@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CharactersListComponent } from '../pages/characters-list/characters-list.component';
+import { CharactersListComponent } from './pages/characters-list/characters-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' }, // Redirige a /characters si la ruta es vacía

@@ -1,6 +1,21 @@
 <div class="characters-list-container container mt-4">
+  <!-- Título de la lista de personajes -->
   <h2 class="mb-4">Lista de personajes</h2>
 
+  <!-- Contenedor de búsqueda -->
+  <div class="search-container mb-4">
+    <!-- Input para ingresar el término de búsqueda -->
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Buscar personaje..."
+      (keydown.enter)="searchCharacters()"
+    />
+    <!-- Botón para realizar la búsqueda -->
+    <button (click)="searchCharacters()">Buscar</button>
+  </div>
+
+  <!-- Lista de personajes -->
   <div
     class="d-flex flex-wrap justify-content-center"
     *ngIf="characters.length; else noCharacters"
@@ -10,14 +25,16 @@
       class="card m-2"
       style="width: 15rem"
     >
+      <!-- Imagen del personaje -->
       <img
         [src]="character.image"
         alt="{{ character.name }} image"
         class="card-img-top"
       />
       <div class="card-body">
+        <!-- Nombre del personaje -->
         <h5 class="card-title text-center">{{ character.name }}</h5>
-        <!-- Botón para abrir el modal -->
+        <!-- Botón para abrir el modal de detalles -->
         <button
           class="btn btn-primary btn-sm btn-block"
           (click)="openModal(character, characterModal)"
@@ -28,13 +45,16 @@
     </div>
   </div>
 
+  <!-- Plantilla para el modal de detalles del personaje -->
   <ng-template #characterModal>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
+          <!-- Título del modal (nombre del personaje) -->
           <h5 class="modal-title" id="characterModalLabel">
             {{ selectedCharacter?.name }}
           </h5>
+          <!-- Botón para cerrar el modal -->
           <button
             type="button"
             class="btn-close"
@@ -43,11 +63,13 @@
           ></button>
         </div>
         <div class="modal-body">
+          <!-- Imagen del personaje -->
           <img
             [src]="selectedCharacter?.image"
             alt="{{ selectedCharacter?.name }} image"
             class="img-fluid mb-3"
           />
+          <!-- Detalles del personaje -->
           <p><strong>Estado:</strong> {{ selectedCharacter?.status }}</p>
           <p><strong>Especie:</strong> {{ selectedCharacter?.species }}</p>
           <p><strong>Género:</strong> {{ selectedCharacter?.gender }}</p>
@@ -59,7 +81,24 @@
             <strong>Localización:</strong>
             {{ selectedCharacter?.location.name }}
           </p>
-          <p><strong>Episodios en los que aparece:</strong></p>
+
+          <!-- Plantillas para mostrar los episodios -->
+          <ng-template #singleEpisode>
+            <p><strong>Episodio en el que aparece:</strong></p>
+          </ng-template>
+
+          <ng-template #multipleEpisodes>
+            <p><strong>Episodios en los que aparece:</strong></p>
+          </ng-template>
+
+          <!-- Lista de episodios -->
+          <p
+            *ngIf="
+              episodes.length === 1;
+              then singleEpisode;
+              else multipleEpisodes
+            "
+          ></p>
           <ul class="scrollable-list">
             <li *ngFor="let episode of episodes">{{ episode }}</li>
           </ul>
@@ -68,13 +107,16 @@
     </div>
   </ng-template>
 
+  <!-- Plantilla para mostrar un mensaje si no hay personajes -->
   <ng-template #noCharacters>
     <div class="alert alert-warning" role="alert">
       No hay personajes disponibles en este momento.
     </div>
   </ng-template>
 
+  <!-- Controles de paginación -->
   <div class="d-flex justify-content-between mt-4">
+    <!-- Botón para página anterior -->
     <button
       class="btn btn-primary"
       (click)="prevPage()"
@@ -82,7 +124,9 @@
     >
       Anterior
     </button>
+    <!-- Indicador de página actual -->
     <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <!-- Botón para página siguiente -->
     <button
       class="btn btn-primary"
       (click)="nextPage()"
