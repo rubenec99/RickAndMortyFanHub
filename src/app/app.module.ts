@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'; // Necesario para realizar solicitudes HTTP
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +18,7 @@ import { HeaderComponent } from './components/header/header.component';
     AppRoutingModule,
     HttpClientModule, // Importa el módulo HttpClientModule
     NgbModule,
+    NgbDropdownModule,
     FormsModule,
   ],
   providers: [CharactersService], // Proporciona el servicio CharactersService

@@ -15,6 +15,64 @@
     <button (click)="searchCharacters()">Buscar</button>
   </div>
 
+  <div ngbDropdown class="d-inline-block" autoClose="outside">
+    <button
+      class="btn btn-outline-primary"
+      id="dropdownBasic1"
+      ngbDropdownToggle
+    >
+      Filtros
+    </button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <!-- Selector de género -->
+      <div class="dropdown-item">
+        <label>Género:</label>
+        <select
+          [(ngModel)]="selectedGender"
+          (change)="onGenderChange(selectedGender)"
+        >
+          <option value="">Todos los géneros</option>
+          <option *ngFor="let gender of allGenders" [value]="gender">
+            {{ gender }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Selector de estado (status) -->
+      <div class="dropdown-item">
+        <label>Estado:</label>
+        <select
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusChange(selectedStatus)"
+        >
+          <option value="">Todos los estados</option>
+          <option *ngFor="let status of allStatuses" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Selector de especie -->
+      <div class="dropdown-item">
+        <label>Especie:</label>
+        <select
+          [(ngModel)]="selectedSpecies"
+          (change)="onSpeciesChange(selectedSpecies)"
+        >
+          <option value="">Todas las especies</option>
+          <option *ngFor="let species of allSpecies" [value]="species">
+            {{ species }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Botón para restablecer filtros -->
+      <div class="dropdown-item">
+        <button (click)="resetFilters()">Restablecer filtros</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Lista de personajes -->
   <div
     class="d-flex flex-wrap justify-content-center"

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Character } from 'src/app/models/character.model';
+import { Episode } from '../models/episode.model';
 import { CharactersResponse } from 'src/app/models/character.model';
 
 @Injectable({
@@ -12,36 +14,88 @@ export class CharactersService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Método para obtener todos los personajes (con paginación opcional).
+   * Método para obtener todos los personajes desde la API con paginación opcional y filtros.
    *
    * @param page (Opcional) El número de página que se desea recuperar. Por defecto, es la página 1.
+   * @param gender (Opcional) El género por el cual se desea filtrar los personajes.
+   * @param status (Opcional) El estado por el cual se desea filtrar los personajes.
+   * @param species (Opcional) La especie por la cual se desea filtrar los personajes.
    * @returns Un Observable que emite una respuesta de tipo "CharactersResponse".
    */
-  getAllCharacters(page: number = 1): Observable<CharactersResponse> {
-    // Realiza una solicitud HTTP GET a la URL de la API de personajes, incluyendo el número de página si se proporciona.
-    return this.http.get<CharactersResponse>(`${this.baseUrl}?page=${page}`);
+  getAllCharacters(
+    page: number = 1,
+    gender?: string,
+    status?: string,
+    species?: string
+  ): Observable<CharactersResponse> {
+    let url = `${this.baseUrl}?page=${page}`;
+
+    if (gender) {
+      url += `&gender=${gender}`;
+    }
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (species) {
+      url += `&species=${species}`;
+    }
+
+    return this.http.get<CharactersResponse>(url);
   }
 
   /**
-   * Método para obtener un personaje por su ID.
+   * Método para obtener todos los personajes de la API de Rick, incluyendo todos los páginas disponibles.
    *
-   * @param id El ID del personaje que se desea obtener.
-   * @returns Un Observable que emite una respuesta de tipo "any".
+   * @returns Un Observable que emite un arreglo de objetos de tipo "Character".
    */
-  getCharacterById(id: number): Observable<any> {
-    // Realiza una solicitud HTTP GET a la URL base de la API seguida del ID para obtener un personaje específico.
-    return this.http.get(`${this.baseUrl}/${id}`);
+  getAllCharactersFull(): Observable<Character[]> {
+    return new Observable<Character[]>((observer) => {
+      let allCharacters: Character[] = [];
+
+      // Función recursiva para obtener personajes por página
+      const getCharactersByPage = (page: number) => {
+        // Realiza una solicitud HTTP para obtener personajes de una página específica
+        this.getAllCharacters(page).subscribe((response) => {
+          allCharacters = allCharacters.concat(response.results); // Agrega los personajes de la página actual al arreglo
+
+          if (response.info.next) {
+            // Si hay una página siguiente, continúa la recursión para obtener más personajes
+            getCharactersByPage(page + 1);
+          } else {
+            // Cuando no hay más páginas disponibles, emite el arreglo completo y completa el observable
+            observer.next(allCharacters);
+            observer.complete();
+          }
+        });
+      };
+
+      // Comienza la obtención de personajes desde la primera página
+      getCharactersByPage(1);
+    });
   }
 
   /**
-   * Método para obtener un episodio específico por su URL.
+   * Obtiene la información de un personaje específico de Rick and Morty utilizando su ID.
    *
-   * @param episodeUrl La URL del episodio que se desea obtener.
-   * @returns Un Observable que emite una respuesta de tipo "any".
+   * @param id - El identificador único del personaje.
+   * @returns Observable<Character> - Un observable que emite el detalle del personaje solicitado.
    */
-  getEpisode(episodeUrl: string): Observable<any> {
-    // Realiza una solicitud HTTP GET a la URL proporcionada para obtener el episodio.
-    return this.http.get<any>(episodeUrl);
+  getCharacterById(id: number): Observable<Character> {
+    // Construye la URL completa usando la URL base y el ID proporcionado, luego realiza una solicitud HTTP GET para obtener los detalles del personaje.
+    return this.http.get<Character>(`${this.baseUrl}/character/${id}`);
+  }
+
+  /**
+   * Obtiene la información de un episodio específico de Rick and Morty utilizando su URL directa.
+   *
+   * @param episodeUrl - La URL completa que apunta al detalle del episodio deseado.
+   * @returns Observable<Episode> - Un observable que emite el detalle del episodio solicitado.
+   */
+  getEpisode(episodeUrl: string): Observable<Episode> {
+    // Realiza una solicitud HTTP GET directamente usando la URL proporcionada para obtener los detalles del episodio.
+    return this.http.get<Episode>(episodeUrl);
   }
 
   /**
