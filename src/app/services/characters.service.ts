@@ -23,4 +23,10 @@ export class CharactersService {
     // Realiza una solicitud HTTP GET a la URL base seguida del ID para obtener un personaje específico
     return this.http.get(`${this.baseUrl}/${id}`);
   }
+
+  // Método para obtener un episodio específico por su URL
+  getEpisode(episodeUrl: string): Observable<any> {
+    // Realiza una solicitud HTTP GET a la URL proporcionada
+    return this.http.get<any>(episodeUrl);
+  }
 }

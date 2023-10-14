@@ -1,0 +1,94 @@
+<div class="characters-list-container container mt-4">
+  <h2 class="mb-4">Lista de personajes</h2>
+
+  <div
+    class="d-flex flex-wrap justify-content-center"
+    *ngIf="characters.length; else noCharacters"
+  >
+    <div
+      *ngFor="let character of characters"
+      class="card m-2"
+      style="width: 15rem"
+    >
+      <img
+        [src]="character.image"
+        alt="{{ character.name }} image"
+        class="card-img-top"
+      />
+      <div class="card-body">
+        <h5 class="card-title text-center">{{ character.name }}</h5>
+        <!-- Botón para abrir el modal -->
+        <button
+          class="btn btn-primary btn-sm btn-block"
+          (click)="openModal(character, characterModal)"
+        >
+          Ver detalles
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #characterModal>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="characterModalLabel">
+            {{ selectedCharacter?.name }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            (click)="modalService.dismissAll()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <img
+            [src]="selectedCharacter?.image"
+            alt="{{ selectedCharacter?.name }} image"
+            class="img-fluid mb-3"
+          />
+          <p><strong>Estado:</strong> {{ selectedCharacter?.status }}</p>
+          <p><strong>Especie:</strong> {{ selectedCharacter?.species }}</p>
+          <p><strong>Género:</strong> {{ selectedCharacter?.gender }}</p>
+          <p>
+            <strong>Origen:</strong>
+            {{ selectedCharacter?.origin.name }}
+          </p>
+          <p>
+            <strong>Localización:</strong>
+            {{ selectedCharacter?.location.name }}
+          </p>
+          <p><strong>Episodios en los que aparece:</strong></p>
+          <ul class="scrollable-list">
+            <li *ngFor="let episode of episodes">{{ episode }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #noCharacters>
+    <div class="alert alert-warning" role="alert">
+      No hay personajes disponibles en este momento.
+    </div>
+  </ng-template>
+
+  <div class="d-flex justify-content-between mt-4">
+    <button
+      class="btn btn-primary"
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+    >
+      Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button
+      class="btn btn-primary"
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
