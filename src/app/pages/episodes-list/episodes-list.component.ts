@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { EpisodesService } from 'src/app/services/episodes.service';
 import { Episode } from 'src/app/models/episode.model';
+import { Character } from 'src/app/models/character.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-episodes-list',
@@ -13,6 +15,8 @@ export class EpisodesComponent implements OnInit {
   totalPages: number = 0; // Número total de páginas disponibles con base en el número de episodios
   seasonFilter: string = ''; // Filtro seleccionado por el usuario para ver una temporada específica
   allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
+  selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
+  charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
 
   constructor(private episodesService: EpisodesService) {}
 
@@ -58,5 +62,24 @@ export class EpisodesComponent implements OnInit {
       // Si no se proporciona un filtro, muestra todos los episodios
       this.episodes = [...this.allEpisodes];
     }
+  }
+
+  /**
+   * Abre la ventana modal y carga los detalles del personaje para el episodio seleccionado.
+   *
+   * @param episode - El episodio seleccionado.
+   */
+  openModal(episode: Episode): void {
+    this.selectedEpisode = episode;
+
+    // Obtener detalles de cada personaje del episodio
+    const characterRequests = episode.characters.map((url) =>
+      this.episodesService.getCharacter(url)
+    );
+
+    forkJoin(characterRequests).subscribe((characters) => {
+      this.charactersOfEpisode = characters;
+      // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
+    });
   }
 }

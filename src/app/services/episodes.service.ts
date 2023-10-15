@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EpisodeResponse } from '../models/episode.model';
 import { Episode } from '../models/episode.model';
+import { Character } from '../models/character.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,5 +33,15 @@ export class EpisodesService {
   getEpisode(episodeUrl: string): Observable<Episode> {
     // Realiza una solicitud HTTP GET directamente usando la URL proporcionada para obtener los detalles del episodio.
     return this.http.get<Episode>(episodeUrl);
+  }
+
+  /**
+   * Obtiene la información de un personaje específico utilizando su URL.
+   *
+   * @param characterUrl - La URL del personaje.
+   * @returns Observable<Character> - Los detalles del personaje solicitado.
+   */
+  getCharacter(characterUrl: string): Observable<Character> {
+    return this.http.get<Character>(characterUrl);
   }
 }
