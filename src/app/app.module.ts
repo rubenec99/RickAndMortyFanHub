@@ -7,12 +7,18 @@ import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CharactersListComponent } from './pages/characters-list/characters-list.component';
+import { CharactersComponent } from './pages/characters-list/characters-list.component';
+import { EpisodesComponent } from './pages/episodes-list/episodes-list.component';
 import { CharactersService } from './services/characters.service';
 import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
-  declarations: [AppComponent, CharactersListComponent, HeaderComponent],
+  declarations: [
+    AppComponent,
+    CharactersComponent,
+    HeaderComponent,
+    EpisodesComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

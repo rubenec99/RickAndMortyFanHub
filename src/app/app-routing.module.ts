@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CharactersListComponent } from './pages/characters-list/characters-list.component';
+import { CharactersComponent } from './pages/characters-list/characters-list.component';
+import { EpisodesComponent } from './pages/episodes-list/episodes-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/', pathMatch: 'full' }, // Redirige a /characters si la ruta es vacía
-  { path: 'characters', component: CharactersListComponent }, // Ruta para el listado de personajes
-  // Aquí puedes añadir más rutas en el futuro
+  { path: 'characters', component: CharactersComponent }, // Ruta para el listado de personajes
+  { path: 'episodes', component: EpisodesComponent }, // Ruta para el listado de episodios
 ];
 
 @NgModule({

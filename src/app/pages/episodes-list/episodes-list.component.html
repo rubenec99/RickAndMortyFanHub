@@ -1,0 +1,34 @@
+<div class="container mt-5">
+  <h1 class="mb-4">Episodios</h1>
+
+  <!-- Controles de filtro -->
+  <div class="mb-4">
+    <label for="seasonFilter">Filtrar por temporada:</label>
+    <select
+      id="seasonFilter"
+      [(ngModel)]="seasonFilter"
+      (change)="filterBySeason()"
+    >
+      <option value="">Todas las temporadas</option>
+      <option value="S01">Temporada 1</option>
+      <option value="S02">Temporada 2</option>
+      <option value="S03">Temporada 3</option>
+      <option value="S04">Temporada 4</option>
+      <option value="S05">Temporada 5</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4" *ngFor="let episode of episodes">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ episode.name }}</h5>
+          <p class="card-text">
+            <strong>Fecha de emisión:</strong> {{ episode.air_date }}<br />
+            <strong>Episodio:</strong> {{ episode.episode }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

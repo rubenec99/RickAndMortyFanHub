@@ -27,10 +27,7 @@
       <!-- Selector de género -->
       <div class="dropdown-item">
         <label>Género:</label>
-        <select
-          [(ngModel)]="selectedGender"
-          (change)="onGenderChange(selectedGender)"
-        >
+        <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
           <option value="">Todos los géneros</option>
           <option *ngFor="let gender of allGenders" [value]="gender">
             {{ gender }}
@@ -41,10 +38,7 @@
       <!-- Selector de estado (status) -->
       <div class="dropdown-item">
         <label>Estado:</label>
-        <select
-          [(ngModel)]="selectedStatus"
-          (change)="onStatusChange(selectedStatus)"
-        >
+        <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
           <option value="">Todos los estados</option>
           <option *ngFor="let status of allStatuses" [value]="status">
             {{ status }}
@@ -55,10 +49,7 @@
       <!-- Selector de especie -->
       <div class="dropdown-item">
         <label>Especie:</label>
-        <select
-          [(ngModel)]="selectedSpecies"
-          (change)="onSpeciesChange(selectedSpecies)"
-        >
+        <select [(ngModel)]="selectedSpecies" (change)="onFilterChange()">
           <option value="">Todas las especies</option>
           <option *ngFor="let species of allSpecies" [value]="species">
             {{ species }}

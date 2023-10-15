@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importa el módulo de 
   templateUrl: './characters-list.component.html',
   styleUrls: ['./characters-list.component.css'],
 })
-export class CharactersListComponent implements OnInit {
+export class CharactersComponent implements OnInit {
   characters: Character[] = []; // Almacena los personajes obtenidos de la API
   episodes: string[] = []; // Almacena los nombres de los episodios de un personaje
   currentPage: number = 1; // Página actual de personajes
@@ -133,33 +133,11 @@ export class CharactersListComponent implements OnInit {
   }
 
   /**
-   * Método para manejar el cambio en el filtro de género.
-   *
-   * @param gender El nuevo género seleccionado.
+   * Método para manejar los cambios de filtro
    */
-  onGenderChange(gender: string): void {
-    this.selectedGender = gender; // Actualiza el género seleccionado
-    this.loadCharacters(); // Vuelve a cargar los personajes con el nuevo filtro aplicado
-  }
-
-  /**
-   * Método para manejar el cambio en el filtro de estado (status).
-   *
-   * @param selectedStatus El nuevo estado (status) seleccionado.
-   */
-  onStatusChange(selectedStatus: string): void {
-    this.currentPage = 1; // Resetea la página al cambiar el filtro de estado
-    this.loadCharacters(); // Vuelve a cargar los personajes con el nuevo filtro de estado aplicado
-  }
-
-  /**
-   * Método para manejar el cambio en el filtro de especie (species).
-   *
-   * @param selectedSpecies La nueva especie (species) seleccionada.
-   */
-  onSpeciesChange(selectedSpecies: string): void {
-    this.currentPage = 1; // Resetea la página al cambiar el filtro de especie
-    this.loadCharacters(); // Vuelve a cargar los personajes con el nuevo filtro de especie aplicado
+  onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadCharacters();
   }
 
   /**
