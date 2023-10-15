@@ -10,17 +10,18 @@
       (change)="filterBySeason()"
     >
       <option value="">Todas las temporadas</option>
-      <option value="S01">Temporada 1</option>
-      <option value="S02">Temporada 2</option>
-      <option value="S03">Temporada 3</option>
-      <option value="S04">Temporada 4</option>
-      <option value="S05">Temporada 5</option>
+      <option *ngFor="let season of uniqueSeasons" [value]="season">
+        {{ "Temporada " + season.slice(1) }}
+      </option>
     </select>
   </div>
 
   <!-- Contenedor para los episodios -->
   <div class="row">
-    <div class="col-md-4" *ngFor="let episode of episodes">
+    <div
+      class="col-md-4"
+      *ngFor="let episode of episodes; trackBy: trackByEpisodeId"
+    >
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">{{ episode.name }}</h5>

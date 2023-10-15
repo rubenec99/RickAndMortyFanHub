@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CharactersService } from 'src/app/services/characters.service';
+
 import { Character } from 'src/app/models/character.model';
+
+import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importa el módulo de Bootstrap para modales
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-characters-list',
@@ -14,8 +17,8 @@ export class CharactersComponent implements OnInit {
   episodes: string[] = []; // Almacena los nombres de los episodios de un personaje
   currentPage: number = 1; // Página actual de personajes
   totalPages: number = 0; // Total de páginas disponibles
-  selectedCharacter: any; // Almacena el personaje seleccionado
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
+  selectedCharacter: any; // Almacena el personaje seleccionado
   selectedGender: string = ''; // Almacena el género seleccionado
 
   /**

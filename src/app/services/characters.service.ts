@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+
 import { Character } from 'src/app/models/character.model';
-import { Episode } from '../models/episode.model';
 import { CharactersResponse } from 'src/app/models/character.model';
 
 @Injectable({
@@ -64,7 +65,7 @@ export class CharactersService {
             // Si hay una página siguiente, continúa la recursión para obtener más personajes
             getCharactersByPage(page + 1);
           } else {
-            // Cuando no hay más páginas disponibles, emite el arreglo completo y completa el observable
+            // Cuando no hay más páginas disponibles, emite el array completo y completa el observable
             observer.next(allCharacters);
             observer.complete();
           }
@@ -77,7 +78,7 @@ export class CharactersService {
   }
 
   /**
-   * Obtiene la información de un personaje específico de Rick and Morty utilizando su ID.
+   * Obtiene la información de un personaje específico utilizando su ID.
    *
    * @param id - El identificador único del personaje.
    * @returns Observable<Character> - Un observable que emite el detalle del personaje solicitado.
@@ -96,5 +97,15 @@ export class CharactersService {
   searchCharactersByName(name: string): Observable<CharactersResponse> {
     // Realiza una solicitud HTTP GET a la URL de la API con el parámetro "name" para buscar personajes por nombre.
     return this.http.get<CharactersResponse>(`${this.baseUrl}?name=${name}`);
+  }
+
+  /**
+   * Obtiene la información de un personaje específico utilizando su URL.
+   *
+   * @param characterUrl - La URL del personaje.
+   * @returns Observable<Character> - Los detalles del personaje solicitado.
+   */
+  getCharacter(characterUrl: string): Observable<Character> {
+    return this.http.get<Character>(characterUrl);
   }
 }

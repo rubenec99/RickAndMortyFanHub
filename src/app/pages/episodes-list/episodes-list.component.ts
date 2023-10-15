@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { EpisodesService } from 'src/app/services/episodes.service';
+
 import { Episode } from 'src/app/models/episode.model';
 import { Character } from 'src/app/models/character.model';
+
+import { EpisodesService } from 'src/app/services/episodes.service';
+import { CharactersService } from 'src/app/services/characters.service';
+
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -17,8 +21,12 @@ export class EpisodesComponent implements OnInit {
   allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
   selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
   charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
+  uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
 
-  constructor(private episodesService: EpisodesService) {}
+  constructor(
+    private episodesService: EpisodesService,
+    private characterService: CharactersService
+  ) {}
 
   ngOnInit(): void {
     this.loadAllEpisodes();
@@ -40,8 +48,33 @@ export class EpisodesComponent implements OnInit {
         this.loadAllEpisodes(nextPage); // Carga los episodios de la siguiente página de forma recursiva
       } else {
         this.episodes = [...this.allEpisodes];
+        this.extractUniqueSeasons();
       }
     });
+  }
+
+  /**
+   * Método para extraer las temporadas únicas de la lista de episodios.
+   *
+   * Este método analiza cada episodio en la lista y extrae el código de temporada único
+   * (por ejemplo, "Sxx" de "SxxExx"). Luego, almacena las temporadas únicas en el arreglo
+   * "uniqueSeasons" en orden ascendente.
+   */
+  extractUniqueSeasons() {
+    // Crea un conjunto (Set) para almacenar temporadas únicas
+    const seasonsSet = new Set<string>();
+
+    // Itera a través de todos los episodios en la lista
+    this.allEpisodes.forEach((episode) => {
+      // Extrae el código de temporada (por ejemplo, "Sxx" de "SxxExx")
+      const seasonCode = episode.episode.slice(0, 3);
+
+      // Agrega la temporada al conjunto (Set)
+      seasonsSet.add(seasonCode);
+    });
+
+    // Convierte el conjunto (Set) en un arreglo y lo ordena en orden ascendente
+    this.uniqueSeasons = Array.from(seasonsSet).sort();
   }
 
   /**
@@ -74,12 +107,26 @@ export class EpisodesComponent implements OnInit {
 
     // Obtener detalles de cada personaje del episodio
     const characterRequests = episode.characters.map((url) =>
-      this.episodesService.getCharacter(url)
+      this.characterService.getCharacter(url)
     );
 
     forkJoin(characterRequests).subscribe((characters) => {
       this.charactersOfEpisode = characters;
       // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
     });
+  }
+
+  /**
+   * Método para rastrear los episodios en una lista mediante su ID.
+   *
+   * Este método se utiliza en las directivas *ngFor para ayudar a Angular a rastrear
+   * y gestionar eficientemente los elementos en una lista cuando se producen cambios.
+   *
+   * @param index El índice del elemento en la lista.
+   * @param episode El episodio en la lista correspondiente al índice dado.
+   * @returns El ID del episodio, que se utiliza como valor de seguimiento único.
+   */
+  trackByEpisodeId(index: number, episode: Episode): number {
+    return episode.id;
   }
 }
