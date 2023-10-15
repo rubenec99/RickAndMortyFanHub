@@ -8,11 +8,11 @@ import { Episode } from 'src/app/models/episode.model';
   styleUrls: ['./episodes-list.component.css'],
 })
 export class EpisodesComponent implements OnInit {
-  episodes: Episode[] = [];
-  currentPage: number = 1;
-  totalPages: number = 0;
-  seasonFilter: string = '';
-  allEpisodes: Episode[] = [];
+  episodes: Episode[] = []; // Lista de episodios que se mostrarán en la vista actual
+  currentPage: number = 1; // Página actual en la que se encuentra el usuario
+  totalPages: number = 0; // Número total de páginas disponibles con base en el número de episodios
+  seasonFilter: string = ''; // Filtro seleccionado por el usuario para ver una temporada específica
+  allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
 
   constructor(private episodesService: EpisodesService) {}
 

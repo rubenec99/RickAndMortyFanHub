@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CharactersService } from 'src/app/services/characters.service';
 import { Character } from 'src/app/models/character.model';
+import { EpisodesService } from 'src/app/services/episodes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importa el módulo de Bootstrap para modales
 
 @Component({
@@ -29,6 +30,7 @@ export class CharactersComponent implements OnInit {
 
   constructor(
     private charactersService: CharactersService, // Inyecta el servicio de personajes
+    private episodesService: EpisodesService, // Inyecta el servicio de episodios
     public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
   ) {}
 
@@ -99,7 +101,7 @@ export class CharactersComponent implements OnInit {
 
     // Obtiene los nombres de los episodios a través de sus URLs
     character.episode.forEach((episodeUrl) => {
-      this.charactersService.getEpisode(episodeUrl).subscribe((episode) => {
+      this.episodesService.getEpisode(episodeUrl).subscribe((episode) => {
         // Agrega el nombre del episodio al arreglo "episodes"
         this.episodes.push(episode.name);
       });

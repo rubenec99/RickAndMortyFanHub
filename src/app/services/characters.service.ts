@@ -46,7 +46,7 @@ export class CharactersService {
   }
 
   /**
-   * Método para obtener todos los personajes de la API de Rick, incluyendo todos los páginas disponibles.
+   * Método para obtener todos los personajes de la API, incluyendo todas los páginas disponibles.
    *
    * @returns Un Observable que emite un arreglo de objetos de tipo "Character".
    */
@@ -85,17 +85,6 @@ export class CharactersService {
   getCharacterById(id: number): Observable<Character> {
     // Construye la URL completa usando la URL base y el ID proporcionado, luego realiza una solicitud HTTP GET para obtener los detalles del personaje.
     return this.http.get<Character>(`${this.baseUrl}/character/${id}`);
-  }
-
-  /**
-   * Obtiene la información de un episodio específico de Rick and Morty utilizando su URL directa.
-   *
-   * @param episodeUrl - La URL completa que apunta al detalle del episodio deseado.
-   * @returns Observable<Episode> - Un observable que emite el detalle del episodio solicitado.
-   */
-  getEpisode(episodeUrl: string): Observable<Episode> {
-    // Realiza una solicitud HTTP GET directamente usando la URL proporcionada para obtener los detalles del episodio.
-    return this.http.get<Episode>(episodeUrl);
   }
 
   /**
