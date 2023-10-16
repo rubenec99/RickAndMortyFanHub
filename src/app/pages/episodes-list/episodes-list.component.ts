@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Episode } from 'src/app/models/episode.model';
 import { Character } from 'src/app/models/character.model';
@@ -6,23 +9,12 @@ import { Character } from 'src/app/models/character.model';
 import { EpisodesService } from 'src/app/services/episodes.service';
 import { CharactersService } from 'src/app/services/characters.service';
 
-import { forkJoin } from 'rxjs';
-
 @Component({
   selector: 'app-episodes-list',
   templateUrl: './episodes-list.component.html',
   styleUrls: ['./episodes-list.component.css'],
 })
-export class EpisodesComponent implements OnInit {
-  episodes: Episode[] = []; // Lista de episodios que se mostrarán en la vista actual
-  currentPage: number = 1; // Página actual en la que se encuentra el usuario
-  totalPages: number = 0; // Número total de páginas disponibles con base en el número de episodios
-  seasonFilter: string = ''; // Filtro seleccionado por el usuario para ver una temporada específica
-  allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
-  selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
-  charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
-  uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
-
+export class EpisodesComponent implements OnInit, OnDestroy {
   constructor(
     private episodesService: EpisodesService,
     private characterService: CharactersService
@@ -32,6 +24,17 @@ export class EpisodesComponent implements OnInit {
     this.loadAllEpisodes();
   }
 
+  private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
+
+  episodes: Episode[] = []; // Lista de episodios que se mostrarán en la vista actual
+  currentPage: number = 1; // Página actual en la que se encuentra el usuario
+  totalPages: number = 0; // Número total de páginas disponibles con base en el número de episodios
+  seasonFilter: string = ''; // Filtro seleccionado por el usuario para ver una temporada específica
+  allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
+  selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
+  charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
+  uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
+
   /**
    * Método para cargar todos los episodios de la API con paginación opcional.
    *
@@ -39,18 +42,21 @@ export class EpisodesComponent implements OnInit {
    * @returns void
    */
   loadAllEpisodes(page: number = 1): void {
-    this.episodesService.getAllEpisodes(page).subscribe((response) => {
-      this.allEpisodes = [...this.allEpisodes, ...response.results];
-      this.totalPages = response.info.pages;
+    this.episodesService
+      .getAllEpisodes(page)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((response) => {
+        this.allEpisodes = [...this.allEpisodes, ...response.results];
+        this.totalPages = response.info.pages;
 
-      if (response.info.next) {
-        const nextPage = page + 1;
-        this.loadAllEpisodes(nextPage); // Carga los episodios de la siguiente página de forma recursiva
-      } else {
-        this.episodes = [...this.allEpisodes];
-        this.extractUniqueSeasons();
-      }
-    });
+        if (response.info.next) {
+          const nextPage = page + 1;
+          this.loadAllEpisodes(nextPage); // Carga los episodios de la siguiente página de forma recursiva
+        } else {
+          this.episodes = [...this.allEpisodes];
+          this.extractUniqueSeasons();
+        }
+      });
   }
 
   /**
@@ -111,6 +117,7 @@ export class EpisodesComponent implements OnInit {
 
     this.characterService
       .getCharactersByIds(characterIds)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((characters) => {
         this.charactersOfEpisode = characters;
         // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
@@ -129,5 +136,17 @@ export class EpisodesComponent implements OnInit {
    */
   trackByEpisodeId(index: number, episode: Episode): number {
     return episode.id;
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente está a punto de ser destruido.
+   * Se utiliza para emitir un valor a través del `unsubscribe$` Subject, lo que
+   * señala a todos los observables (que estén utilizando `takeUntil(this.unsubscribe$)`)
+   * que se desuscriban para evitar pérdidas de memoria.
+   * Además, completa el `unsubscribe$` Subject para asegurarse de que no emita más valores.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

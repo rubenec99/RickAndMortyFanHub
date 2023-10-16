@@ -1,25 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Character } from 'src/app/models/character.model';
 
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 @Component({
   selector: 'app-characters-list',
   templateUrl: './characters-list.component.html',
   styleUrls: ['./characters-list.component.css'],
 })
-export class CharactersComponent implements OnInit {
+export class CharactersComponent implements OnInit, OnDestroy {
+  constructor(
+    private charactersService: CharactersService, // Inyecta el servicio de personajes
+    private episodesService: EpisodesService, // Inyecta el servicio de episodios
+    public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
+  ) {}
+
+  ngOnInit(): void {
+    this.loadCharacters(); // Carga los personajes al inicializar el componente
+  }
+
+  private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
+
   characters: Character[] = []; // Almacena los personajes obtenidos de la API
   episodes: string[] = []; // Almacena los nombres de los episodios de un personaje
   currentPage: number = 1; // Página actual de personajes
   totalPages: number = 0; // Total de páginas disponibles
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
   selectedCharacter: any; // Almacena el personaje seleccionado
-  selectedGender: string = ''; // Almacena el género seleccionado
 
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
@@ -39,18 +53,9 @@ export class CharactersComponent implements OnInit {
     'Cronenberg',
     'Disease',
   ];
-  selectedStatus: string = '';
-  selectedSpecies: string = '';
-
-  constructor(
-    private charactersService: CharactersService, // Inyecta el servicio de personajes
-    private episodesService: EpisodesService, // Inyecta el servicio de episodios
-    public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
-  ) {}
-
-  ngOnInit(): void {
-    this.loadCharacters(); // Carga los personajes al inicializar el componente
-  }
+  selectedGender: string = ''; // Almacena el género seleccionado
+  selectedStatus: string = ''; // Alamacena el estatus seleccionado
+  selectedSpecies: string = ''; // Almacena la especie seleccionada
 
   /**
    * Método para cargar los personajes de la API.
@@ -68,6 +73,7 @@ export class CharactersComponent implements OnInit {
         this.selectedStatus,
         this.selectedSpecies
       )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((response) => {
         // Actualiza la lista de personajes con la respuesta de la API
         this.characters = response.results;
@@ -116,6 +122,7 @@ export class CharactersComponent implements OnInit {
     // Realiza una búsqueda de personajes por nombre utilizando el término de búsqueda
     this.charactersService
       .searchCharactersByName(this.searchTerm)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((response) => {
         // Actualiza la lista de personajes con los resultados de la búsqueda
         this.characters = response.results;
@@ -174,5 +181,17 @@ export class CharactersComponent implements OnInit {
       this.currentPage--; // Decrementa la página actual
       this.loadCharacters(); // Recarga los personajes de la página anterior
     }
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente está a punto de ser destruido.
+   * Se utiliza para emitir un valor a través del `unsubscribe$` Subject, lo que
+   * señala a todos los observables (que estén utilizando `takeUntil(this.unsubscribe$)`)
+   * que se desuscriban para evitar pérdidas de memoria.
+   * Además, completa el `unsubscribe$` Subject para asegurarse de que no emita más valores.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
