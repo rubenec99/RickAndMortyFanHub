@@ -43,25 +43,17 @@ export class LocationsComponent {
     });
   }
 
-  /**
-   * Método para abrir una ventana modal que muestra los detalles de una ubicación y sus residentes.
-   *
-   * @param location La ubicación de la que se mostrarán los detalles.
-   * @returns void
-   */
   openModal(location: Location): void {
     this.selectedLocation = location;
 
-    // Realiza solicitudes para obtener información de los residentes de la ubicación
-    const residentRequests = location.residents.map((url) =>
-      this.characterService.getCharacter(url)
-    );
+    const residentIds = location.residents.map((url) => +url.split('/').pop()!);
 
-    // Combina las solicitudes en paralelo usando forkJoin
-    forkJoin(residentRequests).subscribe((residents) => {
-      this.residentsOfLocation = residents;
-      // La ventana modal se abrirá en la interfaz de usuario (HTML) utilizando Bootstrap
-    });
+    this.characterService
+      .getCharactersByIds(residentIds)
+      .subscribe((residents) => {
+        this.residentsOfLocation = residents;
+        // La ventana modal se abrirá en la interfaz de usuario (HTML) utilizando Bootstrap
+      });
   }
 
   /**

@@ -91,12 +91,10 @@ export class CharactersComponent implements OnInit {
     // Reinicia el arreglo de episodios
     this.episodes = [];
 
-    // Obtiene los nombres de los episodios a través de sus URLs
-    character.episode.forEach((episodeUrl) => {
-      this.episodesService.getEpisode(episodeUrl).subscribe((episode) => {
-        // Agrega el nombre del episodio al arreglo "episodes"
-        this.episodes.push(episode.name);
-      });
+    const episodeIds = character.episode.map((url) => +url.split('/').pop()!);
+
+    this.episodesService.getEpisodesByIds(episodeIds).subscribe((episodes) => {
+      this.episodes = episodes.map((ep) => ep.name);
     });
 
     // Abre el modal con el contenido proporcionado y lo centra en la pantalla

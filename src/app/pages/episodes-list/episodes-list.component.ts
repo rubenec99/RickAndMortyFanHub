@@ -105,15 +105,16 @@ export class EpisodesComponent implements OnInit {
   openModal(episode: Episode): void {
     this.selectedEpisode = episode;
 
-    // Obtener detalles de cada personaje del episodio
-    const characterRequests = episode.characters.map((url) =>
-      this.characterService.getCharacter(url)
+    const characterIds = episode.characters.map(
+      (url) => +url.split('/').pop()!
     );
 
-    forkJoin(characterRequests).subscribe((characters) => {
-      this.charactersOfEpisode = characters;
-      // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
-    });
+    this.characterService
+      .getCharactersByIds(characterIds)
+      .subscribe((characters) => {
+        this.charactersOfEpisode = characters;
+        // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
+      });
   }
 
   /**

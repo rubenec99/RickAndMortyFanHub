@@ -25,14 +25,9 @@ export class EpisodesService {
     return this.http.get<EpisodeResponse>(url);
   }
 
-  /**
-   * Obtiene la información de un episodio específico utilizando su URL directa.
-   *
-   * @param episodeUrl - La URL completa que apunta al detalle del episodio deseado.
-   * @returns Observable<Episode> - Un observable que emite el detalle del episodio solicitado.
-   */
-  getEpisode(episodeUrl: string): Observable<Episode> {
-    // Realiza una solicitud HTTP GET directamente usando la URL proporcionada para obtener los detalles del episodio.
-    return this.http.get<Episode>(episodeUrl);
+  getEpisodesByIds(ids: number[]): Observable<Episode[]> {
+    const idsString = ids.join(',');
+    const url = `https://rickandmortyapi.com/api/episode/${idsString}`;
+    return this.http.get<Episode[]>(url);
   }
 }

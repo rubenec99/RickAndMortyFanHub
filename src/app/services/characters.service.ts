@@ -68,13 +68,9 @@ export class CharactersService {
     return this.http.get<CharactersResponse>(`${this.baseUrl}?name=${name}`);
   }
 
-  /**
-   * Obtiene la información de un personaje específico utilizando su URL.
-   *
-   * @param characterUrl - La URL del personaje.
-   * @returns Observable<Character> - Los detalles del personaje solicitado.
-   */
-  getCharacter(characterUrl: string): Observable<Character> {
-    return this.http.get<Character>(characterUrl);
+  getCharactersByIds(ids: number[]): Observable<Character[]> {
+    const idsString = ids.join(',');
+    const url = `https://rickandmortyapi.com/api/character/${idsString}`;
+    return this.http.get<Character[]>(url);
   }
 }
