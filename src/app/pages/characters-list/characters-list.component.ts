@@ -25,10 +25,21 @@ export class CharactersComponent implements OnInit {
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
    * Estas propiedades se utilizan para mostrar opciones de filtro y realizar búsquedas avanzadas.
    */
-  allGenders: string[] = [];
-  allStatuses: string[] = [];
+  allGenders: string[] = ['Male', 'Female', 'unknow', 'Gernderless'];
+  allStatuses: string[] = ['Alive', 'unknow', 'dead'];
+  allSpecies: string[] = [
+    'Human',
+    'Alien',
+    'Humanoid',
+    'unknow',
+    'Poopybutthole',
+    'Mythological Creature',
+    'Animal',
+    'Robot',
+    'Cronenberg',
+    'Disease',
+  ];
   selectedStatus: string = '';
-  allSpecies: string[] = [];
   selectedSpecies: string = '';
 
   constructor(
@@ -39,28 +50,6 @@ export class CharactersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCharacters(); // Carga los personajes al inicializar el componente
-    this.loadAllFilterValues();
-  }
-
-  /**
-   * Método para cargar los valores únicos de género, estado y especie de todos los personajes.
-   * Se utiliza para obtener las opciones disponibles para los filtros.
-   *
-   * @returns void
-   */
-  loadAllFilterValues(): void {
-    this.charactersService.getAllCharactersFull().subscribe((characters) => {
-      // Obtiene los valores únicos de género, estado y especie de todos los personajes
-      this.allGenders = Array.from(
-        new Set(characters.map((char) => char.gender))
-      );
-      this.allStatuses = Array.from(
-        new Set(characters.map((char) => char.status))
-      );
-      this.allSpecies = Array.from(
-        new Set(characters.map((char) => char.species))
-      );
-    });
   }
 
   /**

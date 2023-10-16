@@ -47,37 +47,6 @@ export class CharactersService {
   }
 
   /**
-   * Método para obtener todos los personajes de la API, incluyendo todas los páginas disponibles.
-   *
-   * @returns Un Observable que emite un arreglo de objetos de tipo "Character".
-   */
-  getAllCharactersFull(): Observable<Character[]> {
-    return new Observable<Character[]>((observer) => {
-      let allCharacters: Character[] = [];
-
-      // Función recursiva para obtener personajes por página
-      const getCharactersByPage = (page: number) => {
-        // Realiza una solicitud HTTP para obtener personajes de una página específica
-        this.getAllCharacters(page).subscribe((response) => {
-          allCharacters = allCharacters.concat(response.results); // Agrega los personajes de la página actual al arreglo
-
-          if (response.info.next) {
-            // Si hay una página siguiente, continúa la recursión para obtener más personajes
-            getCharactersByPage(page + 1);
-          } else {
-            // Cuando no hay más páginas disponibles, emite el array completo y completa el observable
-            observer.next(allCharacters);
-            observer.complete();
-          }
-        });
-      };
-
-      // Comienza la obtención de personajes desde la primera página
-      getCharactersByPage(1);
-    });
-  }
-
-  /**
    * Obtiene la información de un personaje específico utilizando su ID.
    *
    * @param id - El identificador único del personaje.
@@ -85,7 +54,7 @@ export class CharactersService {
    */
   getCharacterById(id: number): Observable<Character> {
     // Construye la URL completa usando la URL base y el ID proporcionado, luego realiza una solicitud HTTP GET para obtener los detalles del personaje.
-    return this.http.get<Character>(`${this.baseUrl}/character/${id}`);
+    return this.http.get<Character>(`${this.baseUrl}/${id}`);
   }
 
   /**
