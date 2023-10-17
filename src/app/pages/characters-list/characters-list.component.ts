@@ -90,9 +90,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * @param content - El contenido del modal que se va a abrir.
    */
   openModal(character: Character, content: any): void {
-    // Muestra en consola el personaje que será presentado en el modal.
-    console.log('Personaje recibido en el modal:', character);
-
     // Asigna el personaje seleccionado a la variable "selectedCharacter" del componente.
     this.selectedCharacter = character;
 
@@ -101,14 +98,12 @@ export class CharactersComponent implements OnInit, OnDestroy {
     const episodeIds = character.episode
       .map((url) => parseInt(url.split('/').pop() || '0'))
       .filter((id) => !isNaN(id));
-    console.log(character.episode);
 
     // Utiliza el servicio "episodesService" para obtener detalles de los episodios basándose en los IDs extraídos.
     this.episodesService
       .getMultipleEpisodes(episodeIds)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((episodes) => {
-        console.log(episodes);
         if (Array.isArray(episodes)) {
           // Si la respuesta es un array (como se espera), actualiza la lista de episodios con los nombres de los episodios obtenidos.
           this.episodes = episodes.map((ep) => ep.name);

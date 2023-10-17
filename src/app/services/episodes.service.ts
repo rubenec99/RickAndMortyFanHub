@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { EpisodeResponse, Episode } from '../models/episode.model';
@@ -37,10 +37,13 @@ export class EpisodesService {
     if (ids.length === 1) {
       const url = `${this.baseURL}/${ids[0]}`;
       return this.http.get<Episode>(url).pipe(map((episode) => [episode]));
+    } else if (ids.length > 1) {
+      // Si hay varios IDs, recupera todos los episodios correspondientes.
+      const url = `${this.baseURL}/${ids.join(',')}`;
+      return this.http.get<Episode[]>(url);
+    } else {
+      // Si no hay IDs, retorna un observable con un array vacío.
+      return of([]);
     }
-
-    // Si hay varios IDs, recupera todos los episodios correspondientes.
-    const url = `${this.baseURL}/${ids.join(',')}`;
-    return this.http.get<Episode[]>(url);
   }
 }

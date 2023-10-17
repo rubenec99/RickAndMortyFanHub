@@ -49,11 +49,17 @@
           ></button>
         </div>
         <div class="modal-body">
-          <ul>
+          <!-- Si hay residentes -->
+          <ul *ngIf="residentsOfLocation.length > 0; else noResidents">
             <li *ngFor="let resident of residentsOfLocation">
               {{ resident.name }}
             </li>
           </ul>
+
+          <!-- Template que se muestra cuando no hay residentes -->
+          <ng-template #noResidents>
+            <p>No hay residentes en esta ubicación.</p>
+          </ng-template>
         </div>
         <div class="modal-footer">
           <button

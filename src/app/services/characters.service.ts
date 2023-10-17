@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { map } from 'rxjs';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
@@ -68,9 +69,12 @@ export class CharactersService {
       return this.http
         .get<Character>(url)
         .pipe(map((character) => [character]));
+    } else if (ids.length > 1) {
+      const idsString = ids.join(',');
+      return this.http.get<Character[]>(`${this.baseUrl}/${idsString}`);
+    } else {
+      // Si no hay IDs, retorna un observable con un array vacío.
+      return of([]);
     }
-
-    const idsString = ids.join(',');
-    return this.http.get<Character[]>(`${this.baseUrl}/${idsString}`);
   }
 }
