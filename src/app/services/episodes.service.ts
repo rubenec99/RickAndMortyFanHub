@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
 import { EpisodeResponse } from '../models/episode.model';
 import { Episode } from '../models/episode.model';
@@ -25,9 +26,25 @@ export class EpisodesService {
     return this.http.get<EpisodeResponse>(url);
   }
 
-  getEpisodesByIds(ids: number[]): Observable<Episode[]> {
-    const idsString = ids.join(',');
-    const url = `https://rickandmortyapi.com/api/episode/${idsString}`;
-    return this.http.get<Episode[]>(url);
+  /**
+   * Obtiene múltiples episodios basado en una lista de IDs.
+   *
+   * @param ids - Un array de números que representa los IDs de los episodios que se desean obtener.
+   * @returns Un observable que emite un array de episodios.
+   */
+  getMultipleEpisodes(ids: number[]): Observable<Episode[]> {
+    // Verifica si sólo hay un ID en el array.
+    if (ids.length === 1) {
+      // Si sólo hay un ID, construye la URL específica para ese episodio.
+      const url = `${this.baseURL}/${ids[0]}`;
+      // Realiza la petición HTTP para obtener un único episodio.
+      // Luego, usa el operador "map" para convertir ese episodio individual en un array.
+      return this.http.get<Episode>(url).pipe(map((episode) => [episode]));
+    } else {
+      // Si hay más de un ID, construye la URL con todos los IDs separados por comas.
+      const url = `${this.baseURL}/${ids.join(',')}`;
+      // Realiza la petición HTTP para obtener un array de episodios.
+      return this.http.get<Episode[]>(url);
+    }
   }
 }

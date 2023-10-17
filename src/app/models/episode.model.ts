@@ -9,11 +9,6 @@ export interface Episode {
 }
 
 export interface EpisodeResponse {
-  info: {
-    count: number;
-    pages: number;
-    next: string | null;
-    prev: string | null;
-  };
+  info: any;
   results: Episode[];
 }

@@ -9,6 +9,7 @@ import { Character } from 'src/app/models/character.model';
 
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
+import { Episode } from 'src/app/models/episode.model';
 
 @Component({
   selector: 'app-characters-list',
@@ -33,7 +34,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   currentPage: number = 1; // Página actual de personajes
   totalPages: number = 0; // Total de páginas disponibles
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
-  selectedCharacter: any; // Almacena el personaje seleccionado
+  selectedCharacter: Character | null = null; // Almacena el personaje seleccionado
 
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
@@ -84,26 +85,42 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para abrir un modal con detalles de un personaje.
+   * Abre un modal para mostrar detalles del personaje seleccionado y los episodios en los que aparece.
    *
-   * @param character El personaje del que se mostrarán los detalles.
-   * @param content El contenido del modal que se abrirá.
-   * @returns void
+   * @param character - El personaje seleccionado que se desea mostrar en el modal.
+   * @param content - El contenido del modal que se va a abrir.
    */
   openModal(character: Character, content: any): void {
-    // Almacena el personaje seleccionado en "selectedCharacter"
+    // Muestra en consola el personaje que será presentado en el modal.
+    console.log('Personaje recibido en el modal:', character);
+
+    // Asigna el personaje seleccionado a la variable "selectedCharacter" del componente.
     this.selectedCharacter = character;
 
-    // Reinicia el arreglo de episodios
-    this.episodes = [];
+    // Extrae los IDs de episodio de las URLs de episodios del personaje.
+    // Se asegura de que cada ID sea un número válido, eliminando cualquier valor que no sea un número.
+    const episodeIds = character.episode
+      .map((url) => parseInt(url.split('/').pop() || '0'))
+      .filter((id) => !isNaN(id));
+    console.log(character.episode);
 
-    const episodeIds = character.episode.map((url) => +url.split('/').pop()!);
+    // Utiliza el servicio "episodesService" para obtener detalles de los episodios basándose en los IDs extraídos.
+    this.episodesService
+      .getMultipleEpisodes(episodeIds)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((episodes) => {
+        console.log(episodes);
+        if (Array.isArray(episodes)) {
+          // Si la respuesta es un array (como se espera), actualiza la lista de episodios con los nombres de los episodios obtenidos.
+          this.episodes = episodes.map((ep) => ep.name);
+        } else {
+          // Si la respuesta no tiene el formato esperado, muestra un error en consola.
+          console.error('Unexpected response format:', episodes);
+        }
+      });
 
-    this.episodesService.getEpisodesByIds(episodeIds).subscribe((episodes) => {
-      this.episodes = episodes.map((ep) => ep.name);
-    });
-
-    // Abre el modal con el contenido proporcionado y lo centra en la pantalla
+    // Utiliza el servicio "modalService" para abrir el modal, pasando el contenido que debe ser mostrado en el modal.
+    // Además, centra el modal en la pantalla.
     this.modalService.open(content, { centered: true });
   }
 
