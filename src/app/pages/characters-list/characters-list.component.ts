@@ -9,7 +9,6 @@ import { Character } from 'src/app/models/character.model';
 
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
-import { Episode } from 'src/app/models/episode.model';
 
 @Component({
   selector: 'app-characters-list',
@@ -55,7 +54,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
     'Disease',
   ];
   selectedGender: string = ''; // Almacena el género seleccionado
-  selectedStatus: string = ''; // Alamacena el estatus seleccionado
+  selectedStatus: string = ''; // Almacena el estatus seleccionado
   selectedSpecies: string = ''; // Almacena la especie seleccionada
 
   /**

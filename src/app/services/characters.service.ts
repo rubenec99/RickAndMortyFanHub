@@ -1,27 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { map } from 'rxjs';
 import { Observable } from 'rxjs';
 
-import { Character } from 'src/app/models/character.model';
-import { CharactersResponse } from 'src/app/models/character.model';
+import { Character, CharactersResponse } from 'src/app/models/character.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CharactersService {
-  private baseUrl = 'https://rickandmortyapi.com/api/character'; // URL específica para personajes
+  // URL base de la API de personajes de "Rick and Morty".
+  private baseUrl = 'https://rickandmortyapi.com/api/character';
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Método para obtener todos los personajes desde la API con paginación opcional y filtros.
+   * Recupera una lista de personajes desde la API con opciones de paginación y filtros.
    *
-   * @param page (Opcional) El número de página que se desea recuperar. Por defecto, es la página 1.
-   * @param gender (Opcional) El género por el cual se desea filtrar los personajes.
-   * @param status (Opcional) El estado por el cual se desea filtrar los personajes.
-   * @param species (Opcional) La especie por la cual se desea filtrar los personajes.
-   * @returns Un Observable que emite una respuesta de tipo "CharactersResponse".
+   * @param page     (Opcional) Página de resultados. Por defecto es la página 1.
+   * @param gender   (Opcional) Filtro por género.
+   * @param status   (Opcional) Filtro por estado del personaje (vivo, muerto, etc.).
+   * @param species  (Opcional) Filtro por especie del personaje.
+   * @returns Observable<CharactersResponse> Lista paginada de personajes.
    */
   getAllCharacters(
     page: number = 1,
@@ -29,16 +30,15 @@ export class CharactersService {
     status?: string,
     species?: string
   ): Observable<CharactersResponse> {
+    // Construye la URL con los parámetros proporcionados.
     let url = `${this.baseUrl}?page=${page}`;
 
     if (gender) {
       url += `&gender=${gender}`;
     }
-
     if (status) {
       url += `&status=${status}`;
     }
-
     if (species) {
       url += `&species=${species}`;
     }
@@ -47,30 +47,30 @@ export class CharactersService {
   }
 
   /**
-   * Obtiene la información de un personaje específico utilizando su ID.
+   * Busca personajes basándose en su nombre.
    *
-   * @param id - El identificador único del personaje.
-   * @returns Observable<Character> - Un observable que emite el detalle del personaje solicitado.
-   */
-  getCharacterById(id: number): Observable<Character> {
-    // Construye la URL completa usando la URL base y el ID proporcionado, luego realiza una solicitud HTTP GET para obtener los detalles del personaje.
-    return this.http.get<Character>(`${this.baseUrl}/${id}`);
-  }
-
-  /**
-   * Método para buscar personajes por nombre.
-   *
-   * @param name El nombre del personaje a buscar.
-   * @returns Un Observable que emite una respuesta de tipo CharactersResponse.
+   * @param name - Nombre del personaje a buscar.
+   * @returns Observable<CharactersResponse> - Lista de personajes que coinciden con el nombre.
    */
   searchCharactersByName(name: string): Observable<CharactersResponse> {
-    // Realiza una solicitud HTTP GET a la URL de la API con el parámetro "name" para buscar personajes por nombre.
     return this.http.get<CharactersResponse>(`${this.baseUrl}?name=${name}`);
   }
 
+  /**
+   * Obtiene información de varios personajes basándose en una lista de IDs.
+   *
+   * @param ids - Lista de IDs de personajes.
+   * @returns Observable<Character[]> - Datos de los personajes correspondientes a los IDs.
+   */
   getCharactersByIds(ids: number[]): Observable<Character[]> {
+    if (ids.length === 1) {
+      const url = `${this.baseUrl}/${ids[0]}`;
+      return this.http
+        .get<Character>(url)
+        .pipe(map((character) => [character]));
+    }
+
     const idsString = ids.join(',');
-    const url = `https://rickandmortyapi.com/api/character/${idsString}`;
-    return this.http.get<Character[]>(url);
+    return this.http.get<Character[]>(`${this.baseUrl}/${idsString}`);
   }
 }
