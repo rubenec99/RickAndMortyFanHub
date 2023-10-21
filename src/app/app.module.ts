@@ -12,6 +12,8 @@ import { EpisodesComponent } from './pages/episodes-list/episodes-list.component
 import { CharactersService } from './services/characters.service';
 import { HeaderComponent } from './components/header/header.component';
 import { LocationsComponent } from './pages/locations-list/locations-list.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { LocationsComponent } from './pages/locations-list/locations-list.compon
     HeaderComponent,
     EpisodesComponent,
     LocationsComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

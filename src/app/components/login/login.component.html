@@ -1,0 +1,78 @@
+<!-- Botón que activará la modal -->
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#loginModal"
+>
+  Iniciar sesión
+</button>
+
+<!-- Ventana modal -->
+<div
+  class="modal fade"
+  id="loginModal"
+  tabindex="-1"
+  aria-labelledby="loginModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Iniciar sesión</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <!-- Email o usuario -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email o usuario</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Ingrese su email o usuario"
+            />
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Ingrese su contraseña"
+            />
+          </div>
+
+          <!-- Checkbox para recordar contraseña -->
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe" />
+            <label class="form-check-label" for="rememberMe"
+              >Recordar contraseña</label
+            >
+          </div>
+
+          <!-- Botón para iniciar sesión -->
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary">
+              Iniciar sesión
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- Botón para volver/cerrar la modal -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Volver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

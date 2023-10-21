@@ -1,0 +1,122 @@
+<!-- Botón que activará la modal -->
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#registerModal"
+>
+  Registro
+</button>
+
+<!-- Ventana modal -->
+<div
+  class="modal fade"
+  id="registerModal"
+  tabindex="-1"
+  aria-labelledby="registerModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Registro de Usuario</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="firstName" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              placeholder="Ingrese su nombre"
+            />
+          </div>
+
+          <!-- Apellidos -->
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Apellidos</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              placeholder="Ingrese sus apellidos"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Ingrese su email"
+            />
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label">Nombre de usuario</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              placeholder="Elige un nombre de usuario"
+            />
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              placeholder="Elige una contraseña"
+            />
+          </div>
+
+          <!-- Repetir contraseña -->
+          <div class="mb-3">
+            <label for="repeatPassword" class="form-label"
+              >Repetir contraseña</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="repeatPassword"
+              placeholder="Repite la contraseña"
+            />
+          </div>
+
+          <!-- Fecha de nacimiento -->
+          <div class="mb-3">
+            <label for="birthDate" class="form-label"
+              >Fecha de nacimiento</label
+            >
+            <input type="date" class="form-control" id="birthDate" />
+          </div>
+
+          <!-- Botón para registrarse -->
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- Botón para volver/cerrar la modal -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Volver
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
