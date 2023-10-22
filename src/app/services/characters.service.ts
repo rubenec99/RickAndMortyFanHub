@@ -15,16 +15,6 @@ export class CharactersService {
 
   constructor(private http: HttpClient) {}
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Error desconocido!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Error Código: ${error.status}\nMensaje: ${error.message}`;
-    }
-    return throwError(errorMessage);
-  }
-
   /**
    * Recupera una lista de personajes desde la API con opciones de paginación y filtros.
    *
@@ -91,5 +81,17 @@ export class CharactersService {
     } else {
       return of([]);
     }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Código: ${error.status}\nMensaje: ${error.message}`;
+    }
+    console.error(errorMessage);
+
+    return throwError(errorMessage);
   }
 }

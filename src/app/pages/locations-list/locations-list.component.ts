@@ -32,6 +32,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
   residents: Character[] = []; // Arreglo que almacena a los residentes de una ubicación
   selectedLocation: Location | null = null; // Ubicación seleccionada actualmente para mostrar detalles
   residentsOfLocation: Character[] = []; // Arreglo que almacena a los residentes de la ubicación seleccionada
+  errorMessage: string | null = null;
 
   /**
    * Método para cargar todas las localizaciones desde la API con paginación opcional.
@@ -43,10 +44,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
     this.locationsService
       .getAllLocations(page)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((response) => {
-        this.locations = response.results;
-        this.totalPages = response.info.pages;
-      });
+      .subscribe(
+        (response) => {
+          this.locations = response.results;
+          this.totalPages = response.info.pages;
+          this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
+        },
+        (error) => {
+          this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
+        }
+      );
   }
 
   openModal(location: Location): void {
@@ -57,10 +64,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
     this.characterService
       .getCharactersByIds(residentIds)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((residents) => {
-        this.residentsOfLocation = residents;
-        // La ventana modal se abrirá en la interfaz de usuario (HTML) utilizando Bootstrap
-      });
+      .subscribe(
+        (residents) => {
+          this.residentsOfLocation = residents;
+          this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
+        },
+        (error) => {
+          this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
+        }
+      );
   }
 
   /**

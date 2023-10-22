@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+import { Observable, of, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import { EpisodeResponse, Episode } from '../models/episode.model';
 
@@ -23,7 +24,9 @@ export class EpisodesService {
    */
   getAllEpisodes(page: number = 1): Observable<EpisodeResponse> {
     const url = `${this.baseURL}?page=${page}`;
-    return this.http.get<EpisodeResponse>(url);
+    return this.http
+      .get<EpisodeResponse>(url)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -33,17 +36,28 @@ export class EpisodesService {
    * @returns Observable<Episode[]> - Datos de los episodios correspondientes a los IDs.
    */
   getMultipleEpisodes(ids: number[]): Observable<Episode[]> {
-    // Si sólo hay un ID, recupera y devuelve ese episodio individual como un array.
     if (ids.length === 1) {
       const url = `${this.baseURL}/${ids[0]}`;
-      return this.http.get<Episode>(url).pipe(map((episode) => [episode]));
+      return this.http.get<Episode>(url).pipe(
+        map((episode) => [episode]),
+        catchError(this.handleError)
+      );
     } else if (ids.length > 1) {
-      // Si hay varios IDs, recupera todos los episodios correspondientes.
       const url = `${this.baseURL}/${ids.join(',')}`;
-      return this.http.get<Episode[]>(url);
+      return this.http.get<Episode[]>(url).pipe(catchError(this.handleError));
     } else {
-      // Si no hay IDs, retorna un observable con un array vacío.
       return of([]);
     }
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Error desconocido!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Código: ${error.status}\nMensaje: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 }

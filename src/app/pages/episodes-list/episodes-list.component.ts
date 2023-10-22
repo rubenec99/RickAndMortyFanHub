@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 import { Episode } from 'src/app/models/episode.model';
 import { Character } from 'src/app/models/character.model';
@@ -34,6 +34,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
   charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
   uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
+  errorMessage: string | null = null;
 
   /**
    * Método para cargar todos los episodios de la API con paginación opcional.
@@ -44,14 +45,21 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   loadAllEpisodes(page: number = 1): void {
     this.episodesService
       .getAllEpisodes(page)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError((error) => {
+          this.errorMessage =
+            'Error al cargar los episodios. Intente nuevamente.';
+          return throwError(error);
+        })
+      )
       .subscribe((response) => {
         this.allEpisodes = [...this.allEpisodes, ...response.results];
         this.totalPages = response.info.pages;
 
         if (response.info.next) {
           const nextPage = page + 1;
-          this.loadAllEpisodes(nextPage); // Carga los episodios de la siguiente página de forma recursiva
+          this.loadAllEpisodes(nextPage);
         } else {
           this.episodes = [...this.allEpisodes];
           this.extractUniqueSeasons();
@@ -117,7 +125,14 @@ export class EpisodesComponent implements OnInit, OnDestroy {
 
     this.characterService
       .getCharactersByIds(characterIds)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError((error) => {
+          this.errorMessage =
+            'Error al cargar los personajes. Intente nuevamente.';
+          return throwError(error);
+        })
+      )
       .subscribe((characters) => {
         this.charactersOfEpisode = characters;
         // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
