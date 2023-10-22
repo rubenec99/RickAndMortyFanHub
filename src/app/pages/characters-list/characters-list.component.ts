@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -34,13 +34,14 @@ export class CharactersComponent implements OnInit, OnDestroy {
   totalPages: number = 0; // Total de páginas disponibles
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
   selectedCharacter: Character | null = null; // Almacena el personaje seleccionado
+  errorMessage: string | null = null;
 
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
    * Estas propiedades se utilizan para mostrar opciones de filtro y realizar búsquedas avanzadas.
    */
-  allGenders: string[] = ['Male', 'Female', 'unknow', 'Gernderless'];
-  allStatuses: string[] = ['Alive', 'unknow', 'dead'];
+  allGenders: string[] = ['Male', 'Female', 'Unknow', 'Genderless'];
+  allStatuses: string[] = ['Alive', 'Unknow', 'dead'];
   allSpecies: string[] = [
     'Human',
     'Alien',
@@ -66,6 +67,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * @returns void
    */
   loadCharacters(): void {
+    this.errorMessage = null;
+
     this.charactersService
       .getAllCharacters(
         this.currentPage,
@@ -73,7 +76,15 @@ export class CharactersComponent implements OnInit, OnDestroy {
         this.selectedStatus,
         this.selectedSpecies
       )
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError((error) => {
+          this.errorMessage =
+            'No hay personajes con los filtros seleccionados. Por favor, inténtelo de nuevo.';
+          console.error('Error loading characters:', error);
+          return throwError(error);
+        })
+      )
       .subscribe((response) => {
         // Actualiza la lista de personajes con la respuesta de la API
         this.characters = response.results;
@@ -90,6 +101,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * @param content - El contenido del modal que se va a abrir.
    */
   openModal(character: Character, content: any): void {
+    this.errorMessage = null;
+
     // Asigna el personaje seleccionado a la variable "selectedCharacter" del componente.
     this.selectedCharacter = character;
 
@@ -99,16 +112,25 @@ export class CharactersComponent implements OnInit, OnDestroy {
       .map((url) => parseInt(url.split('/').pop() || '0'))
       .filter((id) => !isNaN(id));
 
-    // Utiliza el servicio "episodesService" para obtener detalles de los episodios basándose en los IDs extraídos.
     this.episodesService
       .getMultipleEpisodes(episodeIds)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError((error) => {
+          this.errorMessage =
+            'Error al cargar los detalles del personaje. Por favor, inténtelo de nuevo más tarde.';
+          console.error('Error loading episode details:', error);
+          return throwError(error);
+        })
+      )
       .subscribe((episodes) => {
         if (Array.isArray(episodes)) {
           // Si la respuesta es un array (como se espera), actualiza la lista de episodios con los nombres de los episodios obtenidos.
           this.episodes = episodes.map((ep) => ep.name);
         } else {
           // Si la respuesta no tiene el formato esperado, muestra un error en consola.
+          this.errorMessage =
+            'Formato de respuesta inesperado al obtener detalles del episodio.';
           console.error('Unexpected response format:', episodes);
         }
       });
@@ -130,14 +152,22 @@ export class CharactersComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.errorMessage = null;
+
     // Realiza una búsqueda de personajes por nombre utilizando el término de búsqueda
     this.charactersService
       .searchCharactersByName(this.searchTerm)
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError((error) => {
+          this.errorMessage =
+            'No se encontraron personajes. Por favor, inténtelo de nuevo.';
+          console.error('Error searching characters:', error);
+          return throwError(error);
+        })
+      )
       .subscribe((response) => {
-        // Actualiza la lista de personajes con los resultados de la búsqueda
         this.characters = response.results;
-        // Actualiza el total de páginas disponibles
         this.totalPages = response.info.pages;
       });
   }

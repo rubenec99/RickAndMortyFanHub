@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { map } from 'rxjs';
-import { Observable } from 'rxjs';
-import { of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
 
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
@@ -15,6 +14,16 @@ export class CharactersService {
   private baseUrl = 'https://rickandmortyapi.com/api/character';
 
   constructor(private http: HttpClient) {}
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Código: ${error.status}\nMensaje: ${error.message}`;
+    }
+    return throwError(errorMessage);
+  }
 
   /**
    * Recupera una lista de personajes desde la API con opciones de paginación y filtros.
@@ -44,7 +53,9 @@ export class CharactersService {
       url += `&species=${species}`;
     }
 
-    return this.http.get<CharactersResponse>(url);
+    return this.http
+      .get<CharactersResponse>(url)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -54,7 +65,9 @@ export class CharactersService {
    * @returns Observable<CharactersResponse> - Lista de personajes que coinciden con el nombre.
    */
   searchCharactersByName(name: string): Observable<CharactersResponse> {
-    return this.http.get<CharactersResponse>(`${this.baseUrl}?name=${name}`);
+    return this.http
+      .get<CharactersResponse>(`${this.baseUrl}?name=${name}`)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -66,14 +79,16 @@ export class CharactersService {
   getCharactersByIds(ids: number[]): Observable<Character[]> {
     if (ids.length === 1) {
       const url = `${this.baseUrl}/${ids[0]}`;
-      return this.http
-        .get<Character>(url)
-        .pipe(map((character) => [character]));
+      return this.http.get<Character>(url).pipe(
+        map((character) => [character]),
+        catchError(this.handleError)
+      );
     } else if (ids.length > 1) {
       const idsString = ids.join(',');
-      return this.http.get<Character[]>(`${this.baseUrl}/${idsString}`);
+      return this.http
+        .get<Character[]>(`${this.baseUrl}/${idsString}`)
+        .pipe(catchError(this.handleError));
     } else {
-      // Si no hay IDs, retorna un observable con un array vacío.
       return of([]);
     }
   }

@@ -9,7 +9,7 @@
       type="text"
       [(ngModel)]="searchTerm"
       placeholder="Buscar personaje..."
-      (keydown.enter)="searchCharacters()"
+      (keypress)="searchCharacters()"
     />
     <!-- Botón para realizar la búsqueda -->
     <button (click)="searchCharacters()">Buscar</button>
@@ -65,34 +65,36 @@
   </div>
 
   <!-- Lista de personajes -->
-  <div
-    class="d-flex flex-wrap justify-content-center"
-    *ngIf="characters.length; else noCharacters"
-  >
-    <div
-      *ngFor="let character of characters"
-      class="card m-2"
-      style="width: 15rem"
-    >
-      <!-- Imagen del personaje -->
-      <img
-        [src]="character.image"
-        alt="{{ character.name }} image"
-        class="card-img-top"
-      />
-      <div class="card-body">
-        <!-- Nombre del personaje -->
-        <h5 class="card-title text-center">{{ character.name }}</h5>
-        <!-- Botón para abrir el modal de detalles -->
-        <button
-          class="btn btn-primary btn-sm btn-block"
-          (click)="openModal(character, characterModal)"
-        >
-          Ver detalles
-        </button>
+  <div *ngIf="errorMessage; else showCharacters" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <ng-template #showCharacters>
+    <div class="d-flex flex-wrap justify-content-center">
+      <div
+        *ngFor="let character of characters"
+        class="card m-2"
+        style="width: 15rem"
+      >
+        <!-- Imagen del personaje -->
+        <img
+          [src]="character.image"
+          alt="{{ character.name }} image"
+          class="card-img-top"
+        />
+        <div class="card-body">
+          <!-- Nombre del personaje -->
+          <h5 class="card-title text-center">{{ character.name }}</h5>
+          <!-- Botón para abrir el modal de detalles -->
+          <button
+            class="btn btn-primary btn-sm btn-block"
+            (click)="openModal(character, characterModal)"
+          >
+            Ver detalles
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
 
   <!-- Plantilla para el modal de detalles del personaje -->
   <ng-template #characterModal>
@@ -153,13 +155,6 @@
           </ul>
         </div>
       </div>
-    </div>
-  </ng-template>
-
-  <!-- Plantilla para mostrar un mensaje si no hay personajes -->
-  <ng-template #noCharacters>
-    <div class="alert alert-warning" role="alert">
-      No hay personajes disponibles en este momento.
     </div>
   </ng-template>
 
