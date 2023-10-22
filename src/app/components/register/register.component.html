@@ -28,7 +28,8 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form>
+        <!-- Especifica la URL y el método para enviar el formulario -->
+        <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
           <!-- Nombre -->
           <div class="mb-3">
             <label for="firstName" class="form-label">Nombre</label>
@@ -36,6 +37,7 @@
               type="text"
               class="form-control"
               id="firstName"
+              #firstName
               placeholder="Ingrese su nombre"
             />
           </div>
@@ -47,6 +49,7 @@
               type="text"
               class="form-control"
               id="lastName"
+              #lastName
               placeholder="Ingrese sus apellidos"
             />
           </div>
@@ -58,6 +61,7 @@
               type="email"
               class="form-control"
               id="email"
+              #email
               placeholder="Ingrese su email"
             />
           </div>
@@ -69,6 +73,7 @@
               type="text"
               class="form-control"
               id="username"
+              #username
               placeholder="Elige un nombre de usuario"
             />
           </div>
@@ -80,20 +85,8 @@
               type="password"
               class="form-control"
               id="password"
+              #password
               placeholder="Elige una contraseña"
-            />
-          </div>
-
-          <!-- Repetir contraseña -->
-          <div class="mb-3">
-            <label for="repeatPassword" class="form-label"
-              >Repetir contraseña</label
-            >
-            <input
-              type="password"
-              class="form-control"
-              id="repeatPassword"
-              placeholder="Repite la contraseña"
             />
           </div>
 
@@ -102,7 +95,7 @@
             <label for="birthDate" class="form-label"
               >Fecha de nacimiento</label
             >
-            <input type="date" class="form-control" id="birthDate" />
+            <input type="date" class="form-control" id="birthDate" #birthDate />
           </div>
 
           <!-- Botón para registrarse -->
