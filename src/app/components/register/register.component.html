@@ -16,6 +16,17 @@
   aria-labelledby="registerModalLabel"
   aria-hidden="true"
 >
+  <div *ngIf="show">
+    <ngb-toast
+      *ngFor="let message of toastMessages"
+      [header]="'Notificación'"
+      [autohide]="true"
+      [delay]="5000"
+      (hide)="closeToast()"
+    >
+      {{ message }}
+    </ngb-toast>
+  </div>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -28,30 +39,50 @@
         ></button>
       </div>
       <div class="modal-body">
-        <!-- Especifica la URL y el método para enviar el formulario -->
-        <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
+        <!-- Formulario Reactivo -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           <!-- Nombre -->
           <div class="mb-3">
-            <label for="firstName" class="form-label">Nombre</label>
+            <label for="first_name" class="form-label">Nombre</label>
             <input
               type="text"
               class="form-control"
-              id="firstName"
-              #firstName
+              id="first_name"
+              formControlName="first_name"
               placeholder="Ingrese su nombre"
+              required
             />
+            <div
+              *ngIf="
+                registerForm?.get('first_name')?.hasError('hasNumber') &&
+                registerForm?.get('first_name')?.touched
+              "
+              class="text-danger"
+            >
+              El nombre no debe contener números
+            </div>
           </div>
 
           <!-- Apellidos -->
           <div class="mb-3">
-            <label for="lastName" class="form-label">Apellidos</label>
+            <label for="last_name" class="form-label">Apellidos</label>
             <input
               type="text"
               class="form-control"
-              id="lastName"
-              #lastName
+              id="last_name"
+              formControlName="last_name"
               placeholder="Ingrese sus apellidos"
+              required
             />
+            <div
+              *ngIf="
+                registerForm?.get('last_name')?.hasError('hasNumber') &&
+                registerForm?.get('last_name')?.touched
+              "
+              class="text-danger"
+            >
+              Los apellidos no deben contener números
+            </div>
           </div>
 
           <!-- Email -->
@@ -61,9 +92,25 @@
               type="email"
               class="form-control"
               id="email"
-              #email
-              placeholder="Ingrese su email"
+              formControlName="email"
+              placeholder="Introduce tu email"
+              required
             />
+            <div
+              *ngIf="
+                registerForm.get('email')?.hasError('email') &&
+                registerForm.get('email')?.touched
+              "
+              class="text-danger"
+            >
+              El formato del correo electrónico no es válido.
+            </div>
+            <div
+              *ngIf="registerForm.get('email')?.hasError('emailTaken')"
+              class="text-danger"
+            >
+              El email ya está registrado.
+            </div>
           </div>
 
           <!-- Username -->
@@ -73,29 +120,85 @@
               type="text"
               class="form-control"
               id="username"
-              #username
+              formControlName="username"
               placeholder="Elige un nombre de usuario"
+              required
             />
+            <div
+              *ngIf="registerForm.get('username')?.hasError('usernameTaken')"
+              class="text-danger"
+            >
+              El nombre de usuario ya está en uso.
+            </div>
           </div>
 
-          <!-- Contraseña -->
+          <!-- Password -->
           <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
             <input
               type="password"
               class="form-control"
               id="password"
-              #password
-              placeholder="Elige una contraseña"
+              formControlName="password"
+              placeholder="Introduce tu contraseña"
+              required
             />
+            <div
+              *ngIf="
+                registerForm.get('password')?.hasError('pattern') &&
+                registerForm.get('password')?.touched
+              "
+              class="text-danger"
+            >
+              La contraseña debe tener al entre 8 y 16 caracteres, al menos un
+              dígito, al menos una minúscula y al menos una mayúscula.
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label"
+              >Repite la Contraseña</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Repite tu contraseña"
+              required
+            />
+            <div
+              *ngIf="registerForm.errors?.['passwordsDontMatch'] && registerForm.get('confirmPassword')?.touched"
+              class="text-danger"
+            >
+              Las contraseñas no coinciden.
+            </div>
           </div>
 
           <!-- Fecha de nacimiento -->
           <div class="mb-3">
-            <label for="birthDate" class="form-label"
+            <label for="birth_date" class="form-label"
               >Fecha de nacimiento</label
             >
-            <input type="date" class="form-control" id="birthDate" #birthDate />
+            <input
+              type="date"
+              class="form-control"
+              id="birth_date"
+              formControlName="birth_date"
+              required
+            />
+
+            <!-- Mensaje de error de Bootstrap para fecha futura -->
+            <div
+              *ngIf="
+                registerForm?.get('birth_date')?.hasError('futureDate') &&
+                registerForm?.get('birth_date')?.touched
+              "
+              class="text-danger"
+            >
+              La fecha de nacimiento no puede ser futura.
+            </div>
           </div>
 
           <!-- Botón para registrarse -->

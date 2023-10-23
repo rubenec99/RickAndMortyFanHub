@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http'; // Necesario para reali
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +34,8 @@ import { RegisterComponent } from './components/register/register.component';
     NgbModule,
     NgbDropdownModule,
     FormsModule,
+    ReactiveFormsModule,
+    NgbToastModule,
   ],
   providers: [CharactersService], // Proporciona el servicio CharactersService
   bootstrap: [AppComponent],
