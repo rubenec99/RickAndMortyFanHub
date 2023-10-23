@@ -28,15 +28,17 @@
         ></button>
       </div>
       <div class="modal-body">
-        <form>
-          <!-- Email o usuario -->
+        <form (submit)="onLogin($event)">
+          <!-- Usuario -->
           <div class="mb-3">
-            <label for="email" class="form-label">Email o usuario</label>
+            <label for="email" class="form-label">Nombre de usuario</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
               id="email"
               placeholder="Ingrese su email o usuario"
+              [(ngModel)]="loginData.username"
+              name="username"
             />
           </div>
 
@@ -48,11 +50,14 @@
               class="form-control"
               id="password"
               placeholder="Ingrese su contraseña"
+              [(ngModel)]="loginData.password"
+              name="password"
             />
           </div>
 
           <!-- Checkbox para recordar contraseña -->
           <div class="mb-3 form-check">
+            <!-- Por ahora lo dejaremos aquí, pero este checkbox generalmente se utiliza para mantener al usuario conectado por un tiempo prolongado. Necesitarás lógica adicional para implementar esto correctamente. -->
             <input type="checkbox" class="form-check-input" id="rememberMe" />
             <label class="form-check-label" for="rememberMe"
               >Recordar contraseña</label

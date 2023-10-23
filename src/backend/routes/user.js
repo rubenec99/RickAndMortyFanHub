@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const SECRET_KEY = "secret_key"; // ¿Guardar esta clave en un archivo .env o en una variable de ambiente? Para más seguridad.
 
 // Número de rondas para el algoritmo de salting.
 // Puede ser ajustado, pero 10 es comúnmente usado en la industria por un equilibrio de seguridad y eficiencia.
@@ -87,5 +90,47 @@ router.post("/check-email", (req, res) => {
   });
 });
 
-// Exportamos el router para que sea utilizado en otros archivos.
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  const query = "SELECT * FROM user WHERE username = ?";
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al verificar el nombre de usuario" });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).send({ error: "Credenciales inválidas" });
+    }
+
+    const user = results[0];
+
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        return res
+          .status(500)
+          .send({ error: "Error al comparar la contraseña" });
+      }
+
+      if (!isMatch) {
+        return res.status(401).send({ error: "Credenciales inválidas" });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        SECRET_KEY,
+        {
+          expiresIn: "1h", // Expira en 1 hora
+        }
+      );
+
+      res
+        .status(200)
+        .send({ success: "Inicio de sesión exitoso", token: token });
+    });
+  });
+});
+
 module.exports = router;

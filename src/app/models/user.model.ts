@@ -11,3 +11,14 @@ export interface RegistrationResponse {
   success?: string;
   error?: string;
 }
+
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success?: string;
+  error?: string;
+  token?: string; // Si se implementa tokens JWT u otra forma de autenticación.
+}

@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RegistrationData, RegistrationResponse } from '../models/user.model';
+import {
+  RegistrationData,
+  RegistrationResponse,
+  LoginData,
+  LoginResponse,
+} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +48,17 @@ export class UserService {
    */
   checkEmail(email: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/check-email`, { email: email });
+  }
+
+  loginUser(credentials: LoginData): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem('authToken', token);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
   }
 }
