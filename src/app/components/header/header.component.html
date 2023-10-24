@@ -38,11 +38,17 @@
           <a class="nav-link" routerLink="/locations">Ubicaciones</a>
         </li>
 
-        <li class="nav-item">
+        <!-- Si el usuario NO está logueado -->
+        <li class="nav-item" *ngIf="!isLogged()">
           <app-login></app-login>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="!isLogged()">
           <app-register></app-register>
+        </li>
+
+        <!-- Si el usuario está logueado -->
+        <li class="nav-item" *ngIf="isLogged()">
+          <app-logout></app-logout>
         </li>
       </ul>
     </div>

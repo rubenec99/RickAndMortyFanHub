@@ -16,6 +16,8 @@ import { RegistrationData } from 'src/app/models/user.model';
 import { Subject, Observable, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -29,10 +31,6 @@ export class RegisterComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder
   ) {}
-
-  // Variable para gestionar las toasts
-  toastMessages: string[] = [];
-  show = false;
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -212,49 +210,38 @@ export class RegisterComponent implements OnInit {
    * Este método se invoca cuando el usuario intenta enviar el formulario de registro.
    * Se realiza una serie de validaciones en el formulario y, si es válido, se procede
    * a registrar al usuario a través del servicio 'userService'. Los mensajes resultantes
-   * (ya sean de éxito o error) se muestran al usuario a través de toasts.
+   * (ya sean de éxito o error) se muestran al usuario a través de sweetalert.
    */
   onSubmit() {
-    // Verificar si el formulario de registro es válido.
     if (this.registerForm.valid) {
-      // Obtener los datos del formulario.
       const formData: RegistrationData = this.registerForm.value;
 
-      // Llamar al método 'registerUser' del servicio 'userService' para registrar al usuario.
       this.userService
         .registerUser(formData)
-        // Desubscribirse del observable cuando 'destroy$' emite un valor.
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           (response) => {
-            // Si la respuesta contiene un mensaje de éxito, mostrarlo.
             if (response.success) {
-              this.toastMessages.push(response.success);
-              this.show = true;
-            }
-            // Si la respuesta contiene un mensaje de error, mostrarlo.
-            else if (response.error) {
-              this.toastMessages.push(response.error);
-              this.show = true;
+              Swal.fire('¡Éxito!', response.success, 'success');
+            } else if (response.error) {
+              Swal.fire('Error', response.error, 'error');
             }
           },
-          // En caso de error durante la llamada al servicio, registrar el error en la consola.
           (error) => {
             console.error('Error al registrar usuario:', error);
+            Swal.fire(
+              'Error',
+              'Ocurrió un error inesperado. Intente de nuevo.',
+              'error'
+            );
           }
         );
     } else {
-      // Si el formulario no es válido, mostrar un mensaje genérico al usuario.
-      this.toastMessages.push(
-        'Por favor, complete todos los campos correctamente.'
+      Swal.fire(
+        'Advertencia',
+        'Por favor, complete todos los campos correctamente.',
+        'warning'
       );
-      this.show = true;
     }
-  }
-
-  // Método para cerrar toast
-  closeToast() {
-    this.show = false;
-    this.toastMessages = [];
   }
 }

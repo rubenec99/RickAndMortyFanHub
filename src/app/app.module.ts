@@ -5,7 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { LocationsComponent } from './pages/locations-list/locations-list.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { RegisterComponent } from './components/register/register.component';
     LocationsComponent,
     LoginComponent,
     RegisterComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,7 @@ import { RegisterComponent } from './components/register/register.component';
     NgbDropdownModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbToastModule,
+    SweetAlert2Module,
   ],
   providers: [CharactersService], // Proporciona el servicio CharactersService
   bootstrap: [AppComponent],

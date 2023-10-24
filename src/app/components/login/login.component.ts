@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { LoginData } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -21,17 +22,23 @@ export class LoginComponent {
     this.userService.loginUser(this.loginData).subscribe(
       (response) => {
         if (response.success) {
-          // Almacenar el token
           this.userService.setToken(response.token!);
-          // Navegar a la página de inicio
-          this.router.navigate(['/characters']); // Asume que '/home' es tu ruta de inicio
+          this.router.navigate(['/characters']);
+          // Informamos al usuario que ha iniciado sesión correctamente
+          Swal.fire(
+            '¡Bienvenido!',
+            'Has iniciado sesión correctamente.',
+            'success'
+          );
         } else if (response.error) {
-          // Muestra el error al usuario.
-          console.log('Incorrecto');
+          // Informamos al usuario que las credenciales no son correctas
+          Swal.fire('Error', 'Usuario o contraseña incorrectos.', 'error');
         }
       },
       (error) => {
         console.error('Error al iniciar sesión:', error);
+        /// Informamos al usuario que las credenciales no son correctas
+        Swal.fire('Error', 'Usuario o contraseña incorrectos.', 'error');
       }
     );
   }

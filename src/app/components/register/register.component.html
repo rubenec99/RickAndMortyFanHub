@@ -16,17 +16,6 @@
   aria-labelledby="registerModalLabel"
   aria-hidden="true"
 >
-  <div *ngIf="show">
-    <ngb-toast
-      *ngFor="let message of toastMessages"
-      [header]="'Notificación'"
-      [autohide]="true"
-      [delay]="5000"
-      (hide)="closeToast()"
-    >
-      {{ message }}
-    </ngb-toast>
-  </div>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

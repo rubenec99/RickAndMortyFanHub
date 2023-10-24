@@ -61,4 +61,8 @@ export class UserService {
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
+
+  logoutUser(): void {
+    localStorage.removeItem('authToken');
+  }
 }
