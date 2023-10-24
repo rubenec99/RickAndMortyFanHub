@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
-import { LoginData } from 'src/app/models/user.model';
 import { Router } from '@angular/router';
+
+import { LoginData } from 'src/app/models/user.model';
+import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,13 +11,30 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  // Datos para iniciar sesión
   loginData: LoginData = {
     username: '',
     password: '',
   };
 
+  /**
+   * Elimina el fondo opaco de Bootstrap que puede permanecer
+   * después de cerrar un modal.
+   */
+  removeBootstrapBackdrop() {
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
   constructor(private userService: UserService, private router: Router) {}
 
+  /**
+   * Método que maneja el evento de inicio de sesión.
+   *
+   * @param event - Evento del formulario para prevenir su envío por defecto.
+   */
   onLogin(event: Event) {
     event.preventDefault();
     this.userService.loginUser(this.loginData).subscribe(
@@ -24,21 +42,29 @@ export class LoginComponent {
         if (response.success) {
           this.userService.setToken(response.token!);
           this.router.navigate(['/characters']);
-          // Informamos al usuario que ha iniciado sesión correctamente
-          Swal.fire(
-            '¡Bienvenido!',
-            'Has iniciado sesión correctamente.',
-            'success'
-          );
+          Swal.fire({
+            title: '¡Bienvenido!',
+            text: 'Has iniciado sesión correctamente.',
+            icon: 'success',
+            didClose: () => {
+              this.removeBootstrapBackdrop();
+            },
+          });
         } else if (response.error) {
-          // Informamos al usuario que las credenciales no son correctas
-          Swal.fire('Error', 'Usuario o contraseña incorrectos.', 'error');
+          Swal.fire({
+            title: 'Error',
+            text: 'Usuario o contraseña incorrectos.',
+            icon: 'error',
+          });
         }
       },
       (error) => {
         console.error('Error al iniciar sesión:', error);
-        /// Informamos al usuario que las credenciales no son correctas
-        Swal.fire('Error', 'Usuario o contraseña incorrectos.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Usuario o contraseña incorrectos.',
+          icon: 'error',
+        });
       }
     );
   }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+
+import { UserService } from 'src/app/services/user.service';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -10,6 +12,9 @@ import Swal from 'sweetalert2';
 export class LogoutComponent {
   constructor(private userService: UserService, private router: Router) {}
 
+  /**
+   * Muestra un mensaje de confirmación para verificar si el usuario realmente desea cerrar la sesión.
+   */
   confirmLogout() {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -27,6 +32,9 @@ export class LogoutComponent {
     });
   }
 
+  /**
+   * Cierra la sesión del usuario actual y redirige a la página de personajes.
+   */
   private onLogout() {
     this.userService.logoutUser();
     this.router.navigate(['/characters']);

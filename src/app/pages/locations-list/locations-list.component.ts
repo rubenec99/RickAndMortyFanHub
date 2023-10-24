@@ -56,6 +56,11 @@ export class LocationsComponent implements OnInit, OnDestroy {
       );
   }
 
+  /**
+   * Abre un modal que muestra los detalles de una ubicación y sus residentes.
+   *
+   * @param location - La ubicación de la que se desean ver los detalles.
+   */
   openModal(location: Location): void {
     this.selectedLocation = location;
 

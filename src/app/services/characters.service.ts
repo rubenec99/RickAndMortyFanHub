@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, of } from 'rxjs';
 
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
@@ -83,6 +83,12 @@ export class CharactersService {
     }
   }
 
+  /**
+   * Maneja y procesa errores de tipo HTTP.
+   *
+   * @param error - El error HTTP que se debe manejar.
+   * @returns - Lanza un observable con el mensaje de error.
+   */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Error desconocido!';
     if (error.error instanceof ErrorEvent) {

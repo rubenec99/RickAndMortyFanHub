@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
+import { Component, ViewChild } from '@angular/core';
+
 import { LoginComponent } from '../login/login.component';
 import { RegisterComponent } from '../register/register.component';
 import { LogoutComponent } from '../logout/logout.component';
-import { ViewChild } from '@angular/core';
+
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-header',

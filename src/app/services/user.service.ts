@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+
 import {
   RegistrationData,
   RegistrationResponse,
@@ -50,18 +52,37 @@ export class UserService {
     return this.http.post<any>(`${this.apiUrl}/check-email`, { email: email });
   }
 
+  /**
+   * Realiza la petición de inicio de sesión al servidor.
+   *
+   * @param credentials - Datos de inicio de sesión del usuario que contiene el nombre de usuario y la contraseña.
+   * @returns - Un observable con la respuesta del inicio de sesión.
+   */
   loginUser(credentials: LoginData): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
+  /**
+   * Almacena el token de autenticación en el almacenamiento local.
+   *
+   * @param token - Token de autenticación que se desea almacenar.
+   */
   setToken(token: string): void {
     localStorage.setItem('authToken', token);
   }
 
+  /**
+   * Obtiene el token de autenticación del almacenamiento local.
+   *
+   * @returns - El token de autenticación si existe, de lo contrario retorna null.
+   */
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
 
+  /**
+   * Elimina el token de autenticación del almacenamiento local para cerrar sesión.
+   */
   logoutUser(): void {
     localStorage.removeItem('authToken');
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import {
   FormBuilder,
   FormGroup,
@@ -8,15 +7,15 @@ import {
   ValidationErrors,
   AsyncValidatorFn,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { UserService } from 'src/app/services/user.service';
-
 import { RegistrationData } from 'src/app/models/user.model';
+
+import Swal from 'sweetalert2';
 
 import { Subject, Observable, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
-
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -29,42 +28,30 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   */
   ngOnInit() {
-    // Inicialización del formulario 'registerForm' utilizando FormBuilder.
+    // Inicialización del formulario de registro con validaciones.
     this.registerForm = this.formBuilder.group(
       {
-        // Campo para el primer nombre con validaciones requeridas y sin números.
-        first_name: [
-          '', // Valor inicial vacío.
-          [Validators.required, this.noNumberValidator], // Array de validaciones.
-        ],
+        first_name: ['', [Validators.required, this.noNumberValidator]],
 
-        // Campo para el apellido con validaciones requeridas y sin números.
         last_name: ['', [Validators.required, this.noNumberValidator]],
 
-        // Campo para el correo electrónico con validaciones requeridas, formato de correo
-        // y comprobación de disponibilidad del correo.
         email: [
           '',
-          [Validators.required, Validators.email], // Validaciones básicas.
-          this.emailTakenValidator(this.userService), // Validador asíncrono para verificar si el correo ya existe.
+          [Validators.required, Validators.email],
+          this.emailTakenValidator(this.userService),
         ],
 
-        // Campo para el nombre de usuario con validaciones requeridas
-        // y comprobación de disponibilidad del nombre de usuario.
         username: [
           '',
           Validators.required,
           this.usernameTakenValidator(this.userService),
         ],
 
-        // Campo para la fecha de nacimiento con validaciones requeridas y fecha no futura.
         birth_date: ['', [Validators.required, this.dateNotInFutureValidator]],
 
         // Campo para la contraseña con validaciones requeridas, y un patrón específico.
@@ -84,31 +71,25 @@ export class RegisterComponent implements OnInit {
           ],
         ],
 
-        // Campo para confirmar la contraseña, solo se requiere que esté presente.
         confirmPassword: ['', Validators.required],
       },
       {
-        // Validador adicional al nivel de grupo para asegurarse de que la contraseña
-        // y la confirmación de la contraseña coincidan.
         validator: this.passwordsMatchValidator,
       }
     );
   }
 
   /**
-   * Validador personalizado para verificar que un control no contenga números.
+   * Validador que asegura que el valor ingresado no contenga números.
    *
-   * @param control - El control a ser validado.
-   *
-   * @returns Un objeto con un error si el control contiene números, o 'null' si es válido.
+   * @param control - Control del formulario a validar.
+   * @returns - Objeto de errores o null.
    */
   noNumberValidator(
     control: AbstractControl
   ): { [key: string]: boolean } | null {
-    // Obtener el valor del control.
     const value = control.value;
 
-    // Verificar si el valor contiene algún número.
     if (/\d/.test(value)) {
       return { hasNumber: true };
     }
@@ -117,20 +98,13 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Validador asíncrono que verifica si un nombre de usuario ya ha sido tomado.
+   * Validador asíncrono para verificar si un nombre de usuario ya está tomado.
    *
-   * Este validador utiliza el servicio `UserService` para hacer una verificación asíncrona
-   * y determinar si el nombre de usuario ya está en uso.
-   *
-   * @param userService - Servicio utilizado para comprobar la disponibilidad del nombre de usuario.
-   *
-   * @returns Una función de validador asíncrono que devuelve un observable. El observable emitirá
-   *          un objeto de error si el nombre de usuario ya está tomado, o 'null' si el nombre de usuario
-   *          está disponible o si ocurre algún error durante la verificación.
+   * @param userService - Servicio para verificar el nombre de usuario.
+   * @returns - Función de validación asíncrona.
    */
   usernameTakenValidator(userService: UserService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      // Utilizar el servicio para comprobar si el nombre de usuario ya ha sido tomado.
       return userService.checkUsername(control.value).pipe(
         map((res) => (res.exists ? { usernameTaken: true } : null)),
         catchError(() => of(null))
@@ -139,16 +113,10 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Validador asíncrono que verifica si un correo electrónico ya ha sido registrado.
+   * Validador asíncrono que verifica si el email ya está registrado.
    *
-   * Este validador utiliza el servicio `UserService` para realizar una verificación asíncrona
-   * y determinar si el correo electrónico ya está en uso.
-   *
-   * @param userService - Servicio utilizado para verificar la disponibilidad del correo electrónico.
-   *
-   * @returns Una función de validador asíncrono que devuelve un observable. El observable emitirá
-   *          un objeto de error si el correo electrónico ya está registrado, o 'null' si el correo
-   *          electrónico está disponible o si ocurre algún error durante la verificación.
+   * @param userService - Servicio para verificar la existencia del email.
+   * @returns - Función de validación asíncrona.
    */
   emailTakenValidator(userService: UserService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -162,37 +130,26 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Validador que verifica si dos campos de contraseña en un formulario coinciden.
+   * Validador que verifica si la contraseña y su confirmación son iguales.
    *
-   * Este validador compara los valores de los campos 'password' y 'confirmPassword' dentro
-   * de un formulario para asegurarse de que ambos valores sean idénticos.
-   *
-   * @param control - El grupo de formulario que contiene ambos campos de contraseña.
-   *
-   * @returns Un objeto de error si las contraseñas no coinciden o 'null' si coinciden.
+   * @param control - Grupo de controles del formulario.
+   * @returns - Objeto de errores si las contraseñas no coinciden, de lo contrario, null.
    */
   passwordsMatchValidator(control: FormGroup): ValidationErrors | null {
     const password = control.get('password');
-
     const confirmPassword = control.get('confirmPassword');
 
     if (password?.value !== confirmPassword?.value) {
       return { passwordsDontMatch: true };
     }
-
     return null;
   }
 
   /**
-   * Validador que verifica si la fecha proporcionada no está en el futuro.
+   * Validador que asegura que la fecha seleccionada no esté en el futuro.
    *
-   * Este validador se asegura de que la fecha ingresada por el usuario no sea
-   * posterior a la fecha actual. Es útil, por ejemplo, para campos donde se espera
-   * que el usuario ingrese una fecha de nacimiento o una fecha de evento que ya haya pasado.
-   *
-   * @param control - El control del formulario que contiene la fecha a validar.
-   *
-   * @returns Un objeto de error si la fecha es futura o 'null' si es una fecha pasada o presente.
+   * @param control - Control del formulario con la fecha a validar.
+   * @returns - Objeto de errores si la fecha está en el futuro, de lo contrario, null.
    */
   dateNotInFutureValidator(control: AbstractControl): ValidationErrors | null {
     const selectedDate = new Date(control.value);
@@ -205,12 +162,19 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Método que maneja el envío del formulario de registro.
-   *
-   * Este método se invoca cuando el usuario intenta enviar el formulario de registro.
-   * Se realiza una serie de validaciones en el formulario y, si es válido, se procede
-   * a registrar al usuario a través del servicio 'userService'. Los mensajes resultantes
-   * (ya sean de éxito o error) se muestran al usuario a través de sweetalert.
+   * Método para remover el backdrop de Bootstrap. Esto se usa normalmente
+   * para limpiar el overlay oscuro detrás de modales al cerrar un modal
+   * de Bootstrap.
+   */
+  removeBootstrapBackdrop() {
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove();
+    }
+  }
+
+  /**
+   * Envía la solicitud de registro si el formulario es válido.
    */
   onSubmit() {
     if (this.registerForm.valid) {
@@ -222,18 +186,34 @@ export class RegisterComponent implements OnInit {
         .subscribe(
           (response) => {
             if (response.success) {
-              Swal.fire('¡Éxito!', response.success, 'success');
+              Swal.fire({
+                title: '¡Éxito!',
+                text: 'Registro exitoso. Iniciando sesión...',
+                icon: 'success',
+                didClose: () => {
+                  this.removeBootstrapBackdrop();
+                  // Realiza el login automático.
+                  this.autoLogin(formData);
+                },
+              });
             } else if (response.error) {
-              Swal.fire('Error', response.error, 'error');
+              Swal.fire({
+                title: 'Error',
+                text: response.error,
+                icon: 'error',
+                didClose: () => {
+                  this.removeBootstrapBackdrop();
+                },
+              });
             }
           },
           (error) => {
             console.error('Error al registrar usuario:', error);
-            Swal.fire(
-              'Error',
-              'Ocurrió un error inesperado. Intente de nuevo.',
-              'error'
-            );
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error inesperado. Intente de nuevo.',
+              icon: 'error',
+            });
           }
         );
     } else {
@@ -243,5 +223,36 @@ export class RegisterComponent implements OnInit {
         'warning'
       );
     }
+  }
+
+  /**
+   * Función que realiza el inicio de sesión automático después del registro.
+   *
+   * @param formData - Datos de registro del usuario.
+   */
+  autoLogin(formData: RegistrationData) {
+    const loginData = {
+      username: formData.username,
+      password: formData.password,
+    };
+
+    this.userService.loginUser(loginData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.userService.setToken(response.token!);
+          this.router.navigate(['/characters']);
+        } else {
+          Swal.fire(
+            'Error',
+            'Error al iniciar sesión automáticamente',
+            'error'
+          );
+        }
+      },
+      (error) => {
+        console.error('Error al iniciar sesión automáticamente:', error);
+        Swal.fire('Error', 'Error al iniciar sesión automáticamente', 'error');
+      }
+    );
   }
 }

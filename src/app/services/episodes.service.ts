@@ -50,6 +50,12 @@ export class EpisodesService {
     }
   }
 
+  /**
+   * Maneja y procesa errores de tipo HTTP.
+   *
+   * @param error - El error HTTP que se debe manejar.
+   * @returns - Lanza un observable con el mensaje de error.
+   */
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Error desconocido!';
     if (error.error instanceof ErrorEvent) {
