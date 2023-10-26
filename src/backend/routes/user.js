@@ -143,13 +143,28 @@ router.post("/login", (req, res) => {
  * Endpoint para obtener todos los usuarios.
  */
 router.get("/all-users", (req, res) => {
-  const query =
-    "SELECT id, first_name, last_name, email, username, user_type, birth_date FROM user";
+  const limit = parseInt(req.query.limit) || 15;
+  const offset = (parseInt(req.query.page) || 0) * limit;
+
+  const query = `SELECT id, first_name, last_name, email, username, user_type, birth_date FROM user LIMIT ${limit} OFFSET ${offset}`;
+
   db.query(query, (err, results) => {
     if (err) {
       return res.status(500).send({ error: "Error al obtener los usuarios" });
     }
-    res.status(200).send(results);
+
+    // Obtener el número total de usuarios
+    const countQuery = "SELECT COUNT(*) as count FROM user";
+    db.query(countQuery, (err, countResult) => {
+      if (err) {
+        return res
+          .status(500)
+          .send({ error: "Error al obtener el número total de usuarios" });
+      }
+
+      const totalUsers = countResult[0].count;
+      res.status(200).send({ data: results, total: totalUsers });
+    });
   });
 });
 

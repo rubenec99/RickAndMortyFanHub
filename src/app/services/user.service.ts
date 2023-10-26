@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 
 import { User } from 'src/backend/models/user.model';
 
@@ -94,8 +95,17 @@ export class UserService {
    *
    * @returns - Un observable con la lista de usuarios.
    */
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/all-users`);
+  getAllUsers(
+    page: number = 0,
+    limit: number = 15
+  ): Observable<{ data: User[]; total: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    return this.http.get<{ data: User[]; total: number }>(
+      `${this.apiUrl}/all-users`,
+      { params }
+    );
   }
 
   /**

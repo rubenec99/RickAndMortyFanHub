@@ -14,7 +14,12 @@ import Swal from 'sweetalert2';
 export class AdminPanelComponent {
   users: User[] = [];
   currentSorting: string = ''; // Esta propiedad determinará qué columna está siendo usada para ordenar y en qué dirección.
+  isAscending: boolean = true;
   originalUserTypes: Map<number, string> = new Map();
+
+  currentPage: number = 0;
+  pageSize: number = 15;
+  totalUsers: number = 0;
 
   constructor(private userService: UserService) {}
 
@@ -23,13 +28,14 @@ export class AdminPanelComponent {
    */
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe(
-      (data) => {
+      (response) => {
         // Cuando se recibe la lista de usuarios con éxito, se asigna a la propiedad "users".
-        this.users = data;
+        this.users = response.data;
+        this.totalUsers = response.total; // También almacenamos el total de usuarios.
 
         // Se itera sobre los usuarios para almacenar sus tipos de usuario originales.
         // Esto se hace para poder verificar si ha habido cambios en el tipo de usuario más adelante.
-        data.forEach((user) => {
+        this.users.forEach((user) => {
           this.originalUserTypes.set(user.id, user.user_type);
         });
       },
@@ -43,9 +49,18 @@ export class AdminPanelComponent {
    * Método para cargar la lista de usuarios desde el servicio.
    */
   loadUsers(): void {
-    this.userService.getAllUsers().subscribe(
-      (data) => {
-        this.users = data;
+    this.userService.getAllUsers(this.currentPage, this.pageSize).subscribe(
+      (response) => {
+        this.users = response.data;
+        this.totalUsers = response.total;
+
+        // Limpiar el originalUserTypes
+        this.originalUserTypes.clear();
+
+        // Actualizar el originalUserTypes con los nuevos usuarios
+        this.users.forEach((user) => {
+          this.originalUserTypes.set(user.id, user.user_type);
+        });
       },
       (error) => {
         console.error('Error obteniendo usuarios:', error);
@@ -53,6 +68,20 @@ export class AdminPanelComponent {
     );
   }
 
+  get totalPages(): number {
+    return Math.ceil(this.totalUsers / this.pageSize);
+  }
+
+  changePage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadUsers(); // cargar la página seleccionada
+    }
+  }
+
+  get hasNextPage(): boolean {
+    return this.currentPage < this.totalPages - 1;
+  }
   /**
    * Método para actualizar el tipo de usuario y gestionar la respuesta.
    *
@@ -93,6 +122,11 @@ export class AdminPanelComponent {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        Swal.fire(
+          'Actualizado',
+          'Los permisos han sido actualizados correctamente.',
+          'success'
+        );
         this.updateUserType(userId, newUserType);
       }
     });
@@ -108,7 +142,7 @@ export class AdminPanelComponent {
       (response) => {
         Swal.fire(
           'Eliminado',
-          'El usuario ha sido eliminado exitosamente.',
+          'El usuario ha sido eliminado correctamente.',
           'success'
         );
 
@@ -220,32 +254,46 @@ export class AdminPanelComponent {
    */
   toggleSort(sorting: string): void {
     if (this.currentSorting === sorting) {
-      // Si la columna de ordenación actual es la misma que se hace clic de nuevo, se invierte la dirección.
+      this.isAscending = !this.isAscending;
       this.users.reverse();
     } else {
-      // Si no, se define la dirección de ordenación y se ordena la lista por la columna seleccionada.
       this.currentSorting = sorting;
+      this.isAscending = true; // Por defecto, establecer el orden ascendente al cambiar de columna
+
       if (sorting === 'id') {
-        // Ordenar por ID de manera ascendente.
-        this.users.sort((a, b) => a.id - b.id);
+        this.users.sort((a, b) =>
+          this.isAscending ? a.id - b.id : b.id - a.id
+        );
       } else if (sorting === 'first_name') {
-        // Ordenar alfabéticamente por el nombre.
-        this.users.sort((a, b) => a.first_name.localeCompare(b.first_name));
+        this.users.sort((a, b) =>
+          this.isAscending
+            ? a.first_name.localeCompare(b.first_name)
+            : b.first_name.localeCompare(a.first_name)
+        );
       } else if (sorting === 'last_name') {
-        // Ordenar alfabéticamente por el apellido.
-        this.users.sort((a, b) => a.last_name.localeCompare(b.last_name));
+        this.users.sort((a, b) =>
+          this.isAscending
+            ? a.last_name.localeCompare(b.last_name)
+            : b.last_name.localeCompare(a.last_name)
+        );
       } else if (sorting === 'email') {
-        // Ordenar alfabéticamente por el correo electrónico.
-        this.users.sort((a, b) => a.email.localeCompare(b.email));
+        this.users.sort((a, b) =>
+          this.isAscending
+            ? a.email.localeCompare(b.email)
+            : b.email.localeCompare(a.email)
+        );
       } else if (sorting === 'username') {
-        // Ordenar alfabéticamente por el nombre de usuario.
-        this.users.sort((a, b) => a.username.localeCompare(b.username));
-      } else if (sorting === 'user_type') {
-        // Ordenar alfabéticamente por el tipo de usuario.
-        this.users.sort((a, b) => a.user_type.localeCompare(b.user_type));
+        this.users.sort((a, b) =>
+          this.isAscending
+            ? a.username.localeCompare(b.username)
+            : b.username.localeCompare(a.username)
+        );
       } else if (sorting === 'birth_date') {
-        // Ordenar cronológicamente por la fecha de nacimiento.
-        this.users.sort((a, b) => a.birth_date.localeCompare(b.birth_date));
+        this.users.sort((a, b) =>
+          this.isAscending
+            ? a.birth_date.localeCompare(b.birth_date)
+            : b.birth_date.localeCompare(a.birth_date)
+        );
       }
     }
   }
