@@ -9,8 +9,9 @@
       type="text"
       [(ngModel)]="searchTerm"
       placeholder="Buscar personaje..."
-      (keypress)="searchCharacters()"
+      (keydown)="onSearchKeyDown($event)"
     />
+
     <!-- Botón para realizar la búsqueda -->
     <button (click)="searchCharacters()">Buscar</button>
   </div>

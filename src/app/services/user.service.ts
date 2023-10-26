@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { User } from 'src/backend/models/user.model';
+
 import { Observable } from 'rxjs';
 
 import {
@@ -85,5 +87,54 @@ export class UserService {
    */
   logoutUser(): void {
     localStorage.removeItem('authToken');
+  }
+
+  /**
+   * Obtiene todos los usuarios del servidor.
+   *
+   * @returns - Un observable con la lista de usuarios.
+   */
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/all-users`);
+  }
+
+  /**
+   * Cambia el tipo de usuario (normal o administrador) para un usuario específico.
+   *
+   * @param userId El ID del usuario cuyo tipo se va a cambiar.
+   * @param newUserType El nuevo tipo de usuario ('normal' o 'admin').
+   * @returns Un Observable que emite la respuesta del servidor.
+   */
+  changeUserType(userId: number, newUserType: string): Observable<any> {
+    const url = 'http://localhost:3000/user/update-type';
+
+    const body = {
+      userId: userId,
+      newUserType: newUserType,
+    };
+
+    return this.http.put(url, body);
+  }
+
+  /**
+   * Elimina un usuario específico por su ID.
+   *
+   * @param userId El ID del usuario que se eliminará.
+   * @returns Un Observable que emite la respuesta del servidor.
+   */
+  deleteUser(userId: number): Observable<any> {
+    const url = `${this.apiUrl}/delete-user/${userId}`;
+
+    return this.http.delete(url);
+  }
+
+  /**
+   * Elimina múltiples usuarios basado en sus IDs.
+   *
+   * @param userIds Array de IDs de usuarios a eliminar.
+   */
+  deleteMultipleUsers(userIds: number[]): Observable<any> {
+    const endpoint = `${this.apiUrl}/delete-multiple`;
+    return this.http.post(endpoint, { userIds });
   }
 }

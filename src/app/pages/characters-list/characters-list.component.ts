@@ -173,6 +173,18 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Maneja el evento de presionar una tecla en el cuadro de búsqueda.
+   *
+   * @param event El evento de teclado que se ha desencadenado.
+   * @returns void
+   */
+  onSearchKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.searchCharacters();
+    }
+  }
+
+  /**
    * Método para manejar los cambios de filtro
    */
   onFilterChange(): void {

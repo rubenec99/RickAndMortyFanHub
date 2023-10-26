@@ -139,4 +139,67 @@ router.post("/login", (req, res) => {
   });
 });
 
+/**
+ * Endpoint para obtener todos los usuarios.
+ */
+router.get("/all-users", (req, res) => {
+  const query =
+    "SELECT id, first_name, last_name, email, username, user_type, birth_date FROM user";
+  db.query(query, (err, results) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al obtener los usuarios" });
+    }
+    res.status(200).send(results);
+  });
+});
+
+/**
+ * Endpoint para actualizar el tipo de usuario.
+ */
+router.put("/update-type", (req, res) => {
+  const { userId, newUserType } = req.body;
+
+  const query = "UPDATE user SET user_type = ? WHERE id = ?";
+  db.query(query, [newUserType, userId], (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al actualizar el tipo de usuario" });
+    }
+    res
+      .status(200)
+      .send({ success: "Tipo de usuario actualizado exitosamente" });
+  });
+});
+
+/**
+ * Endpoint para eliminar a un usuario.
+ */
+router.delete("/delete-user/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const query = "DELETE FROM user WHERE id = ?";
+  db.query(query, [userId], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al eliminar el usuario" });
+    }
+    res.status(200).send({ success: "Usuario eliminado exitosamente" });
+  });
+});
+
+/**
+ * Endpoint para eliminar a múltiples usuarios
+ */
+router.post("/delete-multiple", (req, res) => {
+  const userIds = req.body.userIds;
+
+  const query = "DELETE FROM user WHERE id IN (?)";
+  db.query(query, [userIds], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al eliminar usuarios" });
+    }
+    res.status(200).send({ success: "Usuarios eliminados exitosamente" });
+  });
+});
+
 module.exports = router;

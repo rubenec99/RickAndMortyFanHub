@@ -6,6 +6,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { DatePipe } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { LocationsComponent } from './pages/locations-list/locations-list.compon
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { LogoutComponent } from './components/logout/logout.component';
     LoginComponent,
     RegisterComponent,
     LogoutComponent,
+    AdminPanelComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,7 @@ import { LogoutComponent } from './components/logout/logout.component';
     ReactiveFormsModule,
     SweetAlert2Module,
   ],
-  providers: [CharactersService], // Proporciona el servicio CharactersService
+  providers: [CharactersService, DatePipe], // Proporciona el servicio CharactersService
   bootstrap: [AppComponent],
 })
 export class AppModule {}
