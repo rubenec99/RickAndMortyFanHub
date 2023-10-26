@@ -1,31 +1,56 @@
 # RickAndMortyFanHub
 
-Aplicación web desarrollada con Angular, Node.js y MySQL que ofrece una plataforma para que los usuarios puedan interactuar con la API de Rick and Morty. 
+Aplicación web desarrollada con Angular, Node.js, Express.js y MySQL que ofrece una plataforma para que los usuarios puedan interactuar con la API de Rick and Morty. 
 Los usuarios pueden explorar información sobre personajes, episodios y más de la serie de televisión "Rick and Morty". También pueden realizar valoraciones, 
 dejar comentarios y marcar episodios como vistos.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
+Este proyecto se ha creado con [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
 
-## Development server
+## Funcionalidades principales 🌱
+* Explorar personajes, episodios y locaciones.
+* Valorar y comentar episodios.
+* Marcar episodios como vistos.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Comenzando 🚀
 
-## Code scaffolding
+Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  ### Pre-requisitos 📋
 
-## Build
+  Qué cosas necesitas para instalar el software y cómo instalarlas:
+    * Node.js
+    * Angular CLI
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+  ### Instalación 🔧
+  
+    Pasos para obtener un entorno de desarrollo en marcha:
+      1. Clona el repositorio:
+        git clone https://github.com/rubenec99/RickAndMortyFanHub.git
+      2. Accede a la carpeta del proyecto:
+        cd RickAndMortyFanHub
+      3. Instala las dependencias:
+        npm install
+      4. Inicia el backend:
+        node server.js
+      5. En una nueva terminal, arrancar el servidor de desarrollo de Angular:
+        ng serve
 
-## Running unit tests
+## Configuración de la base de datos 🖇️
+  Para configurar la base de datos:
+    1. Asegúrate de tener MySQL instalado.
+    2. Crea una base de datos llamada `rickandmortyfanhubdb`.
+    3. Importa el archivo `db_init.sql` para inicializar las tablas.
+    4. Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
+    
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Construido con 🛠️
+  * [Angular CLI](https://github.com/angular/angular-cli): Framework para crear aplicaciones SPA.
+  * [Node.js](https://github.com/nodejs): Entorno de ejecución para JavaScript.
+  * [Express.js](https://expressjs.com/): Framework para Node.js, facilita el desarrollo de aplicaciones web y API.
+  * [Rick and Morty API](https://rickandmortyapi.com/): API para obtener datos de la serie.
 
-## Running end-to-end tests
+## Versionado 📌
+* Se utiliza git para el control de versiones del proyecto.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Autor ✒️
+* Rubén Escudero - rubenec99
