@@ -72,7 +72,18 @@
             "
           ></i>
         </th>
-        <th>Privilegios</th>
+        <th (click)="toggleSort('user_type')">
+          Privilegios
+          <i
+            [ngClass]="
+              currentSorting === 'user_type'
+                ? isAscending
+                  ? 'fa-solid fa-sort-up'
+                  : 'fa-solid fa-sort-down'
+                : 'fa-solid fa-sort'
+            "
+          ></i>
+        </th>
         <th (click)="toggleSort('birth_date')">
           Fecha de nacimiento
           <i

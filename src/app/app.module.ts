@@ -19,6 +19,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
+import { HomeComponent } from './pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
     RegisterComponent,
     LogoutComponent,
     AdminPanelComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

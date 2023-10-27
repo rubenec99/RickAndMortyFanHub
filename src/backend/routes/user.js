@@ -143,18 +143,34 @@ router.post("/login", (req, res) => {
  * Endpoint para obtener todos los usuarios.
  */
 router.get("/all-users", (req, res) => {
+  // Obtiene el límite de usuarios por página desde los parámetros de consulta o usa 15 como valor por defecto.
   const limit = parseInt(req.query.limit) || 15;
+
+  // Calcula el offset (desplazamiento) basado en la página solicitada.
+  // Si no se especifica una página, se usa 0 por defecto.
   const offset = (parseInt(req.query.page) || 0) * limit;
 
-  const query = `SELECT id, first_name, last_name, email, username, user_type, birth_date FROM user LIMIT ${limit} OFFSET ${offset}`;
+  // Obtiene el campo por el cual se ordenarán los usuarios o usa "id" como valor por defecto.
+  const sortBy = req.query.sortBy || "id";
+
+  // Obtiene la dirección de ordenamiento (ASC o DESC) o usa "ASC" como valor por defecto.
+  const direction = req.query.direction || "ASC";
+
+  const query = `
+    SELECT id, first_name, last_name, email, username, user_type, birth_date 
+    FROM user 
+    ORDER BY ${sortBy} ${direction}
+    LIMIT ${limit} OFFSET ${offset}
+  `;
 
   db.query(query, (err, results) => {
     if (err) {
       return res.status(500).send({ error: "Error al obtener los usuarios" });
     }
 
-    // Obtener el número total de usuarios
     const countQuery = "SELECT COUNT(*) as count FROM user";
+
+    // Ejecuta la consulta SQL para obtener el número total de usuarios.
     db.query(countQuery, (err, countResult) => {
       if (err) {
         return res
@@ -162,7 +178,10 @@ router.get("/all-users", (req, res) => {
           .send({ error: "Error al obtener el número total de usuarios" });
       }
 
+      // Extrae el número total de usuarios de la respuesta de la base de datos.
       const totalUsers = countResult[0].count;
+
+      // Envía una respuesta con estado 200, incluyendo la lista de usuarios y el número total de usuarios.
       res.status(200).send({ data: results, total: totalUsers });
     });
   });

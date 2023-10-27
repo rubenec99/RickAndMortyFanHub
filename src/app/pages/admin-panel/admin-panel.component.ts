@@ -12,13 +12,24 @@ import Swal from 'sweetalert2';
   styleUrls: ['./admin-panel.component.css'],
 })
 export class AdminPanelComponent {
-  users: User[] = [];
-  currentSorting: string = ''; // Esta propiedad determinará qué columna está siendo usada para ordenar y en qué dirección.
+  users: User[] = []; // Lista para almacenar los usuarios que se obtienen.
+  currentSorting: string = ''; // Propiedad que indica la columna actual utilizada para el ordenamiento.
+
+  // Indica si el ordenamiento es en dirección ascendente o no.
+  // Verdadero indica orden ascendente, falso indica orden descendente.
   isAscending: boolean = true;
+
+  // Mapa para almacenar tipos originales de usuario.
+  // La clave es un número (posiblemente el ID del tipo de usuario) y el valor es el nombre del tipo.
   originalUserTypes: Map<number, string> = new Map();
 
+  // Página actual que se está visualizando o solicitando.
   currentPage: number = 0;
+
+  // Cantidad de usuarios que se mostrarán por página.
   pageSize: number = 15;
+
+  // Número total de usuarios en el conjunto de datos o en la base de datos.
   totalUsers: number = 0;
 
   constructor(private userService: UserService) {}
@@ -48,8 +59,13 @@ export class AdminPanelComponent {
   /**
    * Método para cargar la lista de usuarios desde el servicio.
    */
-  loadUsers(): void {
-    this.userService.getAllUsers(this.currentPage, this.pageSize).subscribe(
+  loadUsers(
+    page: number = this.currentPage,
+    limit: number = this.pageSize,
+    sortBy: string = this.currentSorting,
+    direction: string = this.isAscending ? 'ASC' : 'DESC'
+  ): void {
+    this.userService.getAllUsers(page, limit, sortBy, direction).subscribe(
       (response) => {
         this.users = response.data;
         this.totalUsers = response.total;
@@ -247,54 +263,27 @@ export class AdminPanelComponent {
     return user.user_type !== original;
   }
 
-  /**
-   * Método para cambiar la dirección de ordenación de la lista de usuarios.
-   *
-   * @param sorting - El nombre de la columna por la cual se desea ordenar.
-   */
   toggleSort(sorting: string): void {
     if (this.currentSorting === sorting) {
       this.isAscending = !this.isAscending;
-      this.users.reverse();
     } else {
       this.currentSorting = sorting;
       this.isAscending = true; // Por defecto, establecer el orden ascendente al cambiar de columna
+    }
 
-      if (sorting === 'id') {
-        this.users.sort((a, b) =>
-          this.isAscending ? a.id - b.id : b.id - a.id
-        );
-      } else if (sorting === 'first_name') {
-        this.users.sort((a, b) =>
-          this.isAscending
-            ? a.first_name.localeCompare(b.first_name)
-            : b.first_name.localeCompare(a.first_name)
-        );
-      } else if (sorting === 'last_name') {
-        this.users.sort((a, b) =>
-          this.isAscending
-            ? a.last_name.localeCompare(b.last_name)
-            : b.last_name.localeCompare(a.last_name)
-        );
-      } else if (sorting === 'email') {
-        this.users.sort((a, b) =>
-          this.isAscending
-            ? a.email.localeCompare(b.email)
-            : b.email.localeCompare(a.email)
-        );
-      } else if (sorting === 'username') {
-        this.users.sort((a, b) =>
-          this.isAscending
-            ? a.username.localeCompare(b.username)
-            : b.username.localeCompare(a.username)
-        );
-      } else if (sorting === 'birth_date') {
-        this.users.sort((a, b) =>
-          this.isAscending
-            ? a.birth_date.localeCompare(b.birth_date)
-            : b.birth_date.localeCompare(a.birth_date)
-        );
-      }
+    if (sorting === 'user_type') {
+      this.users.sort((a, b) =>
+        this.isAscending
+          ? a.user_type.localeCompare(b.user_type)
+          : b.user_type.localeCompare(a.user_type)
+      );
+    } else {
+      this.loadUsers(
+        this.currentPage,
+        this.pageSize,
+        this.currentSorting,
+        this.isAscending ? 'ASC' : 'DESC'
+      );
     }
   }
 }

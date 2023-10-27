@@ -91,17 +91,29 @@ export class UserService {
   }
 
   /**
-   * Obtiene todos los usuarios del servidor.
+   * Obtiene una lista de usuarios con base en ciertos parámetros de paginación y ordenamiento.
    *
-   * @returns - Un observable con la lista de usuarios.
+   * @param {number} page - Número de página que se quiere consultar. Por defecto es 0.
+   * @param {number} limit - Número máximo de usuarios a retornar por página. Por defecto es 15.
+   * @param {string} sortBy - Campo por el cual se quiere ordenar la lista de usuarios. Por defecto es 'id'.
+   * @param {string} direction - Dirección del ordenamiento: 'ASC' para ascendente y 'DESC' para descendente. Por defecto es 'ASC'.
+   *
+   * @returns {Observable<{ data: User[]; total: number }>} Un Observable que contiene un objeto con:
+   *    - data: Un arreglo de usuarios.
+   *    - total: El número total de usuarios que cumplen con el criterio de búsqueda.
    */
   getAllUsers(
     page: number = 0,
-    limit: number = 15
+    limit: number = 15,
+    sortBy: string = 'id',
+    direction: string = 'ASC'
   ): Observable<{ data: User[]; total: number }> {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString());
+      .set('limit', limit.toString())
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+
     return this.http.get<{ data: User[]; total: number }>(
       `${this.apiUrl}/all-users`,
       { params }
