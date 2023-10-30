@@ -6,6 +6,7 @@ import { CharactersComponent } from './pages/characters-list/characters-list.com
 import { EpisodesComponent } from './pages/episodes-list/episodes-list.component';
 import { LocationsComponent } from './pages/locations-list/locations-list.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,7 +14,11 @@ const routes: Routes = [
   { path: 'characters', component: CharactersComponent },
   { path: 'episodes', component: EpisodesComponent },
   { path: 'locations', component: LocationsComponent },
-  { path: 'admin', component: AdminPanelComponent },
+  {
+    path: 'admin',
+    component: AdminPanelComponent,
+    canActivate: [AdminGuard],
+  },
 ];
 
 @NgModule({

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 import { User } from 'src/backend/models/user.model';
 
@@ -158,5 +159,32 @@ export class UserService {
   deleteMultipleUsers(userIds: number[]): Observable<any> {
     const endpoint = `${this.apiUrl}/delete-multiple`;
     return this.http.post(endpoint, { userIds });
+  }
+
+  /**
+   * Obtiene el tipo de usuario.
+   *
+   * Este método primero recupera el token de autenticación del usuario. Si no hay token,
+   * se lanza un error. Si hay token, se incluye en los encabezados de la petición HTTP
+   * y se realiza una petición GET al endpoint `/user-type` para obtener el tipo de usuario.
+   *
+   * @returns {Observable<{ user_type: string }>}
+   *
+   * @throws {Error}
+   *
+   */
+  getUserType(): Observable<{ user_type: string }> {
+    const token = this.getToken();
+
+    if (!token) {
+      // Aquí puedes manejar el caso en el que no haya token. Por ejemplo, lanzar un error.
+      throw new Error('No token found');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', token);
+
+    return this.http.get<{ user_type: string }>(`${this.apiUrl}/user-type`, {
+      headers,
+    });
   }
 }

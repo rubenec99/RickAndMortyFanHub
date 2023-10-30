@@ -125,7 +125,11 @@ router.post("/login", (req, res) => {
       }
 
       const token = jwt.sign(
-        { id: user.id, username: user.username },
+        {
+          id: user.id,
+          username: user.username,
+          user_type: user.user_type,
+        },
         SECRET_KEY,
         {
           expiresIn: "1h", // Token expira en 1 hora
@@ -233,6 +237,25 @@ router.post("/delete-multiple", (req, res) => {
       return res.status(500).send({ error: "Error al eliminar usuarios" });
     }
     res.status(200).send({ success: "Usuarios eliminados exitosamente" });
+  });
+});
+
+/**
+ * Obtener tipo de usuario y decodificar token
+ */
+router.get("/user-type", (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).send({ error: "Token no proporcionado" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al decodificar el token" });
+    }
+
+    return res.status(200).send({ user_type: decoded.user_type });
   });
 });
 
