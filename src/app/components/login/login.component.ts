@@ -41,6 +41,9 @@ export class LoginComponent {
       (response) => {
         if (response.success) {
           this.userService.setToken(response.token!);
+          const expiryTime = new Date().getTime() + 3600 * 1000; // Tiempo actual + 1 hora (en milisegundos)
+          localStorage.setItem('tokenExpiry', expiryTime.toString());
+
           this.router.navigate(['/characters']);
           Swal.fire({
             title: '¡Bienvenido!',

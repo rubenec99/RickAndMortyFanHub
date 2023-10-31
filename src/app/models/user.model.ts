@@ -20,5 +20,6 @@ export interface LoginData {
 export interface LoginResponse {
   success?: string;
   error?: string;
-  token?: string; // Si se implementa tokens JWT u otra forma de autenticación.
+  token?: string;
+  expiresAt: number;
 }

@@ -174,6 +174,58 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
+   * Intenta iniciar sesión automáticamente usando los datos proporcionados de un formulario de registro.
+   * Esta función se usa después de que un usuario se haya registrado con éxito, para iniciar sesión automáticamente.
+   *
+   * @param formData - Los datos del formulario de registro, que contienen el nombre de usuario y la contraseña.
+   */
+  autoLogin(formData: RegistrationData) {
+    // Preparar los datos de inicio de sesión basados en los datos del formulario de registro.
+    const LoginData = {
+      username: formData.username,
+      password: formData.password,
+    };
+
+    // Usar el servicio 'loginUser' para iniciar sesión.
+    this.userService.loginUser(LoginData).subscribe(
+      (response) => {
+        // Comprobar si la respuesta tiene una propiedad 'success' y si es verdadera.
+        if (response && response.success) {
+          // Verificar si se recibió un token en la respuesta.
+          if (response.token) {
+            // Almacenar el token y su tiempo de expiración en el localStorage.
+            localStorage.setItem('authToken', response.token);
+            localStorage.setItem('tokenExpiry', response.expiresAt.toString());
+
+            console.log(
+              'Token after setting: ',
+              localStorage.getItem('authToken')
+            );
+
+            // Navegar al componente de inicio.
+            this.router.navigate(['/home']);
+          } else {
+            // Mostrar un mensaje de error si no se recibió el token.
+            Swal.fire('Error', 'No se recibió el token del servidor', 'error');
+          }
+        } else {
+          // Mostrar un mensaje de error si la propiedad 'success' no es verdadera.
+          Swal.fire(
+            'Error',
+            'Error al iniciar sesión automáticamente',
+            'error'
+          );
+        }
+      },
+      (error) => {
+        // Manejar cualquier error que pueda surgir durante la solicitud.
+        console.error('Error al iniciar sesión automáticamente:', error);
+        Swal.fire('Error', 'Error al iniciar sesión automáticamente', 'error');
+      }
+    );
+  }
+
+  /**
    * Envía la solicitud de registro si el formulario es válido.
    */
   onSubmit() {
@@ -223,36 +275,5 @@ export class RegisterComponent implements OnInit {
         'warning'
       );
     }
-  }
-
-  /**
-   * Función que realiza el inicio de sesión automático después del registro.
-   *
-   * @param formData - Datos de registro del usuario.
-   */
-  autoLogin(formData: RegistrationData) {
-    const loginData = {
-      username: formData.username,
-      password: formData.password,
-    };
-
-    this.userService.loginUser(loginData).subscribe(
-      (response) => {
-        if (response.success) {
-          this.userService.setToken(response.token!);
-          this.router.navigate(['/characters']);
-        } else {
-          Swal.fire(
-            'Error',
-            'Error al iniciar sesión automáticamente',
-            'error'
-          );
-        }
-      },
-      (error) => {
-        console.error('Error al iniciar sesión automáticamente:', error);
-        Swal.fire('Error', 'Error al iniciar sesión automáticamente', 'error');
-      }
-    );
   }
 }

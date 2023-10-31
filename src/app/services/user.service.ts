@@ -76,49 +76,73 @@ export class UserService {
   }
 
   /**
-   * Obtiene el token de autenticación del almacenamiento local.
+   * Recupera el token de autenticación del localStorage y verifica si ha expirado.
    *
-   * @returns - El token de autenticación si existe, de lo contrario retorna null.
+   * @returns {string | null} - Devuelve el token de autenticación si es válido, o null si ha expirado o no está presente.
    */
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    const retrievedToken = localStorage.getItem('authToken');
+    const expiry = localStorage.getItem('tokenExpiry');
+
+    const currentTime = new Date().getTime();
+
+    // Verificar si el token ha expirado comparando el tiempo actual con el tiempo de expiración del token.
+    if (currentTime > Number(expiry)) {
+      // Si el token ha expirado, cerrar la sesión del usuario y devolver null.
+      this.logoutUser();
+      return null;
+    }
+
+    // Si el token aún es válido, devolverlo.
+    return retrievedToken;
   }
 
   /**
-   * Elimina el token de autenticación del almacenamiento local para cerrar sesión.
+   * Cierra la sesión del usuario eliminando el token de autenticación y su tiempo de expiración del localStorage.
    */
   logoutUser(): void {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('tokenExpiry');
   }
 
   /**
-   * Obtiene una lista de usuarios con base en ciertos parámetros de paginación y ordenamiento.
+   * Obtiene la fecha/hora de expiración del token de autenticación desde el localStorage.
    *
-   * @param {number} page - Número de página que se quiere consultar. Por defecto es 0.
-   * @param {number} limit - Número máximo de usuarios a retornar por página. Por defecto es 15.
-   * @param {string} sortBy - Campo por el cual se quiere ordenar la lista de usuarios. Por defecto es 'id'.
-   * @param {string} direction - Dirección del ordenamiento: 'ASC' para ascendente y 'DESC' para descendente. Por defecto es 'ASC'.
-   *
-   * @returns {Observable<{ data: User[]; total: number }>} Un Observable que contiene un objeto con:
-   *    - data: Un arreglo de usuarios.
-   *    - total: El número total de usuarios que cumplen con el criterio de búsqueda.
+   * @returns {number | null} Retorna la fecha/hora de expiración del token en milisegundos desde
+   *                          la época Unix (1 de enero de 1970) si está presente. Si no, retorna null.
    */
-  getAllUsers(
-    page: number = 0,
-    limit: number = 15,
-    sortBy: string = 'id',
-    direction: string = 'ASC'
-  ): Observable<{ data: User[]; total: number }> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString())
-      .set('sortBy', sortBy)
-      .set('direction', direction);
+  getTokenExpiry(): number | null {
+    const expiry = localStorage.getItem('tokenExpiry');
 
-    return this.http.get<{ data: User[]; total: number }>(
-      `${this.apiUrl}/all-users`,
-      { params }
-    );
+    // Convertir la fecha/hora de expiración a número y retornarla.
+    // Si no se encuentra, retornar null.
+    return expiry ? parseInt(expiry, 10) : null;
+  }
+
+  /**
+   * Determina si el token de autenticación almacenado ha expirado.
+   *
+   * @returns {boolean} Retorna 'true' si el token ha expirado o no tiene fecha/hora de expiración.
+   *                    Retorna 'false' si el token aún es válido.
+   */
+  tokenHasExpired(): boolean {
+    const expiryTime = this.getTokenExpiry();
+
+    // Si no hay fecha/hora de expiración, asumimos que el token ha expirado.
+    if (!expiryTime) {
+      return true;
+    }
+
+    const currentTime = new Date().getTime();
+
+    // Si la fecha/hora actual es mayor que la fecha/hora de expiración del token,
+    // significa que el token ha expirado.
+    if (currentTime > expiryTime) {
+      return true;
+    }
+
+    // Si ninguna de las condiciones anteriores se cumple, el token aún es válido.
+    return false;
   }
 
   /**
@@ -162,11 +186,37 @@ export class UserService {
   }
 
   /**
-   * Obtiene el tipo de usuario.
+   * Obtiene una lista de usuarios con base en ciertos parámetros de paginación y ordenamiento.
    *
-   * Este método primero recupera el token de autenticación del usuario. Si no hay token,
-   * se lanza un error. Si hay token, se incluye en los encabezados de la petición HTTP
-   * y se realiza una petición GET al endpoint `/user-type` para obtener el tipo de usuario.
+   * @param {number} page - Número de página que se quiere consultar. Por defecto es 0.
+   * @param {number} limit - Número máximo de usuarios a retornar por página. Por defecto es 15.
+   * @param {string} sortBy - Campo por el cual se quiere ordenar la lista de usuarios. Por defecto es 'id'.
+   * @param {string} direction - Dirección del ordenamiento: 'ASC' para ascendente y 'DESC' para descendente. Por defecto es 'ASC'.
+   *
+   * @returns {Observable<{ data: User[]; total: number }>} Un Observable que contiene un objeto con:
+   *    - data: Un arreglo de usuarios.
+   *    - total: El número total de usuarios que cumplen con el criterio de búsqueda.
+   */
+  getAllUsers(
+    page: number = 0,
+    limit: number = 15,
+    sortBy: string = 'id',
+    direction: string = 'ASC'
+  ): Observable<{ data: User[]; total: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString())
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+
+    return this.http.get<{ data: User[]; total: number }>(
+      `${this.apiUrl}/all-users`,
+      { params }
+    );
+  }
+
+  /**
+   * Obtiene el tipo de usuario.
    *
    * @returns {Observable<{ user_type: string }>}
    *
@@ -186,5 +236,46 @@ export class UserService {
     return this.http.get<{ user_type: string }>(`${this.apiUrl}/user-type`, {
       headers,
     });
+  }
+
+  /**
+   * Solicita el perfil del usuario al servidor a través de una petición HTTP GET.
+   *
+   * @returns {Observable<User>} Retorna un Observable que emitirá el perfil del usuario
+   *                             cuando se obtenga una respuesta del servidor.
+   * @throws {Error} Si no se encuentra un token de autenticación en el almacenamiento local,
+   *                 se lanza un error.
+   */
+  getProfile(): Observable<User> {
+    let headers = new HttpHeaders();
+    const token = this.getToken();
+
+    // Si el token existe, agregarlo al encabezado 'Authorization' de la solicitud.
+    if (token) {
+      headers = headers.append('Authorization', token);
+    } else {
+      // Si no se encuentra un token, lanzar un error ya que es necesario para la solicitud.
+      throw new Error('No authentication token found.');
+    }
+
+    return this.http.get<User>(`${this.apiUrl}/profile`, { headers });
+  }
+
+  /**
+   * Actualiza el perfil del usuario en el servidor.
+   *
+   * @param {User} user - El perfil del usuario que se quiere actualizar.
+   * @returns {Observable<any>} Retorna un Observable que emitirá la respuesta
+   *                            del servidor tras la actualización.
+   * @throws {Error} Si el token de autenticación no está disponible,
+   *                 TypeScript generará un error de tiempo de compilación debido al operador '!'
+   *                 (usado para asegurarse de que `getToken()` no devuelve null o undefined).
+   */
+  updateProfile(user: User): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: this.getToken()!,
+    });
+
+    return this.http.put(`${this.apiUrl}/update-profile`, user, { headers });
   }
 }

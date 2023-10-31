@@ -6,12 +6,16 @@ const jwt = require("jsonwebtoken");
 
 const SECRET_KEY = "secret_key";
 
+/**
+ *
+ ** INSERTS
+ *
+ */
+
 // Número de rondas para el algoritmo de salting. Es una práctica estándar usar 10 rondas.
 const saltRounds = 10;
 
-/**
- * Endpoint para registrar un nuevo usuario.
- */
+// Endpoint para registrar un nuevo usuario.
 router.post("/register", (req, res) => {
   // Desestructura el cuerpo del request para obtener la información del usuario.
   const { first_name, last_name, email, username, password, birth_date } =
@@ -52,50 +56,12 @@ router.post("/register", (req, res) => {
 });
 
 /**
- * Endpoint para verificar si un nombre de usuario ya está en uso.
+ *
+ ** LOGIN
+ *
  */
-router.post("/check-username", (req, res) => {
-  const username = req.body.username;
 
-  const query = "SELECT username FROM user WHERE username = ?";
-  db.query(query, [username], (err, result) => {
-    if (err) {
-      return res
-        .status(500)
-        .send({ error: "Error al verificar el nombre de usuario" });
-    }
-
-    if (result.length > 0) {
-      return res.status(200).send({ exists: true });
-    } else {
-      return res.status(200).send({ exists: false });
-    }
-  });
-});
-
-/**
- * Endpoint para verificar si un email ya está registrado en la base de datos.
- */
-router.post("/check-email", (req, res) => {
-  const email = req.body.email;
-
-  const query = "SELECT * FROM user WHERE email = ?";
-  db.query(query, [email], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: "Error al verificar el email" });
-    }
-
-    if (result.length > 0) {
-      return res.status(200).send({ exists: true });
-    } else {
-      return res.status(200).send({ exists: false });
-    }
-  });
-});
-
-/**
- * Endpoint para el inicio de sesión del usuario.
- */
+// Endpoint para el inicio de sesión del usuario.
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
 
@@ -136,16 +102,151 @@ router.post("/login", (req, res) => {
         }
       );
 
-      res
-        .status(200)
-        .send({ success: "Inicio de sesión exitoso", token: token });
+      // Decodificar el token para obtener la fecha de expiración
+      const decodedToken = jwt.decode(token);
+      const expiresAt = decodedToken.exp * 1000; // Convierte a milisegundos
+
+      res.status(200).send({
+        success: "Inicio de sesión exitoso",
+        token: token,
+        expiresAt: expiresAt,
+      });
     });
   });
 });
 
 /**
- * Endpoint para obtener todos los usuarios.
+ *
+ ** DELETES
+ *
  */
+
+// Endpoint para eliminar a un usuario.
+router.delete("/delete-user/:id", (req, res) => {
+  const userId = req.params.id;
+
+  const query = "DELETE FROM user WHERE id = ?";
+  db.query(query, [userId], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al eliminar el usuario" });
+    }
+    res.status(200).send({ success: "Usuario eliminado exitosamente" });
+  });
+});
+
+// Endpoint para eliminar a múltiples usuarios.
+router.post("/delete-multiple", (req, res) => {
+  const userIds = req.body.userIds;
+
+  const query = "DELETE FROM user WHERE id IN (?)";
+  db.query(query, [userIds], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al eliminar usuarios" });
+    }
+    res.status(200).send({ success: "Usuarios eliminados exitosamente" });
+  });
+});
+
+/**
+ *
+ ** UPDATES
+ *
+ */
+
+// Endpoint para actualizar el perfil
+router.put("/update-profile", async (req, res) => {
+  const user = req.body;
+
+  // No encriptamos la contraseña si no ha sido cambiada.
+  if (user.password && user.password !== "") {
+    try {
+      // Salt y hash de la contraseña
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+      user.password = hashedPassword;
+    } catch (err) {
+      console.error("Error encriptando la contraseña:", err);
+      return res.status(500).send({
+        error: "Error encriptando la contraseña",
+        details: err.message,
+      });
+    }
+  } else {
+    // Si la contraseña está vacía, no la actualizamos.
+    delete user.password;
+  }
+
+  let query;
+  let queryParams;
+
+  if (user.password) {
+    query =
+      "UPDATE user SET first_name = ?, last_name = ?, password = ?, birth_date = ? WHERE id = ?";
+    queryParams = [
+      user.first_name,
+      user.last_name,
+      user.password,
+      user.birth_date,
+      user.id,
+    ];
+  } else {
+    query =
+      "UPDATE user SET first_name = ?, last_name = ?, birth_date = ? WHERE id = ?";
+    queryParams = [user.first_name, user.last_name, user.birth_date, user.id];
+  }
+
+  db.query(query, queryParams, (err) => {
+    if (err) {
+      console.error("Error en la consulta:", err);
+      return res.status(500).send({
+        error: "Error actualizando el perfil",
+        details: err.message,
+      });
+    }
+    res.status(200).send({ success: "Perfil actualizado correctamente" });
+  });
+});
+
+// Endpoint para actualizar el perfil
+router.put("/update-profile", (req, res) => {
+  const user = req.body;
+
+  const query =
+    "UPDATE user SET first_name = ?, last_name = ?, email = ?, username = ?, password = ?, birth_date = ? WHERE id = ?";
+
+  db.query(
+    query,
+    [
+      user.first_name,
+      user.last_name,
+      user.email,
+      user.username,
+      user.password,
+      user.birth_date,
+      user.id,
+    ],
+    (err) => {
+      if (err) {
+        console.error("Error en la consulta:", err); // Imprime el error real en consola.
+        return res.status(500).send({
+          error: "Error actualizando el perfil",
+          details: err.message,
+        });
+      }
+      res.status(200).send({ success: "Perfil actualizado correctamente" });
+    }
+  );
+});
+
+module.exports = router;
+
+/**
+ *
+ ** GETS
+ *
+ */
+
+// Endpoint para obtener todos los usuarios.
 router.get("/all-users", (req, res) => {
   // Obtiene el límite de usuarios por página desde los parámetros de consulta o usa 15 como valor por defecto.
   const limit = parseInt(req.query.limit) || 15;
@@ -191,58 +292,7 @@ router.get("/all-users", (req, res) => {
   });
 });
 
-/**
- * Endpoint para actualizar el tipo de usuario.
- */
-router.put("/update-type", (req, res) => {
-  const { userId, newUserType } = req.body;
-
-  const query = "UPDATE user SET user_type = ? WHERE id = ?";
-  db.query(query, [newUserType, userId], (err, result) => {
-    if (err) {
-      return res
-        .status(500)
-        .send({ error: "Error al actualizar el tipo de usuario" });
-    }
-    res
-      .status(200)
-      .send({ success: "Tipo de usuario actualizado exitosamente" });
-  });
-});
-
-/**
- * Endpoint para eliminar a un usuario.
- */
-router.delete("/delete-user/:id", (req, res) => {
-  const userId = req.params.id;
-
-  const query = "DELETE FROM user WHERE id = ?";
-  db.query(query, [userId], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: "Error al eliminar el usuario" });
-    }
-    res.status(200).send({ success: "Usuario eliminado exitosamente" });
-  });
-});
-
-/**
- * Endpoint para eliminar a múltiples usuarios
- */
-router.post("/delete-multiple", (req, res) => {
-  const userIds = req.body.userIds;
-
-  const query = "DELETE FROM user WHERE id IN (?)";
-  db.query(query, [userIds], (err, result) => {
-    if (err) {
-      return res.status(500).send({ error: "Error al eliminar usuarios" });
-    }
-    res.status(200).send({ success: "Usuarios eliminados exitosamente" });
-  });
-});
-
-/**
- * Obtener tipo de usuario y decodificar token
- */
+// Obtener tipo de usuario y decodificar token
 router.get("/user-type", (req, res) => {
   const token = req.headers.authorization;
 
@@ -259,4 +309,78 @@ router.get("/user-type", (req, res) => {
   });
 });
 
-module.exports = router;
+// Endpoint para obtener datos de un usuario
+router.get("/profile", (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).send({ error: "Token no proporcionado" });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al decodificar el token" });
+    }
+
+    const userId = decoded.id;
+    const query = "SELECT * FROM user WHERE id = ?";
+    db.query(query, [userId], (err, results) => {
+      if (err) {
+        return res
+          .status(500)
+          .send({ error: "Error al obtener datos del usuario" });
+      }
+      if (results.length === 0) {
+        return res.status(404).send({ error: "Usuario no encontrado" });
+      }
+
+      const user = results[0];
+      delete user.password; // Para no retornar la contraseña al frontend
+      return res.status(200).send(user);
+    });
+  });
+});
+
+/**
+ *
+ ** CHECKS
+ *
+ */
+
+// Endpoint para verificar si un nombre de usuario ya está en uso.
+router.post("/check-username", (req, res) => {
+  const username = req.body.username;
+
+  const query = "SELECT username FROM user WHERE username = ?";
+  db.query(query, [username], (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al verificar el nombre de usuario" });
+    }
+
+    if (result.length > 0) {
+      return res.status(200).send({ exists: true });
+    } else {
+      return res.status(200).send({ exists: false });
+    }
+  });
+});
+
+// Endpoint para verificar si un email ya está registrado en la base de datos.
+router.post("/check-email", (req, res) => {
+  const email = req.body.email;
+
+  const query = "SELECT * FROM user WHERE email = ?";
+  db.query(query, [email], (err, result) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al verificar el email" });
+    }
+
+    if (result.length > 0) {
+      return res.status(200).send({ exists: true });
+    } else {
+      return res.status(200).send({ exists: false });
+    }
+  });
+});
