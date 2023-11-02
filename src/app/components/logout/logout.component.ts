@@ -22,8 +22,9 @@ export class LogoutComponent {
       text: '¿Deseas cerrar sesión?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      iconColor: '#FFD83D',
+      confirmButtonColor: '#8EDD3A',
+      cancelButtonColor: '#FF4565',
       confirmButtonText: 'Sí, cerrar sesión',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
