@@ -1,0 +1,84 @@
+/* Estilos Generales */
+body {
+  background-color: var(--color-space-background);
+  color: var(--color-space-background);
+  font-family: "Comic Sans MS", sans-serif;
+}
+
+h2 {
+  border-bottom: 2px solid var(--color-rick-green);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.outer-container {
+  padding: 2%;
+  margin: 3%;
+  max-width: 90%;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 10px; /* Bordes ligeramente redondeados */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra alrededor del contenedor */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.d-flex {
+  display: flex !important;
+  flex-direction: column;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--color-rick-green);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-portal-blue);
+}
+
+/* Tarjetas */
+.card {
+  background-color: var(--color-space-background);
+  border: 2px solid var(--color-morty-yellow);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  border-color: var(--color-portal-blue);
+}
+
+.card-img-top {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+/* Enlaces */
+a,
+a:hover,
+a:focus {
+  color: var(--color-portal-blue);
+}
+
+/* Carousel (Trivia) */
+.carousel-inner {
+  background-color: var(--color-blood-red);
+}

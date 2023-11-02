@@ -1,1 +1,45 @@
+/* Variables de Color */
+:root {
+  --color-portal-blue: #00bcd4;
+  --color-rick-green: #a8ff44;
+  --color-morty-yellow: #ffd83d;
+  --color-space-background: #1f1f2e;
+  --color-galactic-white: #ffffff;
+  --color-blood-red: #ff4565;
+}
 
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background-image: url(assets/img/bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+/* Webkit (Chrome, Safari) */
+body::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Firefox */
+body {
+  scrollbar-width: none;
+}
+
+/* Internet Explorer y Edge */
+body {
+  -ms-overflow-style: none;
+}
+
+body,
+html {
+  overflow-y: scroll; /* Siempre mantiene el espacio para la barra de desplazamiento, incluso si está oculto */
+}
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  overflow-y: scroll !important;
+}

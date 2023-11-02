@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav
+  class="navbar navbar-expand-lg navbar-light bg-light navbar-custom container-fluid"
+>
   <div class="container-fluid">
     <!-- Logo -->
     <a class="navbar-brand" href="#">
@@ -24,7 +26,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <!-- Menú alineado a la izquierda -->
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/home">Inicio</a>
         </li>
@@ -37,9 +40,13 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/locations">Ubicaciones</a>
         </li>
+      </ul>
+
+      <!-- Menú alineado a la derecha -->
+      <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" *ngIf="isLogged()" routerLink="/profile"
-            >Perfil</a
+            >Mi perfil</a
           >
         </li>
         <li class="nav-item">
@@ -47,7 +54,6 @@
             >Panel admin</a
           >
         </li>
-
         <!-- Si el usuario NO está logueado -->
         <li class="nav-item" *ngIf="!isLogged()">
           <app-login></app-login>
@@ -55,7 +61,6 @@
         <li class="nav-item" *ngIf="!isLogged()">
           <app-register></app-register>
         </li>
-
         <!-- Si el usuario está logueado -->
         <li class="nav-item" *ngIf="isLogged()">
           <app-logout></app-logout>

@@ -1,0 +1,265 @@
+/* -------------------------------------- TABLA ------------------------------------------- */
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Estilo base para la tabla */
+.table {
+  border-collapse: separate; /* Esto permite que se apliquen correctamente los bordes redondeados */
+  border-spacing: 0; /* Elimina espacios entre las celdas */
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  color: #ffffff;
+
+  /* Bordes redondeados y sombra */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Sombra ligera */
+
+  overflow: hidden; /* Esto evita que el contenido interno (como las celdas) sobrepase los bordes redondeados */
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+
+.table th {
+  text-transform: uppercase;
+  background-color: #00bcd4;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #ffd83d;
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* -------------------------------------- BOTONES ------------------------------------------- */
+
+.btn {
+  margin-right: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #a8ff44;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #8edd3a;
+}
+
+.btn-danger {
+  background-color: #ff4565;
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background-color: #d53958;
+}
+
+/* Estilo para el dropdown */
+select {
+  border: 1px solid #dee2e6;
+  padding: 5px;
+}
+
+/* -------------------------------------- PAGINACIÓN ------------------------------------------- */
+
+/* Estilo general para la paginación */
+.pagination {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Estilo para cada ítem de la paginación */
+.page-item {
+  display: inline-block;
+}
+
+/* Estilo base para los botones de la paginación */
+.page-link {
+  color: #ffffff; /* Blanco Galáctico */
+  background-color: #1f1f2e; /* Fondo Espacial */
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 0 3px;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo para el botón activo */
+.page-item.active .page-link,
+.page-link:hover {
+  background-color: #ffffff; /* Blanco Galáctico */
+  color: #1f1f2e; /* Fondo Espacial */
+  border: 2px solid #1f1f2e; /* Fondo Espacial */
+}
+
+/* Estilo para los botones deshabilitados */
+.page-item.disabled .page-link {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* -------------------------------------- CEHCKBOX ------------------------------------------- */
+
+/* Switch starts here */
+.rocker {
+  display: inline-block;
+  position: relative;
+  /*
+  SIZE OF SWITCH
+  ==============
+  All sizes are in em - therefore
+  changing the font-size here
+  will change the size of the switch.
+  See .rocker-small below as example.
+  */
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #888;
+  width: 7em;
+  height: 4em;
+  overflow: hidden;
+  border-bottom: 0.5em solid #eee;
+}
+
+.rocker-small {
+  font-size: 0.75em;
+  /* Sizes the switch */
+  margin: 1em;
+}
+
+.rocker::before {
+  content: "";
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  border: 0.5em solid #eee;
+  border-bottom: 0;
+}
+
+.rocker input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-left,
+.switch-right {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5em;
+  width: 3em;
+  transition: 0.2s;
+  user-select: none;
+}
+
+.switch-left {
+  height: 2.4em;
+  width: 2.75em;
+  left: 0.85em;
+  bottom: 0.4em;
+  background-color: #ddd;
+  transform: rotate(15deg) skewX(15deg);
+}
+
+.switch-right {
+  right: 0.5em;
+  bottom: 0;
+  background-color: #1f1f2e;
+  color: #fff;
+}
+
+.switch-left::before,
+.switch-right::before {
+  content: "";
+  position: absolute;
+  width: 0.4em;
+  height: 2.45em;
+  bottom: -0.45em;
+  background-color: #ccc;
+  transform: skewY(-65deg);
+}
+
+.switch-left::before {
+  left: -0.4em;
+}
+
+.switch-right::before {
+  right: -0.375em;
+  background-color: transparent;
+  transform: skewY(65deg);
+}
+
+input:checked + .switch-left {
+  background-color: #ff4565;
+  color: #ffffff;
+  bottom: 0px;
+  left: 0.5em;
+  height: 2.5em;
+  width: 3em;
+  transform: rotate(0deg) skewX(0deg);
+}
+
+input:checked + .switch-left::before {
+  background-color: transparent;
+  width: 3.0833em;
+}
+
+input:checked + .switch-left + .switch-right {
+  background-color: #ddd;
+  color: #888;
+  bottom: 0.4em;
+  right: 0.8em;
+  height: 2.4em;
+  width: 2.75em;
+  transform: rotate(-15deg) skewX(-15deg);
+}
+
+input:checked + .switch-left + .switch-right::before {
+  background-color: #ccc;
+}
+
+/* Keyboard Users */
+input:focus + .switch-left {
+  color: #333;
+}
+
+input:checked:focus + .switch-left {
+  color: #fff;
+}
+
+input:focus + .switch-left + .switch-right {
+  color: #fff;
+}
+
+input:checked:focus + .switch-left + .switch-right {
+  color: #333;
+}

@@ -26,6 +26,7 @@ export class LoginComponent {
     if (backdrop) {
       backdrop.remove();
     }
+    document.body.style.overflow = 'auto';
   }
 
   constructor(private userService: UserService, private router: Router) {}

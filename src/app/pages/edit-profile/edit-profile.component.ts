@@ -195,8 +195,13 @@ export class EditProfileComponent implements OnInit {
 
       this.userService.updateProfile(updatedProfile).subscribe(
         (response) => {
-          Swal.fire('Éxito', 'Perfil actualizado con éxito.', 'success');
-          this.router.navigate(['/home']);
+          Swal.fire({
+            title: 'Éxito',
+            text: 'Perfil actualizado con éxito.',
+            icon: 'success',
+            confirmButtonColor: '#00BCD4',
+            iconColor: '#A8FF44',
+          }).then(() => this.router.navigate(['/home']));
         },
         (error) => {
           console.error('Error actualizando el perfil:', error);
@@ -208,11 +213,13 @@ export class EditProfileComponent implements OnInit {
         }
       );
     } else {
-      Swal.fire(
-        'Advertencia',
-        'Por favor, verifica los campos del formulario.',
-        'warning'
-      );
+      Swal.fire({
+        title: 'Advertencia',
+        text: 'Por favor, verifica los campos del formulario.',
+        icon: 'warning',
+        confirmButtonColor: '#00BCD4',
+        iconColor: '#FFD83D',
+      });
     }
   }
 
@@ -240,24 +247,36 @@ export class EditProfileComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Eliminar',
       cancelButtonText: 'Cancelar',
+      background: '#FFFFFF',
+      confirmButtonColor: '#FF4565',
+      cancelButtonColor: '#1F1F2E',
+      iconColor: '#FFD83D',
     }).then((result) => {
-      if (this.user && typeof this.user.id !== 'undefined') {
-        this.userService.deleteUser(this.user.id).subscribe(
-          (response) => {
-            Swal.fire('Eliminado', response.success, 'success').then(() => {
-              this.userService.logoutUser();
-              this.router.navigate(['/home']);
-            });
-          },
-          (error) => {
-            console.error('Error al eliminar el perfil:', error);
-            Swal.fire(
-              'Error',
-              'Hubo un error al eliminar tu perfil. Inténtalo de nuevo.',
-              'error'
-            );
-          }
-        );
+      if (result.isConfirmed) {
+        if (this.user && typeof this.user.id !== 'undefined') {
+          this.userService.deleteUser(this.user.id).subscribe(
+            (response) => {
+              Swal.fire({
+                title: 'Eliminado',
+                text: 'Perfil eliminado correctamente.',
+                icon: 'success',
+                confirmButtonColor: '#00BCD4',
+                iconColor: '#A8FF44',
+              }).then(() => {
+                this.userService.logoutUser();
+                this.router.navigate(['/home']);
+              });
+            },
+            (error) => {
+              console.error('Error al eliminar el perfil:', error);
+              Swal.fire(
+                'Error',
+                'Hubo un error al eliminar tu perfil. Inténtalo de nuevo.',
+                'error'
+              );
+            }
+          );
+        }
       }
     });
   }

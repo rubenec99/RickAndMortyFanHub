@@ -152,6 +152,24 @@ router.post("/delete-multiple", (req, res) => {
  ** UPDATES
  *
  */
+/**
+ * Endpoint para actualizar el tipo de usuario.
+ */
+router.put("/update-type", (req, res) => {
+  const { userId, newUserType } = req.body;
+
+  const query = "UPDATE user SET user_type = ? WHERE id = ?";
+  db.query(query, [newUserType, userId], (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al actualizar el tipo de usuario" });
+    }
+    res
+      .status(200)
+      .send({ success: "Tipo de usuario actualizado exitosamente" });
+  });
+});
 
 // Endpoint para actualizar el perfil
 router.put("/update-profile", async (req, res) => {

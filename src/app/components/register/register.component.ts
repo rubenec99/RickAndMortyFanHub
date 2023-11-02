@@ -171,6 +171,7 @@ export class RegisterComponent implements OnInit {
     if (backdrop) {
       backdrop.remove();
     }
+    document.body.style.overflow = 'auto';
   }
 
   /**

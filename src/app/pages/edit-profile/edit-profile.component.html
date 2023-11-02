@@ -1,146 +1,166 @@
-<div *ngIf="editProfileForm" class="container mt-5">
-  <h2 class="mb-4">
-    Perfil de {{ editProfileForm.get("first_name")?.value }}
-    {{ editProfileForm.get("last_name")?.value }}
-  </h2>
+<div class="container-form">
+  <div *ngIf="editProfileForm" class="container mt-5">
+    <h2 class="heading mb-4">
+      Perfil de {{ editProfileForm.get("first_name")?.value }}
+      {{ editProfileForm.get("last_name")?.value }}
+    </h2>
 
-  <form [formGroup]="editProfileForm" (submit)="onSubmit()">
-    <input type="hidden" name="id" value="ID_AQUI" />
-    <!-- Nombre -->
-    <div class="form-group">
-      <label for="first_name">Nombre:</label>
-      <input
-        id="first_name"
-        class="form-control"
-        formControlName="first_name"
-      />
-      <div
-        *ngIf="
-          editProfileForm?.get('first_name')?.hasError('hasNumber') &&
-          editProfileForm?.get('first_name')?.touched
-        "
-        class="text-danger"
-      >
-        El nombre no debe contener números
-      </div>
-    </div>
-
-    <!-- Apellidos -->
-    <div class="form-group">
-      <label for="last_name">Apellidos:</label>
-      <input id="last_name" class="form-control" formControlName="last_name" />
-      <div
-        *ngIf="
-          editProfileForm?.get('last_name')?.hasError('hasNumber') &&
-          editProfileForm?.get('last_name')?.touched
-        "
-        class="text-danger"
-      >
-        Los apellidos no deben contener números
-      </div>
-    </div>
-
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input id="email" class="form-control" formControlName="email" />
-      <!-- Puedes agregar mensajes de validación específicos para el email si lo deseas. -->
-    </div>
-
-    <!-- Username -->
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input id="username" class="form-control" formControlName="username" />
-      <!-- Puedes agregar mensajes de validación específicos para el username si lo deseas. -->
-    </div>
-
-    <!-- Contraseña -->
-    <div class="form-group">
-      <!-- Botón para cambiar contraseña -->
-      <button
-        type="button"
-        class="btn btn-sm btn-secondary ml-2"
-        (click)="togglePasswordFields()"
-      >
-        Cambiar Contraseña
-      </button>
-    </div>
-
-    <!-- Campos de Contraseña, que se mostrarán solo si showPasswordFields es true -->
-    <div *ngIf="showPasswordFields">
-      <label for="password">Nueva contraseña:</label>
+    <form [formGroup]="editProfileForm" (submit)="onSubmit()" class="form">
+      <input type="hidden" name="id" value="ID_AQUI" />
+      <!-- Nombre -->
       <div class="form-group">
+        <label for="first_name">Nombre:</label>
         <input
-          type="password"
-          id="password"
-          class="form-control"
-          formControlName="password"
-        />
-      </div>
-      <div
-        *ngIf="
-          editProfileForm.get('password')?.hasError('pattern') &&
-          editProfileForm.get('password')?.touched
-        "
-        class="text-danger"
-      >
-        La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito, al
-        menos una minúscula y al menos una mayúscula.
-      </div>
-      <!-- Confirmación de Contraseña -->
-      <div class="form-group">
-        <label for="confirmPassword">Confirmar Contraseña:</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          class="form-control"
-          formControlName="confirmPassword"
+          id="first_name"
+          class="form-control input"
+          formControlName="first_name"
         />
         <div
           *ngIf="
-            editProfileForm.get('confirmPassword')?.invalid &&
-            editProfileForm.get('confirmPassword')?.touched
+            editProfileForm?.get('first_name')?.hasError('hasNumber') &&
+            editProfileForm?.get('first_name')?.touched
           "
           class="text-danger"
         >
-          La confirmación de la contraseña es obligatoria.
+          El nombre no debe contener números
+        </div>
+      </div>
+      <br />
+
+      <!-- Apellidos -->
+      <div class="form-group">
+        <label for="last_name">Apellidos:</label>
+        <input
+          id="last_name"
+          class="form-control input"
+          formControlName="last_name"
+        />
+        <div
+          *ngIf="
+            editProfileForm?.get('last_name')?.hasError('hasNumber') &&
+            editProfileForm?.get('last_name')?.touched
+          "
+          class="text-danger"
+        >
+          Los apellidos no deben contener números
+        </div>
+      </div>
+      <br />
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" class="form-control input" formControlName="email" />
+      </div>
+      <br />
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input
+          id="username"
+          class="form-control input"
+          formControlName="username"
+        />
+      </div>
+      <br />
+
+      <!-- Contraseña -->
+      <div class="form-group">
+        <!-- Botón para cambiar contraseña -->
+        <button
+          type="button"
+          class="btn btn-sm change-password-button ml-2"
+          (click)="togglePasswordFields()"
+        >
+          Cambiar Contraseña
+        </button>
+      </div>
+
+      <!-- Campos de Contraseña, que se mostrarán solo si showPasswordFields es true -->
+      <div *ngIf="showPasswordFields">
+        <label for="password">Nueva contraseña:</label>
+        <div class="form-group">
+          <input
+            type="password"
+            id="password"
+            class="form-control input"
+            formControlName="password"
+          />
         </div>
         <div
           *ngIf="
-            editProfileForm.hasError('passwordsDontMatch') &&
-            editProfileForm.get('confirmPassword')?.touched
+            editProfileForm.get('password')?.hasError('pattern') &&
+            editProfileForm.get('password')?.touched
           "
           class="text-danger"
         >
-          Las contraseñas no coinciden.
+          La contraseña debe tener entre 8 y 16 caracteres, al menos un dígito,
+          al menos una minúscula y al menos una mayúscula.
+        </div>
+        <br />
+
+        <!-- Confirmación de Contraseña -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Contraseña:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            class="form-control input"
+            formControlName="confirmPassword"
+          />
+          <div
+            *ngIf="
+              editProfileForm.get('confirmPassword')?.invalid &&
+              editProfileForm.get('confirmPassword')?.touched
+            "
+            class="text-danger"
+          >
+            La confirmación de la contraseña es obligatoria.
+          </div>
+          <div
+            *ngIf="
+              editProfileForm.hasError('passwordsDontMatch') &&
+              editProfileForm.get('confirmPassword')?.touched
+            "
+            class="text-danger"
+          >
+            Las contraseñas no coinciden.
+          </div>
         </div>
       </div>
-    </div>
+      <br />
 
-    <!-- Fecha de Nacimiento -->
-    <div class="form-group">
-      <label for="birth_date">Fecha de Nacimiento:</label>
-      <input
-        type="date"
-        id="birth_date"
-        class="form-control"
-        formControlName="birth_date"
-      />
-      <!-- Mensaje de error de Bootstrap para fecha futura -->
-      <div
-        *ngIf="
-          editProfileForm?.get('birth_date')?.hasError('futureDate') &&
-          editProfileForm?.get('birth_date')?.touched
-        "
-        class="text-danger"
-      >
-        La fecha de nacimiento no puede ser futura.
+      <!-- Fecha de Nacimiento -->
+      <div class="form-group">
+        <label for="birth_date">Fecha de Nacimiento:</label>
+        <input
+          type="date"
+          id="birth_date"
+          class="form-control input"
+          formControlName="birth_date"
+        />
+        <!-- Mensaje de error de Bootstrap para fecha futura -->
+        <div
+          *ngIf="
+            editProfileForm?.get('birth_date')?.hasError('futureDate') &&
+            editProfileForm?.get('birth_date')?.touched
+          "
+          class="text-danger"
+        >
+          La fecha de nacimiento no puede ser futura.
+        </div>
       </div>
-    </div>
+      <br />
 
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-  </form>
-  <button (click)="onDeleteProfile()" class="btn btn-danger">
-    Eliminar perfil
-  </button>
+      <button type="submit" class="login-button">Guardar Cambios</button>
+    </form>
+
+    <button
+      (click)="onDeleteProfile()"
+      class="btn btn-danger delete-profile-button"
+    >
+      Eliminar perfil
+    </button>
+  </div>
 </div>

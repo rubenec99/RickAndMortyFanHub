@@ -1,0 +1,39 @@
+/* -------------------------------------- BOTÓN REGISTER ------------------------------------------- */
+.btn-header {
+  padding: 0.8em 1.8em;
+  position: relative;
+  overflow: hidden;
+  background-color: transparent;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 16px;
+  transition: 0.3s;
+  z-index: 1;
+  font-family: inherit;
+  color: black;
+  font-weight: bold;
+  border-color: transparent;
+}
+
+.btn-header::before {
+  content: "";
+  width: 0;
+  height: 300%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: #00bcd4;
+  transition: 0.5s ease;
+  display: block;
+  z-index: -1;
+}
+
+.btn-header:hover::before {
+  width: 105%;
+}
+
+.btn-header:hover {
+  color: white;
+}
+/* -------------------------------------- BOTÓN REGISTER ------------------------------------------- */
