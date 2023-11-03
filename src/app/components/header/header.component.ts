@@ -21,4 +21,8 @@ export class HeaderComponent {
   isLogged(): boolean {
     return this.userService.getToken() !== null;
   }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('userType') === 'admin';
+  }
 }

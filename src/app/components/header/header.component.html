@@ -57,11 +57,12 @@
             <span class="box"> Mi perfil</span>
           </button>
         </li>
-        <li class="nav-item">
-          <button class="btn nav-link" *ngIf="isLogged()" routerLink="/admin">
+        <li class="nav-item" *ngIf="isLogged() && isAdmin()">
+          <button class="btn nav-link" routerLink="/admin">
             <span class="box"> Panel admin</span>
           </button>
         </li>
+
         <!-- Si el usuario NO está logueado -->
         <li class="nav-item" *ngIf="!isLogged()">
           <app-login></app-login>

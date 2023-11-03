@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 
 import { LoginData } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+
 import Swal from 'sweetalert2';
+
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -42,6 +45,11 @@ export class LoginComponent {
       (response) => {
         if (response.success) {
           this.userService.setToken(response.token!);
+
+          // Decodificar el token para obtener el user_type
+          const decodedToken: any = jwtDecode(response.token!);
+          localStorage.setItem('userType', decodedToken.user_type);
+
           const expiryTime = new Date().getTime() + 3600 * 1000; // Tiempo actual + 1 hora (en milisegundos)
           localStorage.setItem('tokenExpiry', expiryTime.toString());
 
@@ -57,19 +65,23 @@ export class LoginComponent {
           });
         } else if (response.error) {
           Swal.fire({
-            title: 'Error',
-            text: 'Usuario o contraseña incorrectos.',
+            title: '¡Error!',
+            text: 'Usuario o contraseña incorrectos',
             icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
           });
         }
       },
       (error) => {
         console.error('Error al iniciar sesión:', error);
-        Swal.fire(
-          'Error',
-          'Ocurrió un error al intentar iniciar sesión. Inténtalo de nuevo.',
-          'error'
-        );
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Usuario o contraseña incorrectos',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
       }
     );
   }

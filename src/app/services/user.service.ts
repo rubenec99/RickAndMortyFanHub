@@ -103,6 +103,7 @@ export class UserService {
   logoutUser(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('tokenExpiry');
+    localStorage.removeItem('userType');
   }
 
   /**
