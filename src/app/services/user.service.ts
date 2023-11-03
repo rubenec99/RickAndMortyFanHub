@@ -199,7 +199,7 @@ export class UserService {
    */
   getAllUsers(
     page: number = 0,
-    limit: number = 15,
+    limit: number = 10,
     sortBy: string = 'id',
     direction: string = 'ASC'
   ): Observable<{ data: User[]; total: number }> {

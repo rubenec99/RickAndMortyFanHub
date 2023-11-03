@@ -27,7 +27,7 @@ export class AdminPanelComponent {
   currentPage: number = 0;
 
   // Cantidad de usuarios que se mostrarán por página.
-  pageSize: number = 15;
+  pageSize: number = 10;
 
   // Número total de usuarios en el conjunto de datos o en la base de datos.
   totalUsers: number = 0;
@@ -136,13 +136,18 @@ export class AdminPanelComponent {
       showCancelButton: true,
       confirmButtonText: 'Sí, cambiar',
       cancelButtonText: 'Cancelar',
+      iconColor: '#FFD83D',
+      cancelButtonColor: '#1F1F2E',
+      confirmButtonColor: '#FFD83D',
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Actualizado',
-          'Los permisos han sido actualizados correctamente.',
-          'success'
-        );
+        Swal.fire({
+          title: 'Actualizado',
+          text: 'Los permisos han sido actualizados correctamente.',
+          icon: 'warning',
+          iconColor: '#FFD83D',
+          confirmButtonColor: '#00BCD4',
+        });
         this.updateUserType(userId, newUserType);
       }
     });
@@ -156,11 +161,13 @@ export class AdminPanelComponent {
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe(
       (response) => {
-        Swal.fire(
-          'Eliminado',
-          'El usuario ha sido eliminado correctamente.',
-          'success'
-        );
+        Swal.fire({
+          title: 'Eliminado',
+          text: 'El usuario ha sido eliminado correctamente.',
+          icon: 'warning',
+          iconColor: '#FFD83D',
+          confirmButtonColor: '#00BCD4',
+        });
 
         // Recarga la lista de usuarios después de la eliminación.
         this.loadUsers();
@@ -184,6 +191,9 @@ export class AdminPanelComponent {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
+      iconColor: '#FFD83D',
+      cancelButtonColor: '#1F1F2E',
+      confirmButtonColor: '#FF4565',
     }).then((result) => {
       // Verifica si el usuario confirmó la eliminación.
       if (result.isConfirmed) {
@@ -207,11 +217,15 @@ export class AdminPanelComponent {
 
     if (selectedUserIds.length === 0) {
       // Muestra una alerta informativa si no se selecciona ningún usuario.
-      Swal.fire(
-        'No hay usuarios seleccionados',
-        'Por favor, selecciona usuarios para eliminar.',
-        'info'
-      );
+      Swal.fire({
+        title: 'No hay usuarios seleccionados',
+        text: 'Por favor, selecciona usuarios para eliminar.',
+        icon: 'info',
+        confirmButtonText: 'OK',
+        background: '#FFFFFF',
+        confirmButtonColor: '#00BCD4',
+        iconColor: '#00BCD4',
+      });
       return;
     }
 
@@ -222,6 +236,9 @@ export class AdminPanelComponent {
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
+      iconColor: '#FFD83D',
+      cancelButtonColor: '#1F1F2E',
+      confirmButtonColor: '#FF4565',
     }).then((result) => {
       if (result.isConfirmed) {
         // Si se confirma la eliminación, llama al servicio para eliminar los usuarios seleccionados.
@@ -229,11 +246,13 @@ export class AdminPanelComponent {
           (response) => {
             // Después de la eliminación, recarga la lista de usuarios.
             this.loadUsers();
-            Swal.fire(
-              'Eliminados',
-              'Los usuarios seleccionados han sido eliminados correctamente.',
-              'success'
-            );
+            Swal.fire({
+              title: 'Eliminados',
+              text: 'Los usuarios seleccionados han sido eliminados correctamente.',
+              icon: 'warning',
+              iconColor: '#FFD83D',
+              confirmButtonColor: '#00BCD4',
+            });
           },
           (error) => {
             Swal.fire(

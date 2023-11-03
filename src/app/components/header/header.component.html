@@ -29,30 +29,38 @@
       <!-- Menú alineado a la izquierda -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home">Inicio</a>
+          <button class="btn nav-link" routerLink="/home">
+            <span class="box"> Inicio</span>
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/characters">Personajes</a>
+          <button class="btn nav-link" routerLink="/characters">
+            <span class="box"> Personajes</span>
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/episodes">Episodios</a>
+          <button class="btn nav-link" routerLink="/episodes">
+            <span class="box"> Episodios</span>
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/locations">Ubicaciones</a>
+          <button class="btn nav-link" routerLink="/locations">
+            <span class="box"> Ubicaciones</span>
+          </button>
         </li>
       </ul>
 
       <!-- Menú alineado a la derecha -->
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" *ngIf="isLogged()" routerLink="/profile"
-            >Mi perfil</a
-          >
+          <button class="btn nav-link" *ngIf="isLogged()" routerLink="/profile">
+            <span class="box"> Mi perfil</span>
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link" *ngIf="isLogged()" routerLink="/admin"
-            >Panel admin</a
-          >
+          <button class="btn nav-link" *ngIf="isLogged()" routerLink="/admin">
+            <span class="box"> Panel admin</span>
+          </button>
         </li>
         <!-- Si el usuario NO está logueado -->
         <li class="nav-item" *ngIf="!isLogged()">
