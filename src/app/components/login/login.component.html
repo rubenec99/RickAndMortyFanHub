@@ -1,7 +1,7 @@
 <!-- Botón que activará la modal -->
 <button
   type="button"
-  class="btn-header"
+  class="modal-button"
   data-bs-toggle="modal"
   data-bs-target="#loginModal"
 >
@@ -16,10 +16,10 @@
   aria-labelledby="loginModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog">
-    <div class="modal-content">
+  <div class="modal-dialog container-form form">
+    <div class="modal-content form container">
       <div class="modal-header">
-        <h5 class="modal-title" id="loginModalLabel">Iniciar sesión</h5>
+        <h5 class="modal-title heading" id="loginModalLabel">Iniciar sesión</h5>
         <button
           type="button"
           class="btn-close"
@@ -34,7 +34,7 @@
             <label for="email" class="form-label">Nombre de usuario</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control input"
               id="email"
               placeholder="Ingrese su email o usuario"
               [(ngModel)]="loginData.username"
@@ -47,7 +47,7 @@
             <label for="password" class="form-label">Contraseña</label>
             <input
               type="password"
-              class="form-control"
+              class="form-control input"
               id="password"
               placeholder="Ingrese su contraseña"
               [(ngModel)]="loginData.password"
@@ -57,7 +57,7 @@
 
           <!-- Botón para iniciar sesión -->
           <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary login-button">
               Iniciar sesión
             </button>
           </div>
@@ -65,7 +65,11 @@
       </div>
       <div class="modal-footer">
         <!-- Botón para volver/cerrar la modal -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary custom-button"
+          data-bs-dismiss="modal"
+        >
           Volver
         </button>
       </div>

@@ -29,7 +29,15 @@ export class LogoutComponent {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.onLogout();
+        Swal.fire({
+          title: 'Cerrado',
+          text: 'Has cerrado sesión correctamente.',
+          icon: 'success',
+          iconColor: '#A8FF44',
+          confirmButtonColor: '#00BCD4',
+        }).then(() => {
+          this.onLogout();
+        });
       }
     });
   }

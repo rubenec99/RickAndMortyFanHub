@@ -215,7 +215,7 @@ export class EditProfileComponent implements OnInit {
     } else {
       Swal.fire({
         title: 'Advertencia',
-        text: 'Por favor, verifica los campos del formulario.',
+        text: 'Por favor, verifique todos los campos del formulario.',
         icon: 'warning',
         confirmButtonColor: '#00BCD4',
         iconColor: '#FFD83D',

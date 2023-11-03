@@ -1,5 +1,5 @@
 /* -------------------------------------- BOTÓN LOGOUT ------------------------------------------- */
-button {
+.modal-button {
   padding: 0.8em 1.8em;
   position: relative;
   overflow: hidden;
@@ -15,7 +15,7 @@ button {
   border-color: transparent;
 }
 
-button::before {
+.modal-button::before {
   content: "";
   width: 0;
   height: 300%;
@@ -23,17 +23,17 @@ button::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(45deg);
-  background: #00bcd4;
+  background: #d53958;
   transition: 0.5s ease;
   display: block;
   z-index: -1;
 }
 
-button:hover::before {
+.modal-button:hover::before {
   width: 105%;
 }
 
-button:hover {
+.modal-button:hover {
   color: white;
 }
 /* -------------------------------------- BOTÓN LOGOUT ------------------------------------------- */

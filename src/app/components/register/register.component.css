@@ -1,5 +1,85 @@
-/* -------------------------------------- BOTÓN REGISTER ------------------------------------------- */
-.btn-header {
+/* -------------------- CONTAINER -------------------- */
+
+.container-form {
+  display: flex;
+  justify-content: center;
+  max-width: 45vw;
+}
+
+.container {
+  background: #ffffff;
+  background: linear-gradient(
+    0deg,
+    rgb(255, 255, 255) 0%,
+    rgb(244, 247, 251) 100%
+  );
+  border-radius: 20px;
+  padding: 25px 35px;
+  border: 5px solid rgb(255, 255, 255);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
+  margin: 20px;
+}
+
+/* -------------------- HEADER -------------------- */
+
+.heading {
+  text-align: center;
+  font-weight: 800; /* Disminuir un poco el peso puede mejorar la legibilidad */
+  font-size: 32px; /* Un ligero incremento para darle más presencia */
+  color: #00bcd4;
+  letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
+  line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
+  margin-bottom: 20px; /* Proporciona un poco de espacio debajo para separarlo de otros contenidos */
+  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
+}
+
+/* -------------------- FORMULARIO -------------------- */
+
+.form {
+  margin-top: 20px;
+}
+
+.form .input {
+  width: 100%;
+  background: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 20px;
+  margin-top: 15px;
+  box-shadow: #cff0ff 0px 10px 10px -5px;
+  border-inline: 2px solid transparent;
+}
+
+.form .input::-moz-placeholder {
+  color: rgb(170, 170, 170);
+}
+
+.form .input::placeholder {
+  color: rgb(170, 170, 170);
+}
+
+.form .input:focus {
+  outline: none;
+  border-inline: 2px solid #00bcd4;
+}
+
+/* -------------------- LABELS -------------------- */
+
+.form label {
+  display: block; /* asegura que la etiqueta esté en su propia línea */
+  margin-top: 20px; /* proporciona espacio antes de la etiqueta */
+  margin-bottom: 5px; /* espacio entre la etiqueta y el input */
+  color: #00bcd4; /* usando el mismo color que otros elementos destacados de tu diseño */
+  font-weight: 600; /* texto en negrita para darle más énfasis */
+}
+
+.form .input:first-of-type + label {
+  margin-top: 0; /* elimina el margen superior para la primera etiqueta después de un input */
+}
+
+/* -------------------- BOTÓN MODAL -------------------- */
+
+.modal-button {
   padding: 0.8em 1.8em;
   position: relative;
   overflow: hidden;
@@ -15,7 +95,7 @@
   border-color: transparent;
 }
 
-.btn-header::before {
+.modal-button::before {
   content: "";
   width: 0;
   height: 300%;
@@ -23,17 +103,150 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(45deg);
-  background: #00bcd4;
+  background: #e2ba34;
   transition: 0.5s ease;
   display: block;
   z-index: -1;
 }
 
-.btn-header:hover::before {
+.modal-button:hover::before {
   width: 105%;
 }
 
-.btn-header:hover {
+.modal-button:hover {
   color: white;
 }
-/* -------------------------------------- BOTÓN REGISTER ------------------------------------------- */
+
+/* -------------------- BOTÓN REGISTRO -------------------- */
+
+.form .register-button {
+  display: block;
+  width: 10vw;
+  font-weight: bold;
+  background: linear-gradient(45deg, #00bbd4c0 0%, #00bcd4 100%);
+  color: white;
+  padding-block: 15px;
+  margin: 20px auto;
+  border-radius: 20px;
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.form .register-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
+}
+
+.form .register-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
+}
+
+/* -------------------- BOTÓN PERSONALIZADO -------------------- */
+
+.custom-button {
+  display: block; /* para que se alinee con otros elementos si es necesario */
+  width: 10vw; /* puedes ajustar esto según tus necesidades */
+  font-weight: bold;
+  background: linear-gradient(45deg, #1f1f2e 0%, #181820 100%);
+  color: white; /* Color del texto, lo dejé en blanco por legibilidad, pero ajusta según tus necesidades */
+  padding-block: 15px;
+  margin: 20px auto; /* ajusta según tus necesidades */
+  border-radius: 20px;
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 20px 10px -15px; /* he ajustado el color del box-shadow a #1F1F2E con una opacidad del 87.8% */
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 23px 10px -20px;
+}
+
+.custom-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
+}
+
+/* -------------------- MENSAJES DE ERROR -------------------- */
+
+/* Estilos mejorados para los mensajes de error sin fondo */
+.text-danger {
+  color: #ff4565; /* Rojo oscuro para una mejor visibilidad */
+  font-size: 14px; /* Un tamaño legible sin ser demasiado grande */
+  font-weight: 600; /* Peso medio para destacar el error */
+  margin-top: 15px; /* Espacio para separar el mensaje del campo de entrada */
+  padding-left: 5px; /* Un pequeño padding para separarlo del borde */
+  border-left: 3px solid #d53958; /* Una línea vertical para resaltar el mensaje */
+  display: inline-block; /* Permite aplicar dimensiones y otros estilos sin cambiar la estructura del flujo */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Transición suave para cambios en la opacidad y posición */
+}
+
+/* Animación opcional para que el mensaje aparezca suavemente */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.text-danger {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* -------------------- BOTÓN PERSONALIZADO -------------------- */
+
+.custom-button {
+  display: block; /* para que se alinee con otros elementos si es necesario */
+  width: 10vw; /* puedes ajustar esto según tus necesidades */
+  font-weight: bold;
+  background: linear-gradient(45deg, #1f1f2e 0%, #181820 100%);
+  color: white; /* Color del texto, lo dejé en blanco por legibilidad, pero ajusta según tus necesidades */
+  padding-block: 15px;
+  margin: 20px auto; /* ajusta según tus necesidades */
+  border-radius: 20px;
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 20px 10px -15px; /* he ajustado el color del box-shadow a #1F1F2E con una opacidad del 87.8% */
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 23px 10px -20px;
+}
+
+.custom-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
+}
+
+/* -------------------- BOTÓN REGISTRO -------------------- */
+
+.form .register-button {
+  display: block;
+  width: 20vw;
+  font-weight: bold;
+  background: linear-gradient(45deg, #00bbd4c0 0%, #00bcd4 100%);
+  color: white;
+  padding-block: 15px;
+  margin: 20px auto;
+  border-radius: 20px;
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.form .register-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
+}
+
+.form .register-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
+}

@@ -1,15 +1,7 @@
-/* Variables de Color */
-:root {
-  --color-portal-blue: #00bcd4;
-  --color-rick-green: #a8ff44;
-  --color-morty-yellow: #ffd83d;
-  --color-space-background: #1f1f2e;
-  --color-galactic-white: #ffffff;
-  --color-blood-red: #ff4565;
-}
-
 * {
   font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -21,25 +13,56 @@ body {
 }
 
 /* Webkit (Chrome, Safari) */
-body::-webkit-scrollbar {
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
   width: 0;
 }
 
 /* Firefox */
+html,
 body {
   scrollbar-width: none;
 }
 
 /* Internet Explorer y Edge */
-body {
+body,
+html {
   -ms-overflow-style: none;
 }
 
-body,
-html {
-  overflow-y: scroll; /* Siempre mantiene el espacio para la barra de desplazamiento, incluso si está oculto */
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown),
+html.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  overflow-y: scroll !important;
 }
 
-body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+body.swalfire-shown:not(.swalfire-no-backdrop):not(.swalfire-toast-shown),
+html.swalfire-shown:not(.swalfire-no-backdrop):not(.swalfire-toast-shown) {
   overflow-y: scroll !important;
+}
+
+/* Estilo de la barra de desplazamiento */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #eeeeee;
+}
+
+/* Estilo del thumb (el control deslizante) */
+::-webkit-scrollbar-thumb {
+  background-color: #393e46;
+}
+
+/* Estilo del thumb en estado hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #222831;
+}
+
+/* Estilo del track (la pista) */
+::-webkit-scrollbar-track {
+  background-color: #eeeeee;
+}
+
+/* Estilo del track en estado hover */
+::-webkit-scrollbar-track:hover {
+  background-color: #eeeeee;
 }

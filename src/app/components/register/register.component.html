@@ -1,7 +1,7 @@
 <!-- Botón que activará la modal -->
 <button
   type="button"
-  class="btn-header"
+  class="modal-button"
   data-bs-toggle="modal"
   data-bs-target="#registerModal"
 >
@@ -16,10 +16,12 @@
   aria-labelledby="registerModalLabel"
   aria-hidden="true"
 >
-  <div class="modal-dialog">
-    <div class="modal-content">
+  <div class="modal-dialog container-form form">
+    <div class="modal-content form container">
       <div class="modal-header">
-        <h5 class="modal-title" id="registerModalLabel">Registro de Usuario</h5>
+        <h5 class="modal-title heading" id="registerModalLabel">
+          Registro de Usuario
+        </h5>
         <button
           type="button"
           class="btn-close"
@@ -35,7 +37,7 @@
             <label for="first_name" class="form-label">Nombre</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control input"
               id="first_name"
               formControlName="first_name"
               placeholder="Ingrese su nombre"
@@ -57,7 +59,7 @@
             <label for="last_name" class="form-label">Apellidos</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control input"
               id="last_name"
               formControlName="last_name"
               placeholder="Ingrese sus apellidos"
@@ -79,7 +81,7 @@
             <label for="email" class="form-label">Email</label>
             <input
               type="email"
-              class="form-control"
+              class="form-control input"
               id="email"
               formControlName="email"
               placeholder="Introduce tu email"
@@ -107,7 +109,7 @@
             <label for="username" class="form-label">Nombre de usuario</label>
             <input
               type="text"
-              class="form-control"
+              class="form-control input"
               id="username"
               formControlName="username"
               placeholder="Elige un nombre de usuario"
@@ -126,7 +128,7 @@
             <label for="password" class="form-label">Contraseña</label>
             <input
               type="password"
-              class="form-control"
+              class="form-control input"
               id="password"
               formControlName="password"
               placeholder="Introduce tu contraseña"
@@ -151,7 +153,7 @@
             >
             <input
               type="password"
-              class="form-control"
+              class="form-control input"
               id="confirmPassword"
               formControlName="confirmPassword"
               placeholder="Repite tu contraseña"
@@ -172,7 +174,7 @@
             >
             <input
               type="date"
-              class="form-control"
+              class="form-control input"
               id="birth_date"
               formControlName="birth_date"
               required
@@ -192,13 +194,19 @@
 
           <!-- Botón para registrarse -->
           <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Registrarse</button>
+            <button type="submit" class="btn btn-primary register-button">
+              Registrarse
+            </button>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <!-- Botón para volver/cerrar la modal -->
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button
+          type="button"
+          class="btn btn-secondary custom-button"
+          data-bs-dismiss="modal"
+        >
           Volver
         </button>
       </div>

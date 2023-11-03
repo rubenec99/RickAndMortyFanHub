@@ -243,6 +243,8 @@ export class RegisterComponent implements OnInit {
                 title: '¡Éxito!',
                 text: 'Registro exitoso. Iniciando sesión...',
                 icon: 'success',
+                iconColor: '#A8FF44',
+                confirmButtonColor: '#00BCD4',
                 didClose: () => {
                   this.removeBootstrapBackdrop();
                   // Realiza el login automático.
@@ -270,11 +272,13 @@ export class RegisterComponent implements OnInit {
           }
         );
     } else {
-      Swal.fire(
-        'Advertencia',
-        'Por favor, complete todos los campos correctamente.',
-        'warning'
-      );
+      Swal.fire({
+        title: 'Advertencia',
+        text: 'Por favor, verifique todos los campos del formulario.',
+        icon: 'warning',
+        confirmButtonColor: '#00BCD4',
+        iconColor: '#FFD83D',
+      });
     }
   }
 }
