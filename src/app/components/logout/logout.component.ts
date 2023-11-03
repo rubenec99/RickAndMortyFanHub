@@ -30,7 +30,7 @@ export class LogoutComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: 'Cerrado',
+          title: 'Cerrando...',
           text: 'Has cerrado sesión correctamente.',
           icon: 'success',
           iconColor: '#A8FF44',

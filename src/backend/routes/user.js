@@ -15,11 +15,27 @@ const SECRET_KEY = "secret_key";
 // Número de rondas para el algoritmo de salting. Es una práctica estándar usar 10 rondas.
 const saltRounds = 10;
 
+// Función para capitalizar nombre y apellidos
+function capitalize(str) {
+  // Si la cadena está vacía, devuelve una cadena vacía
+  if (!str || str.length === 0) return "";
+
+  // Divide la cadena en palabras, capitaliza cada palabra y luego las une nuevamente.
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 // Endpoint para registrar un nuevo usuario.
 router.post("/register", (req, res) => {
   // Desestructura el cuerpo del request para obtener la información del usuario.
-  const { first_name, last_name, email, username, password, birth_date } =
-    req.body;
+  const { email, username, password, birth_date } = req.body;
+  let { first_name, last_name } = req.body;
+
+  // Capitaliza el nombre y los apellidos.
+  first_name = capitalize(first_name);
+  last_name = capitalize(last_name);
 
   // Validación para asegurarse de que la fecha de nacimiento no sea en el futuro.
   const selectedDate = new Date(birth_date);
@@ -171,9 +187,27 @@ router.put("/update-type", (req, res) => {
   });
 });
 
+// Función para capitalizar nombre y apellidos antes del update
+function capitalize(str) {
+  if (!str || str.length === 0) return "";
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 // Endpoint para actualizar el perfil
 router.put("/update-profile", async (req, res) => {
   const user = req.body;
+
+  // Capitaliza el nombre y los apellidos si están presentes.
+  if (user.first_name) {
+    user.first_name = capitalize(user.first_name);
+  }
+
+  if (user.last_name) {
+    user.last_name = capitalize(user.last_name);
+  }
 
   // No encriptamos la contraseña si no ha sido cambiada.
   if (user.password && user.password !== "") {
@@ -224,39 +258,6 @@ router.put("/update-profile", async (req, res) => {
     res.status(200).send({ success: "Perfil actualizado correctamente" });
   });
 });
-
-// Endpoint para actualizar el perfil
-router.put("/update-profile", (req, res) => {
-  const user = req.body;
-
-  const query =
-    "UPDATE user SET first_name = ?, last_name = ?, email = ?, username = ?, password = ?, birth_date = ? WHERE id = ?";
-
-  db.query(
-    query,
-    [
-      user.first_name,
-      user.last_name,
-      user.email,
-      user.username,
-      user.password,
-      user.birth_date,
-      user.id,
-    ],
-    (err) => {
-      if (err) {
-        console.error("Error en la consulta:", err); // Imprime el error real en consola.
-        return res.status(500).send({
-          error: "Error actualizando el perfil",
-          details: err.message,
-        });
-      }
-      res.status(200).send({ success: "Perfil actualizado correctamente" });
-    }
-  );
-});
-
-module.exports = router;
 
 /**
  *
@@ -402,3 +403,5 @@ router.post("/check-email", (req, res) => {
     }
   });
 });
+
+module.exports = router;

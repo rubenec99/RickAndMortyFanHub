@@ -281,7 +281,6 @@ export class AdminPanelComponent {
     // Compara el tipo de usuario actual con el tipo de usuario original y devuelve el resultado.
     return user.user_type !== original;
   }
-
   toggleSort(sorting: string): void {
     if (this.currentSorting === sorting) {
       this.isAscending = !this.isAscending;
@@ -290,19 +289,11 @@ export class AdminPanelComponent {
       this.isAscending = true; // Por defecto, establecer el orden ascendente al cambiar de columna
     }
 
-    if (sorting === 'user_type') {
-      this.users.sort((a, b) =>
-        this.isAscending
-          ? a.user_type.localeCompare(b.user_type)
-          : b.user_type.localeCompare(a.user_type)
-      );
-    } else {
-      this.loadUsers(
-        this.currentPage,
-        this.pageSize,
-        this.currentSorting,
-        this.isAscending ? 'ASC' : 'DESC'
-      );
-    }
+    this.loadUsers(
+      this.currentPage,
+      this.pageSize,
+      this.currentSorting,
+      this.isAscending ? 'ASC' : 'DESC'
+    );
   }
 }
