@@ -104,6 +104,7 @@ export class UserService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('tokenExpiry');
     localStorage.removeItem('userType');
+    localStorage.removeItem('username');
   }
 
   /**

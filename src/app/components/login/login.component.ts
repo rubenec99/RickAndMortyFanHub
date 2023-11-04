@@ -49,6 +49,7 @@ export class LoginComponent {
           // Decodificar el token para obtener el user_type
           const decodedToken: any = jwtDecode(response.token!);
           localStorage.setItem('userType', decodedToken.user_type);
+          localStorage.setItem('username', decodedToken.username);
 
           const expiryTime = new Date().getTime() + 3600 * 1000; // Tiempo actual + 1 hora (en milisegundos)
           localStorage.setItem('tokenExpiry', expiryTime.toString());
@@ -60,7 +61,7 @@ export class LoginComponent {
             iconColor: '#A8FF44',
             confirmButtonColor: '#00BCD4',
           }).then(() => {
-            this.router.navigate(['/characters']);
+            this.router.navigate(['/home']);
             this.removeBootstrapBackdrop();
           });
         } else if (response.error) {

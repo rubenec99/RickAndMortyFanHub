@@ -1,84 +1,691 @@
-/* Estilos Generales */
-body {
-  background-color: var(--color-space-background);
-  color: var(--color-space-background);
-  font-family: "Comic Sans MS", sans-serif;
-}
-
-h2 {
-  border-bottom: 2px solid var(--color-rick-green);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-}
-
-.outer-container {
-  padding: 2%;
-  margin: 3%;
-  max-width: 90%;
-  overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 10px; /* Bordes ligeramente redondeados */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra alrededor del contenedor */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.align-items-center {
-  align-items: center !important;
-}
-
-.justify-content-center {
-  justify-content: center !important;
-}
-
-.d-flex {
-  display: flex !important;
-  flex-direction: column;
-}
-
-*,
-::after,
-::before {
+/* Restablecer estilos predeterminados del navegador y configurar una base coherente */
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* Botones */
-.btn-primary {
-  background-color: var(--color-rick-green);
+/* -------------------- HEADER -------------------- */
+
+body {
+  color: #ffffff;
+}
+
+.header {
+  position: relative;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 30px;
+  text-align: center;
+}
+
+.header h3 {
+  margin-bottom: 20px;
+  color: #ffffff; /* Azul Portal */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: #ffffff; /* Blanco Galáctico */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 25px;
   border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #00bcd4; /* Azul Portal */
+  color: #ffffff; /* Blanco Galáctico */
 }
 
 .btn-primary:hover {
-  background-color: var(--color-portal-blue);
+  background-color: #0098a8; /* Un tono más oscuro del Azul Portal para el efecto hover */
 }
 
-/* Tarjetas */
-.card {
-  background-color: var(--color-space-background);
-  border: 2px solid var(--color-morty-yellow);
-  transition: transform 0.2s;
+/* -------------------- BOTÓN EXPLORAR AHORA & VER TODOS -------------------- */
+
+.btn-all {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
 }
 
-.card:hover {
+.btn-all.learn-more {
+  width: 12rem;
+  height: auto;
+}
+
+.btn-all.learn-more .circle {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: relative;
+  display: block;
+  margin: 0;
+  width: 3rem;
+  height: 3rem;
+  background: #00bcd4;
+  border-radius: 1.625rem;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-all.learn-more .circle .icon {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+}
+
+.btn-all.learn-more .circle .icon.arrow {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  left: 0.625rem;
+  width: 1.125rem;
+  height: 0.125rem;
+  background: none;
+}
+
+.btn-all.learn-more .circle .icon.arrow::before {
+  position: absolute;
+  content: "";
+  top: -0.29rem;
+  right: 0.0625rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-top: 0.125rem solid #fff;
+  border-right: 0.125rem solid #fff;
+  transform: rotate(45deg);
+}
+
+.btn-all.learn-more .button-text {
+  transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.75rem 0;
+  margin: 0 0 0 1.85rem;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-all:hover .circle {
+  width: 100%;
+}
+
+.btn-all:hover .circle .icon.arrow {
+  background: #fff;
+  transform: translate(1rem, 0);
+}
+
+.btn-all:hover .button-text {
+  color: #fff;
+  text-shadow: none;
+}
+
+/* -------------------- BUTTON NOMBRE -------------------- */
+
+/* === removing default button style ===*/
+.button {
+  margin: 0;
+  height: auto;
+  background: transparent;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+/* button styling */
+.button {
+  --border-right: 6px;
+  --text-stroke-color: rgba(255, 255, 255, 0.6);
+  --animation-color: #a8ff44;
+  --fs-size: 2em;
+  letter-spacing: 3px;
+  text-decoration: none;
+  position: relative;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-stroke-color);
+}
+/* this is the text, when you hover on button */
+.hover-text {
+  position: absolute;
+  box-sizing: border-box;
+  content: attr(data-text);
+  color: var(--animation-color);
+  width: 0%;
+  inset: 0;
+  border-right: var(--border-right) solid var(--animation-color);
+  overflow: hidden;
+  transition: 0.5s;
+  -webkit-text-stroke: 1px var(--animation-color);
+}
+/* hover */
+.button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px var(--animation-color));
+}
+
+/* -------------------- BUTTON TÍTULO -------------------- */
+
+.btn-title,
+.btn-title::after {
+  padding: 10px 50px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  position: relative;
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #00bcd4; /* Azul Portal */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  cursor: auto;
+}
+
+.btn-title::after {
+  --move1: inset(50% 50% 50% 50%);
+  --move2: inset(31% 0 40% 0);
+  --move3: inset(39% 0 15% 0);
+  --move4: inset(45% 0 40% 0);
+  --move5: inset(45% 0 6% 0);
+  --move6: inset(14% 0 61% 0);
+  clip-path: var(--move1);
+  content: "GLITCH";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+}
+
+.btn-title:hover::after {
+  animation: glitch_4011 1s;
+  text-shadow: 10 10px 10px black;
+  animation-timing-function: steps(2, end);
+  text-shadow: -3px -3px 0px #1df2f0, 3px 3px 0px #e94be8;
+  background-color: transparent;
+  border: 3px solid rgb(0, 255, 213);
+}
+
+.btn-title:hover {
+  text-shadow: -1px -1px 0px #1df2f0, 1px 1px 0px #e94be8;
+}
+
+.btn-title:hover {
+  background-color: transparent;
+  border: 1px solid rgb(0, 255, 213);
+  box-shadow: 0px 10px 10px -10px rgb(0, 255, 213);
+}
+
+@keyframes glitch_4011 {
+  0% {
+    clip-path: var(--move1);
+    transform: translate(0px, -10px);
+  }
+
+  10% {
+    clip-path: var(--move2);
+    transform: translate(-10px, 10px);
+  }
+
+  20% {
+    clip-path: var(--move3);
+    transform: translate(10px, 0px);
+  }
+
+  30% {
+    clip-path: var(--move4);
+    transform: translate(-10px, 10px);
+  }
+
+  40% {
+    clip-path: var(--move5);
+    transform: translate(10px, -10px);
+  }
+
+  50% {
+    clip-path: var(--move6);
+    transform: translate(-10px, 10px);
+  }
+
+  60% {
+    clip-path: var(--move1);
+    transform: translate(10px, -10px);
+  }
+
+  70% {
+    clip-path: var(--move3);
+    transform: translate(-10px, 10px);
+  }
+
+  80% {
+    clip-path: var(--move2);
+    transform: translate(10px, -10px);
+  }
+
+  90% {
+    clip-path: var(--move4);
+    transform: translate(-10px, 10px);
+  }
+
+  100% {
+    clip-path: var(--move1);
+    transform: translate(0);
+  }
+}
+
+/* -------------------- SECCIÓN PERSONAJES -------------------- */
+
+.btn-characters-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 2.5em;
+  color: #e1e1e1;
+  font-weight: 800;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+  cursor: auto;
+}
+
+.btn-characters-title:focus,
+.btn-characters-title:hover {
+  color: #00bcd4;
+}
+
+.btn-characters-title:focus:after,
+.btn-characters-title:hover:after {
+  width: 100%;
+  left: 0%;
+}
+
+.btn-characters-title:after {
+  content: "";
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: #fff;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.characters-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem; /* Espacio entre las cards */
+}
+
+.character-card {
+  flex: 1;
+  max-width: 18%; /* Asegura que se muestren 5 tarjetas por fila */
+  position: relative;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.image-container {
+  position: relative;
+}
+
+.character-image {
+  width: 100%;
+  border-radius: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 10px;
+}
+
+.character-name {
+  color: white;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.character-card:hover .character-image {
   transform: scale(1.05);
-  border-color: var(--color-portal-blue);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.card-img-top {
-  max-height: 200px;
+.character-card:hover .overlay {
+  opacity: 1;
+}
+
+/* -------------------- TRIVIA -------------------- */
+
+h3.text-center {
+  color: #4a4a4a;
+  font-size: 2em;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.progress {
+  height: 25px;
+  border-radius: 1rem;
+  background-color: #e4e4e4;
   overflow: hidden;
 }
 
-/* Enlaces */
-a,
-a:hover,
-a:focus {
-  color: var(--color-portal-blue);
+.progress-bar {
+  background-color: #00bcd4;
+  transition: width 0.5s;
+  border-radius: 1rem;
+  line-height: 25px;
+  color: #ffffff;
+  text-align: center;
 }
 
-/* Carousel (Trivia) */
-.carousel-inner {
-  background-color: var(--color-blood-red);
+.card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f9f9f9a9 100%
+  ); /* Fondo con gradiente sutil */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07), 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra más suave */
+  overflow: hidden; /* Esto asegura que nada sobresalga de las esquinas redondeadas */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada en hover */
+}
+
+.card::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  right: -2px;
+  border: 1px solid rgba(0, 0, 0, 0.08); /* Reborde sutil alrededor de la tarjeta */
+  border-radius: 10px;
+  z-index: -1; /* Colocar detrás del contenido principal */
+}
+
+.card-body {
+  padding: 25px;
+}
+
+.form-check {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.form-check-input {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+}
+
+.form-check-input:checked + .form-check-label::before {
+  background-color: #00bcd4;
+  border-color: #00bcd4;
+}
+
+.form-check-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.form-check-label::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.form-check-input:checked + .form-check-label::after {
+  opacity: 1;
+}
+
+.col-lg-4.col-md-6.mb-3 {
+  margin-bottom: 2rem; /* Aumenta la separación inferior de la columna */
+  margin-left: 1rem; /* Añade un margen izquierdo */
+  margin-right: 1rem; /* Añade un margen derecho */
+}
+
+.card {
+  position: relative; /* Esto asegura que el z-index funcione */
+  z-index: 1; /* Esto coloca la tarjeta por encima de elementos vecinos */
+}
+
+.correct-answer .card {
+  box-shadow: 0px 4px 8px rgba(168, 255, 68, 1) !important; /* A8FF44 - Uso de !important para garantizar que este estilo tenga prioridad */
+}
+
+.wrong-answer .card {
+  box-shadow: 0px 4px 8px rgba(255, 69, 101, 1) !important; /* FF4565 - Uso de !important para garantizar que este estilo tenga prioridad */
+}
+
+/* -------------------- NOTIFICACIONES TRIVIA -------------------- */
+
+.feedback-text {
+  font-size: 1.5em; /* Tamaño de letra más grande para enfatizar el mensaje */
+  color: #ffffff; /* Un color oscuro pero no completamente negro para una sensación suave */
+  font-weight: 500; /* Hacer el texto semi-negrita */
+  margin-top: 1rem; /* Espacio respecto al contenido anterior */
+  opacity: 0; /* Comenzar con el mensaje oculto */
+  transform: translateY(
+    0.5rem
+  ); /* Pequeño desplazamiento inicial hacia abajo */
+  transition: opacity 0.4s ease, transform 0.4s ease; /* Transición suave para el efecto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.show-feedback {
+  opacity: 1; /* Mostrar el mensaje con plena opacidad */
+  transform: translateY(0); /* Regresar el mensaje a su posición original */
+}
+
+/* -------------------- BOTÓN TRIVIA -------------------- */
+
+.btn-trivia {
+  outline: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #00bcd4;
+  min-width: 200px;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  padding: 16px 20px;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.btn-trivia:hover {
+  opacity: 0.95;
+}
+
+.btn-trivia .animation {
+  border-radius: 100%;
+  animation: ripple 0.6s linear infinite;
+}
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1),
+      0 0 0 20px rgba(255, 255, 255, 0.1), 0 0 0 40px rgba(255, 255, 255, 0.1),
+      0 0 0 60px rgba(255, 255, 255, 0.1);
+  }
+
+  100% {
+    box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.1),
+      0 0 0 40px rgba(255, 255, 255, 0.1), 0 0 0 60px rgba(255, 255, 255, 0.1),
+      0 0 0 80px rgba(255, 255, 255, 0);
+  }
+}
+
+/* -------------------- CURIOSIDADES -------------------- */
+
+.trivia-container {
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background-image: url(../../../assets/img/curiosity-bg.png);
+  background-attachment: fixed;
+  background-size: cover;
+  width: 100%;
+}
+
+.trivia-heading {
+  color: #0099cc;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.trivia-item {
+  position: relative;
+  padding-left: 40px; /* Espacio para el ícono */
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+  border-bottom: 1px solid #e0e0e0; /* Línea horizontal sutil */
+}
+
+.trivia-item:hover {
+  transform: translateY(-3px);
+}
+
+.trivia-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  color: #00bcd4; /* Color del ícono actualizado */
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+.trivia-item p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1f1f2e;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.trivia-item:last-child {
+  border-bottom: none;
+}
+
+.btn-curiosity-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 2.5em;
+  color: #00bcd4;
+  font-weight: 800;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+  cursor: auto;
+}
+
+.btn-curiosity-title:focus,
+.btn-curiosity-title:hover {
+  color: #00bcd4;
+}
+
+.btn-curiosity-title:focus:after,
+.btn-curiosity-title:hover:after {
+  width: 100%;
+  left: 0%;
+}
+
+.btn-curiosity-title:after {
+  content: "";
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: #00bcd4;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
 }

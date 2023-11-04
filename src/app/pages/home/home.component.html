@@ -1,74 +1,214 @@
 <div class="outer-container">
+  <!-- Encabezado -->
+  <header class="header">
+    <div class="container text-center">
+      <h1><button class="btn-title">Rick & Morty Fan Hub</button></h1>
+
+      <p>Descubre los personajes y planetas del multiverso de Rick & Morty.</p>
+      <p>
+        Valora, haz seguimiento de cada episodio y comparte tus opiniones con la
+        comunidad.
+      </p>
+      <button class="btn-all learn-more" routerLink="/episodes">
+        <span class="circle" aria-hidden="true">
+          <span class="icon arrow"></span>
+        </span>
+        <span class="button-text">Explorar</span>
+      </button>
+    </div>
+  </header>
+
   <!-- Sección de Personajes -->
   <div class="container my-5">
-    <h2 class="text-dark">Conoce a los Habitantes del Multiverso</h2>
-    <div class="row">
-      <!-- Ejemplo para un personaje -->
-      <div class="col-md-3 my-2">
-        <div class="card bg-dark text-dark">
-          <div class="card-body">
-            <h5 class="card-title">Nombre del Personaje</h5>
-            <p class="card-text">Cita o descripción breve.</p>
+    <div class="text-center mb-4">
+      <button class="btn-characters-title">
+        Conoce a los habitantes del Multiverso
+      </button>
+    </div>
+    <div class="characters-row">
+      <div *ngFor="let character of characters" class="character-card">
+        <div class="image-container">
+          <img
+            src="{{ character.image }}"
+            alt="{{ character.name }}"
+            class="character-image"
+          />
+          <div class="overlay">
+            <p class="character-name">{{ character.name }}</p>
           </div>
         </div>
       </div>
-      <!-- Puedes repetir la estructura de columna para otros personajes -->
     </div>
-    <a href="link_a_pagina_personajes" class="btn btn-primary mt-3"
-      >Ver Todos los Personajes</a
-    >
+    <div class="text-center mt-4">
+      <button class="btn-all learn-more" routerLink="/episodes">
+        <span class="circle" aria-hidden="true">
+          <span class="icon arrow"></span>
+        </span>
+        <span class="button-text">Ver todos</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Sección de Episodios -->
-  <div class="container my-5">
-    <h2 class="text-dark">Aventuras sin límites en cada episodio</h2>
-    <div class="row">
-      <!-- Ejemplo para un episodio -->
-      <div class="col-md-4 my-2">
-        <div class="card bg-dark text-dark">
-          <div class="card-body">
-            <h5 class="card-title">Título del Episodio</h5>
-          </div>
+  <!-- Sección de Trivia Interactiva -->
+  <div class="container my-3">
+    <div class="text-center mb-4">
+      <button class="btn-characters-title">Trivia de Rick & Morty</button>
+    </div>
+
+    <div class="mb-4" *ngIf="showProgressBar">
+      <div class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [style.width]="getProgressPercentage() + '%'"
+          [attr.aria-valuenow]="getProgressPercentage()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{ correctAnswersCount }}/{{ displayedQuestions.length }}
         </div>
       </div>
-      <!-- Puedes repetir la estructura de columna para otros episodios -->
     </div>
-    <a href="link_a_pagina_episodios" class="btn btn-primary mt-3"
-      >Explorar Episodios</a
-    >
-  </div>
 
-  <!-- Trivia o Curiosidades -->
-  <div class="container my-5">
-    <h2 class="text-dark">Trivia y Curiosidades</h2>
-    <div class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <!-- Ejemplo para una tarjeta de trivia -->
-        <div class="carousel-item active">
-          <div class="card bg-dark text-dark">
-            <div class="card-body">
-              <p class="card-text">
-                ¿Sabías que el 'Consejo de Ricks' está basado en teorías de la
-                física cuántica?
-              </p>
+    <!-- Primera fila con 3 preguntas -->
+    <div class="row justify-content-center">
+      <ng-container *ngFor="let question of displayedQuestions; let i = index">
+        <ng-container *ngIf="i < 3">
+          <div
+            class="col-lg-4 col-md-6 mb-3"
+            [class.correct-answer]="answerStatus[i]"
+            [class.wrong-answer]="answerStatus[i] === false"
+          >
+            <div class="card shadow-sm h-100">
+              <div class="card-body p-3 d-flex flex-column">
+                <p class="card-text mb-2">
+                  {{ question.question }}
+                </p>
+                <div
+                  *ngFor="let option of question.options; let j = index"
+                  class="form-check mb-2"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="trivia-{{ i }}"
+                    id="trivia-{{ i }}-{{ j }}"
+                    value="{{ j }}"
+                  />
+                  <label class="form-check-label" for="trivia-{{ i }}-{{ j }}">
+                    {{ option }}
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Puedes repetir la estructura de "carousel-item" para más datos de trivia -->
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <!-- Segunda fila con 2 preguntas -->
+    <div class="row justify-content-center">
+      <ng-container *ngFor="let question of displayedQuestions; let i = index">
+        <ng-container *ngIf="i >= 3">
+          <div
+            class="col-lg-4 col-md-6 mb-3"
+            [class.correct-answer]="answerStatus[i]"
+            [class.wrong-answer]="answerStatus[i] === false"
+          >
+            <div class="card shadow-sm h-100">
+              <div class="card-body p-3 d-flex flex-column">
+                <p class="card-text mb-2">
+                  {{ question.question }}
+                </p>
+                <div
+                  *ngFor="let option of question.options; let j = index"
+                  class="form-check mb-2"
+                >
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="trivia-{{ i }}"
+                    id="trivia-{{ i }}-{{ j }}"
+                    value="{{ j }}"
+                  />
+                  <label class="form-check-label" for="trivia-{{ i }}-{{ j }}">
+                    {{ option }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <!-- Botón para verificar todas las respuestas -->
+    <div class="text-center mt-4">
+      <!-- Mensaje de respuesta -->
+      <div
+        class="mt-3 feedback-text"
+        *ngIf="feedbackMessage"
+        [ngClass]="{ 'show-feedback': feedbackMessage }"
+      >
+        {{ feedbackMessage }}
+      </div>
+      <br />
+      <div>
+        <button class="btn-trivia" (click)="checkAllAnswers()">
+          <i class="animation"></i>Comprobar<i class="animation"></i>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Sección de Noticias o Actualizaciones -->
-  <div class="container my-5">
-    <h2 class="text-dark">Noticias y Actualizaciones</h2>
-    <!-- Ejemplo para una noticia -->
-    <div class="card bg-dark text-dark my-2">
-      <div class="card-body">
-        <h5 class="card-title">Título de la Noticia</h5>
-        <p class="card-text">Descripción breve o extracto de la noticia.</p>
-      </div>
+  <!-- Curiosidades -->
+  <div class="container my-5 trivia-container">
+    <div class="text-center mb-4">
+      <button class="btn-curiosity-title">¿SABÍAS QUÉ...</button>
     </div>
-    <!-- Puedes repetir la estructura de "card" para otras noticias -->
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ... el 'Consejo de Ricks' está basado en teorías de la física cuántica?
+      </p>
+    </div>
+
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ... la serie comenzó como una parodia animada de "Back to the Future"
+        titulada "The Real Animated Adventures of Doc and Mharti"?
+      </p>
+    </div>
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ..., según Justin Roiland, uno de los creadores, todos los universos
+        mostrados en la serie son canon, lo que significa que todo lo que sucede
+        en la serie es "oficial"?
+      </p>
+    </div>
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ... la droga "Kalaxian Crystals", que Rick se ha visto consumiendo en
+        algunos episodios, es una referencia a una serie de historias de ciencia
+        ficción que nunca fue producida?
+      </p>
+    </div>
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ... en la serie, hay una serie de televisión llamada "Ball Fondlers",
+        que es una parodia de las películas de acción de los 80s y 90s?
+      </p>
+    </div>
+    <div class="trivia-item">
+      <i class="fa fa-lightbulb-o trivia-icon"></i>
+      <p>
+        ... "Schwifty", una palabra que se popularizó gracias al episodio "Get
+        Schwifty", significa básicamente relajarse y pasarlo bien?
+      </p>
+    </div>
   </div>
 </div>

@@ -84,6 +84,17 @@ export class CharactersService {
   }
 
   /**
+   * Obtiene los primeros 5 personajes de la API.
+   *
+   * @returns Observable<Character[]> - Datos de los 5 primeros personajes.
+   */
+  getFirstFiveCharacters(): Observable<Character[]> {
+    return this.getAllCharacters(1).pipe(
+      map((response) => response.results.slice(0, 5))
+    );
+  }
+
+  /**
    * Maneja y procesa errores de tipo HTTP.
    *
    * @param error - El error HTTP que se debe manejar.

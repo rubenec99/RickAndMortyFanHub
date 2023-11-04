@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
 import { Subject, Observable, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 
+import { jwtDecode } from 'jwt-decode';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -197,6 +199,10 @@ export class RegisterComponent implements OnInit {
             // Almacenar el token y su tiempo de expiración en el localStorage.
             localStorage.setItem('authToken', response.token);
             localStorage.setItem('tokenExpiry', response.expiresAt.toString());
+            // Decodificar el token para obtener el user_type
+            const decodedToken: any = jwtDecode(response.token!);
+            localStorage.setItem('userType', decodedToken.user_type);
+            localStorage.setItem('username', decodedToken.username);
 
             console.log(
               'Token after setting: ',

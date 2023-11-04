@@ -47,6 +47,6 @@ export class LogoutComponent {
    */
   private onLogout() {
     this.userService.logoutUser();
-    this.router.navigate(['/characters']);
+    this.router.navigate(['/home']);
   }
 }
