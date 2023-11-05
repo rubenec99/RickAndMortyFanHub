@@ -135,10 +135,18 @@ export class HomeComponent implements OnInit {
 
   characters: Character[] = [];
 
+  isUserLoggedIn = false; // Por defecto
+
   constructor(
     private charactersService: CharactersService,
     public userService: UserService
-  ) {}
+  ) {
+    if (this.userService.isLoggedIn()) {
+      this.isUserLoggedIn = true;
+    } else {
+      this.isUserLoggedIn = false;
+    }
+  }
 
   ngOnInit(): void {
     // Obtener los cinco primeros personajes
@@ -203,5 +211,9 @@ export class HomeComponent implements OnInit {
    */
   getProgressPercentage(): number {
     return (this.correctAnswersCount / this.displayedQuestions.length) * 100;
+  }
+
+  getUsername(): string {
+    return localStorage.getItem('username') || 'Usuario';
   }
 }

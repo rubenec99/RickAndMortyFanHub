@@ -4,6 +4,22 @@
     <div class="container text-center">
       <h1><button class="btn-title">Rick & Morty Fan Hub</button></h1>
 
+      <!-- Línea para mostrar el nombre de usuario -->
+      <h3>
+        Hola,
+        <button
+          [disabled]="!isUserLoggedIn"
+          class="button"
+          routerLink="/profile"
+          data-text="Awesome"
+        >
+          <span class="actual-text">&nbsp;{{ getUsername() }}&nbsp;</span>
+          <span aria-hidden="true" class="hover-text"
+            >&nbsp;{{ getUsername() }}&nbsp;</span
+          >
+        </button>
+      </h3>
+
       <p>Descubre los personajes y planetas del multiverso de Rick & Morty.</p>
       <p>
         Valora, haz seguimiento de cada episodio y comparte tus opiniones con la

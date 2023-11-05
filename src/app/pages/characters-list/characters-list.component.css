@@ -123,12 +123,17 @@ ngbDropdownMenu {
 /* -------------------- CONTENEDOR PERSONAJES -------------------- */
 
 /* Contenedor general de personajes */
-.d-flex {
+.characters-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   padding: 40px 0;
 }
 
-/* Estilo para la tarjeta */
-.card {
+/* Estilo para la tarjeta del personaje */
+.character-card {
+  width: 15rem;
+  margin: 0.5rem;
   background-color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -137,24 +142,24 @@ ngbDropdownMenu {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
+.character-card:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.card-img-top {
+.character-image {
   width: 100%;
   height: 220px;
   object-fit: cover;
   transition: transform 0.5s;
 }
 
-.card:hover .card-img-top {
+.character-card:hover .character-image {
   transform: scale(1.1);
 }
 
-/* Estilo para el cuerpo de la tarjeta */
-.card-body {
+/* Detalles del personaje en la tarjeta */
+.character-details {
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -163,22 +168,46 @@ ngbDropdownMenu {
   align-items: center;
 }
 
-.card-title {
+.character-name {
   font-size: 20px;
   color: #00bcd4;
   font-weight: 600; /* Bold */
   margin-bottom: 12px;
 }
 
-/* Estilo para las etiquetas de texto */
-.card-title.text-center:not(:first-of-type) {
-  font-size: 14px;
+/* Color del círculo según el estado */
+.fa-circle.alive {
+  color: #a8ff44;
+}
+
+.fa-circle.dead {
+  color: #ff4565;
+}
+
+.fa-circle.unknown {
+  color: #ffd83d;
+}
+
+div.character-location {
+  text-align: center;
+}
+
+.character-status,
+.character-gender,
+.character-location {
   color: #1f1f2e;
+  display: flex;
+  align-items: center;
   margin-bottom: 6px;
 }
 
+.character-status .icon,
+.character-gender .icon {
+  margin-right: 8px;
+}
+
 /* Botón de detalles */
-.btn.btn-primary.btn-sm.btn-block {
+.details-button {
   background-color: #00bcd4;
   border: none;
   color: #ffffff;
@@ -189,7 +218,7 @@ ngbDropdownMenu {
   margin-top: 10px;
 }
 
-.btn.btn-primary.btn-sm.btn-block:hover {
+.details-button:hover {
   background-color: #0097a7;
   transform: translateY(-2px);
 }

@@ -148,6 +148,19 @@ export class UserService {
   }
 
   /**
+   * Determina si un usuario está logueado basado en la presencia y validez del token de autenticación.
+   *
+   * @returns {boolean} Retorna 'true' si hay un token válido en el almacenamiento local, de lo contrario, 'false'.
+   */
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (token && !this.tokenHasExpired()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Cambia el tipo de usuario (normal o administrador) para un usuario específico.
    *
    * @param userId El ID del usuario cuyo tipo se va a cambiar.
