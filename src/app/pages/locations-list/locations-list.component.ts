@@ -44,16 +44,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
     this.locationsService
       .getAllLocations(page)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.locations = response.results;
           this.totalPages = response.info.pages;
           this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
         },
-        (error) => {
+        error: (error) => {
           this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
-        }
-      );
+        },
+      });
   }
 
   /**
@@ -69,15 +69,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
     this.characterService
       .getCharactersByIds(residentIds)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(
-        (residents) => {
+      .subscribe({
+        next: (residents) => {
           this.residentsOfLocation = residents;
           this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
         },
-        (error) => {
+        error: (error) => {
           this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
-        }
-      );
+        },
+      });
   }
 
   /**

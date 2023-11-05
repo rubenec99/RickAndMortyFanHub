@@ -183,40 +183,26 @@ export class RegisterComponent implements OnInit {
    * @param formData - Los datos del formulario de registro, que contienen el nombre de usuario y la contraseña.
    */
   autoLogin(formData: RegistrationData) {
-    // Preparar los datos de inicio de sesión basados en los datos del formulario de registro.
     const LoginData = {
       username: formData.username,
       password: formData.password,
     };
 
-    // Usar el servicio 'loginUser' para iniciar sesión.
-    this.userService.loginUser(LoginData).subscribe(
-      (response) => {
-        // Comprobar si la respuesta tiene una propiedad 'success' y si es verdadera.
+    this.userService.loginUser(LoginData).subscribe({
+      next: (response) => {
         if (response && response.success) {
-          // Verificar si se recibió un token en la respuesta.
           if (response.token) {
-            // Almacenar el token y su tiempo de expiración en el localStorage.
             localStorage.setItem('authToken', response.token);
             localStorage.setItem('tokenExpiry', response.expiresAt.toString());
-            // Decodificar el token para obtener el user_type
             const decodedToken: any = jwtDecode(response.token!);
             localStorage.setItem('userType', decodedToken.user_type);
             localStorage.setItem('username', decodedToken.username);
 
-            console.log(
-              'Token after setting: ',
-              localStorage.getItem('authToken')
-            );
-
-            // Navegar al componente de inicio.
             this.router.navigate(['/home']);
           } else {
-            // Mostrar un mensaje de error si no se recibió el token.
             Swal.fire('Error', 'No se recibió el token del servidor', 'error');
           }
         } else {
-          // Mostrar un mensaje de error si la propiedad 'success' no es verdadera.
           Swal.fire(
             'Error',
             'Error al iniciar sesión automáticamente',
@@ -224,12 +210,11 @@ export class RegisterComponent implements OnInit {
           );
         }
       },
-      (error) => {
-        // Manejar cualquier error que pueda surgir durante la solicitud.
+      error: (error) => {
         console.error('Error al iniciar sesión automáticamente:', error);
         Swal.fire('Error', 'Error al iniciar sesión automáticamente', 'error');
-      }
-    );
+      },
+    });
   }
 
   /**
@@ -242,8 +227,8 @@ export class RegisterComponent implements OnInit {
       this.userService
         .registerUser(formData)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(
-          (response) => {
+        .subscribe({
+          next: (response) => {
             if (response.success) {
               Swal.fire({
                 title: '¡Éxito!',
@@ -268,15 +253,15 @@ export class RegisterComponent implements OnInit {
               });
             }
           },
-          (error) => {
+          error: (error) => {
             console.error('Error al registrar usuario:', error);
             Swal.fire({
               title: 'Error',
               text: 'Ocurrió un error inesperado. Intente de nuevo.',
               icon: 'error',
             });
-          }
-        );
+          },
+        });
     } else {
       Swal.fire({
         title: 'Advertencia',

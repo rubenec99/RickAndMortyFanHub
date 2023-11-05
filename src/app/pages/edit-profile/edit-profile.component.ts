@@ -193,8 +193,8 @@ export class EditProfileComponent implements OnInit {
         delete updatedProfile.confirmPassword;
       }
 
-      this.userService.updateProfile(updatedProfile).subscribe(
-        (response) => {
+      this.userService.updateProfile(updatedProfile).subscribe({
+        next: (response) => {
           Swal.fire({
             title: 'Éxito',
             text: 'Perfil actualizado con éxito.',
@@ -203,15 +203,15 @@ export class EditProfileComponent implements OnInit {
             iconColor: '#A8FF44',
           }).then(() => this.router.navigate(['/home']));
         },
-        (error) => {
+        error: (error) => {
           console.error('Error actualizando el perfil:', error);
           Swal.fire(
             'Error',
             'Hubo un error actualizando tu perfil. Inténtalo de nuevo.',
             'error'
           );
-        }
-      );
+        },
+      });
     } else {
       Swal.fire({
         title: 'Advertencia',
@@ -254,8 +254,8 @@ export class EditProfileComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         if (this.user && typeof this.user.id !== 'undefined') {
-          this.userService.deleteUser(this.user.id).subscribe(
-            (response) => {
+          this.userService.deleteUser(this.user.id).subscribe({
+            next: (response) => {
               Swal.fire({
                 title: 'Eliminado',
                 text: 'Perfil eliminado correctamente.',
@@ -267,15 +267,15 @@ export class EditProfileComponent implements OnInit {
                 this.router.navigate(['/home']);
               });
             },
-            (error) => {
+            error: (error) => {
               console.error('Error al eliminar el perfil:', error);
               Swal.fire(
                 'Error',
                 'Hubo un error al eliminar tu perfil. Inténtalo de nuevo.',
                 'error'
               );
-            }
-          );
+            },
+          });
         }
       }
     });

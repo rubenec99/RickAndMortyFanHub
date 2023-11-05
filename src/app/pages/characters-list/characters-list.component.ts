@@ -82,7 +82,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
           this.errorMessage =
             'No hay personajes con los filtros seleccionados. Por favor, inténtelo de nuevo.';
           console.error('Error loading characters:', error);
-          return throwError(error);
+          return throwError(() => error);
         })
       )
       .subscribe((response) => {
@@ -120,7 +120,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
           this.errorMessage =
             'Error al cargar los detalles del personaje. Por favor, inténtelo de nuevo más tarde.';
           console.error('Error loading episode details:', error);
-          return throwError(error);
+          return throwError(() => error); // Modificación aquí
         })
       )
       .subscribe((episodes) => {
@@ -163,7 +163,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
           this.errorMessage =
             'No se encontraron personajes. Por favor, inténtelo de nuevo.';
           console.error('Error searching characters:', error);
-          return throwError(error);
+          return throwError(() => error); // Modificación aquí
         })
       )
       .subscribe((response) => {

@@ -88,9 +88,53 @@
         <div class="card-body">
           <!-- Nombre del personaje -->
           <h5 class="card-title text-center">{{ character.name }}</h5>
-          <h5 class="card-title text-center">{{ character.status }}</h5>
-          <h5 class="card-title text-center">{{ character.gender }}</h5>
-          <h5 class="card-title text-center">{{ character.location.name }}</h5>
+
+          <!-- Estado del personaje -->
+          <h5 class="card-title text-center">
+            <i
+              *ngIf="character.status === 'Dead'"
+              class="fa-solid fa-face-dizzy"
+            ></i>
+            <i
+              *ngIf="character.status === 'Alive'"
+              class="fa-solid fa-face-smile"
+            ></i>
+            <i
+              *ngIf="
+                character.status !== 'Alive' && character.gender !== 'Dead'
+              "
+              class="fa-solid fa-question"
+            ></i>
+            {{ character.status }}
+          </h5>
+
+          <!-- Género del personaje -->
+          <h5 class="card-title text-center">
+            <i *ngIf="character.gender === 'Male'" class="fa-solid fa-mars"></i>
+            <i
+              *ngIf="character.gender === 'Female'"
+              class="fa-solid fa-venus"
+            ></i>
+            <i
+              *ngIf="character.gender === 'Genderless'"
+              class="fa-solid fa-genderless"
+            ></i>
+            <i
+              *ngIf="
+                character.gender !== 'Male' &&
+                character.gender !== 'Female' &&
+                character.gender !== 'Genderless'
+              "
+              class="fa-solid fa-question"
+            ></i>
+            {{ character.gender }}
+          </h5>
+
+          <!-- Localización del personaje -->
+          <h5 class="card-title text-center">
+            <i class="fa-solid fa-location-dot"></i>
+            {{ character.location.name }}
+          </h5>
           <!-- Botón para abrir el modal de detalles -->
           <button
             class="btn btn-primary btn-sm btn-block"

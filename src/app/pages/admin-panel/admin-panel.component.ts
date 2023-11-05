@@ -38,22 +38,19 @@ export class AdminPanelComponent {
    * Obtiene la lista de usuarios y almacena los tipos de usuario originales.
    */
   ngOnInit(): void {
-    this.userService.getAllUsers().subscribe(
-      (response) => {
-        // Cuando se recibe la lista de usuarios con éxito, se asigna a la propiedad "users".
+    this.userService.getAllUsers().subscribe({
+      next: (response) => {
         this.users = response.data;
-        this.totalUsers = response.total; // También almacenamos el total de usuarios.
+        this.totalUsers = response.total;
 
-        // Se itera sobre los usuarios para almacenar sus tipos de usuario originales.
-        // Esto se hace para poder verificar si ha habido cambios en el tipo de usuario más adelante.
         this.users.forEach((user) => {
           this.originalUserTypes.set(user.id, user.user_type);
         });
       },
-      (error) => {
+      error: (error) => {
         console.error('Error obteniendo usuarios:', error);
-      }
-    );
+      },
+    });
   }
 
   /**
@@ -65,8 +62,8 @@ export class AdminPanelComponent {
     sortBy: string = this.currentSorting,
     direction: string = this.isAscending ? 'ASC' : 'DESC'
   ): void {
-    this.userService.getAllUsers(page, limit, sortBy, direction).subscribe(
-      (response) => {
+    this.userService.getAllUsers(page, limit, sortBy, direction).subscribe({
+      next: (response) => {
         this.users = response.data;
         this.totalUsers = response.total;
 
@@ -78,26 +75,12 @@ export class AdminPanelComponent {
           this.originalUserTypes.set(user.id, user.user_type);
         });
       },
-      (error) => {
+      error: (error) => {
         console.error('Error obteniendo usuarios:', error);
-      }
-    );
+      },
+    });
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.totalUsers / this.pageSize);
-  }
-
-  changePage(page: number): void {
-    if (page >= 0 && page < this.totalPages) {
-      this.currentPage = page;
-      this.loadUsers(); // cargar la página seleccionada
-    }
-  }
-
-  get hasNextPage(): boolean {
-    return this.currentPage < this.totalPages - 1;
-  }
   /**
    * Método para actualizar el tipo de usuario y gestionar la respuesta.
    *
@@ -106,20 +89,18 @@ export class AdminPanelComponent {
    */
   updateUserType(userId: number, newUserType: string): void {
     // Llama al servicio para cambiar el tipo de usuario.
-    this.userService.changeUserType(userId, newUserType).subscribe(
-      (response) => {
-        console.log('Tipo de usuario actualizado correctamente.');
-
+    this.userService.changeUserType(userId, newUserType).subscribe({
+      next: (response) => {
         // Actualiza el valor original del tipo de usuario para el usuario recién actualizado.
         this.originalUserTypes.set(userId, newUserType);
 
         // Recarga la lista de usuarios después de la actualización.
         this.loadUsers();
       },
-      (error) => {
+      error: (error) => {
         console.error('Hubo un error al actualizar el tipo de usuario.', error);
-      }
-    );
+      },
+    });
   }
 
   /**
@@ -159,8 +140,8 @@ export class AdminPanelComponent {
    * @param userId El ID del usuario que se desea eliminar.
    */
   deleteUser(userId: number): void {
-    this.userService.deleteUser(userId).subscribe(
-      (response) => {
+    this.userService.deleteUser(userId).subscribe({
+      next: (response) => {
         Swal.fire({
           title: 'Eliminado',
           text: 'El usuario ha sido eliminado correctamente.',
@@ -172,10 +153,10 @@ export class AdminPanelComponent {
         // Recarga la lista de usuarios después de la eliminación.
         this.loadUsers();
       },
-      (error) => {
+      error: (error) => {
         Swal.fire('Error', 'Hubo un error al eliminar el usuario.', 'error');
-      }
-    );
+      },
+    });
   }
 
   /**
@@ -242,8 +223,8 @@ export class AdminPanelComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         // Si se confirma la eliminación, llama al servicio para eliminar los usuarios seleccionados.
-        this.userService.deleteMultipleUsers(selectedUserIds).subscribe(
-          (response) => {
+        this.userService.deleteMultipleUsers(selectedUserIds).subscribe({
+          next: (response) => {
             // Después de la eliminación, recarga la lista de usuarios.
             this.loadUsers();
             Swal.fire({
@@ -254,14 +235,14 @@ export class AdminPanelComponent {
               confirmButtonColor: '#00BCD4',
             });
           },
-          (error) => {
+          error: (error) => {
             Swal.fire(
               'Error',
               'Ocurrió un error al eliminar los usuarios.',
               'error'
             );
-          }
-        );
+          },
+        });
       }
     });
   }
@@ -295,5 +276,20 @@ export class AdminPanelComponent {
       this.currentSorting,
       this.isAscending ? 'ASC' : 'DESC'
     );
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalUsers / this.pageSize);
+  }
+
+  changePage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadUsers(); // cargar la página seleccionada
+    }
+  }
+
+  get hasNextPage(): boolean {
+    return this.currentPage < this.totalPages - 1;
   }
 }

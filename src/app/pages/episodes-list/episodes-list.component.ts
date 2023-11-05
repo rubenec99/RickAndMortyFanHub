@@ -50,7 +50,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         catchError((error) => {
           this.errorMessage =
             'Error al cargar los episodios. Intente nuevamente.';
-          return throwError(error);
+          return throwError(() => error);
         })
       )
       .subscribe((response) => {
@@ -130,7 +130,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         catchError((error) => {
           this.errorMessage =
             'Error al cargar los personajes. Intente nuevamente.';
-          return throwError(error);
+          return throwError(() => error);
         })
       )
       .subscribe((characters) => {

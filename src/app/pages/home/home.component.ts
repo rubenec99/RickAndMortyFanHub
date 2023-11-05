@@ -142,10 +142,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     // Obtener los cinco primeros personajes
-    this.charactersService.getFirstFiveCharacters().subscribe(
-      (data) => (this.characters = data),
-      (error) => console.error('Error fetching characters', error)
-    );
+    this.charactersService.getRandomFiveCharacters().subscribe({
+      next: (data) => (this.characters = data),
+      error: (error) => console.error('Error fetching characters', error),
+    });
 
     // Obtener un conjunto de preguntas al azar
     this.getRandomQuestions();

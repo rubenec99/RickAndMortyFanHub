@@ -41,8 +41,8 @@ export class LoginComponent {
    */
   onLogin(event: Event) {
     event.preventDefault();
-    this.userService.loginUser(this.loginData).subscribe(
-      (response) => {
+    this.userService.loginUser(this.loginData).subscribe({
+      next: (response) => {
         if (response.success) {
           this.userService.setToken(response.token!);
 
@@ -74,7 +74,7 @@ export class LoginComponent {
           });
         }
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al iniciar sesión:', error);
         Swal.fire({
           title: '¡Error!',
@@ -83,7 +83,7 @@ export class LoginComponent {
           iconColor: '#FF4565',
           confirmButtonColor: '#00BCD4',
         });
-      }
-    );
+      },
+    });
   }
 }

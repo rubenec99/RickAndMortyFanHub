@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
 
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
@@ -84,17 +84,6 @@ export class CharactersService {
   }
 
   /**
-   * Obtiene los primeros 5 personajes de la API.
-   *
-   * @returns Observable<Character[]> - Datos de los 5 primeros personajes.
-   */
-  getFirstFiveCharacters(): Observable<Character[]> {
-    return this.getAllCharacters(1).pipe(
-      map((response) => response.results.slice(0, 5))
-    );
-  }
-
-  /**
    * Maneja y procesa errores de tipo HTTP.
    *
    * @param error - El error HTTP que se debe manejar.
@@ -110,5 +99,52 @@ export class CharactersService {
     console.error(errorMessage);
 
     return throwError(errorMessage);
+  }
+
+  /**
+   * Obtiene 5 personajes aleatorios de la API.
+   *
+   * @returns Observable<Character[]> - Datos de los 5 personajes aleatorios.
+   */
+  getRandomFiveCharacters(): Observable<Character[]> {
+    return this.getAllCharacters(1).pipe(
+      switchMap((response) => {
+        const totalCharacters = response.info.count;
+        const randomIds = this.generateUniqueRandomNumbers(5, totalCharacters);
+
+        // Usar forkJoin para obtener todos los personajes al mismo tiempo.
+        return forkJoin(randomIds.map((id) => this.getCharacterById(id)));
+      })
+    );
+  }
+
+  /**
+   * Genera un conjunto de números aleatorios únicos.
+   *
+   * @param count - Cuántos números aleatorios generar.
+   * @param max - Límite superior para números aleatorios.
+   * @returns number[] - Conjunto de números aleatorios.
+   */
+  generateUniqueRandomNumbers(count: number, max: number): number[] {
+    const randomNumbers = new Set<number>();
+
+    while (randomNumbers.size < count) {
+      const randomNumber = Math.floor(Math.random() * max) + 1;
+      randomNumbers.add(randomNumber);
+    }
+
+    return [...randomNumbers];
+  }
+
+  /**
+   * Obtiene un personaje por ID.
+   *
+   * @param id - ID del personaje.
+   * @returns Observable<Character> - Datos del personaje.
+   */
+  getCharacterById(id: number): Observable<Character> {
+    return this.http
+      .get<Character>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 }
