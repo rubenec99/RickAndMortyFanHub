@@ -28,6 +28,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadAllEpisodes();
+    this.setCurrentUserId();
   }
 
   private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
@@ -43,6 +44,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   errorMessage: string | null = null;
   comments: any[] = [];
   episodeId!: number;
+  currentUserId: number | null = null;
 
   loadAllEpisodes(page: number = 1): void {
     this.episodesService
@@ -191,6 +193,15 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         console.error('Error al eliminar el comentario:', err);
       },
     });
+  }
+
+  setCurrentUserId(): void {
+    this.currentUserId = this.userService.getCurrentUserId(); // Suponiendo que este método te dé el ID del usuario logueado.
+  }
+
+  // Método para comprobar si el comentario pertenece al usuario logueado
+  isUserComment(commentUserId: number): boolean {
+    return this.currentUserId === commentUserId;
   }
 
   ngOnDestroy(): void {

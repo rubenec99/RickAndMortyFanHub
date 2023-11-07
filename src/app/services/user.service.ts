@@ -14,6 +14,8 @@ import {
   LoginResponse,
 } from '../models/user.model';
 
+import { jwtDecode } from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -257,6 +259,15 @@ export class UserService {
     return this.http.get<{ user_type: string }>(`${this.apiUrl}/user-type`, {
       headers,
     });
+  }
+
+  getCurrentUserId(): number | null {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.user_id; // Asegúrate de que 'user_id' es la clave correcta del ID en tu token.
+    }
+    return null;
   }
 
   /**

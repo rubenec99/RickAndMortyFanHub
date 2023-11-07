@@ -137,7 +137,12 @@
                 >: {{ comment.content }}
               </p>
               <p>{{ comment.createdAt | date }}</p>
-              <button (click)="deleteComment(comment.id)">Eliminar</button>
+              <button
+                *ngIf="isUserComment(comment.userId)"
+                (click)="deleteComment(comment.id)"
+              >
+                Eliminar
+              </button>
             </div>
           </div>
           <ng-template #noComments>

@@ -20,10 +20,6 @@ export class LoginComponent {
     password: '',
   };
 
-  /**
-   * Elimina el fondo opaco de Bootstrap que puede permanecer
-   * después de cerrar un modal.
-   */
   removeBootstrapBackdrop() {
     const backdrop = document.querySelector('.modal-backdrop');
     if (backdrop) {
@@ -34,11 +30,6 @@ export class LoginComponent {
 
   constructor(private userService: UserService, private router: Router) {}
 
-  /**
-   * Método que maneja el evento de inicio de sesión.
-   *
-   * @param event - Evento del formulario para prevenir su envío por defecto.
-   */
   onLogin(event: Event) {
     event.preventDefault();
     this.userService.loginUser(this.loginData).subscribe({
@@ -50,6 +41,7 @@ export class LoginComponent {
           const decodedToken: any = jwtDecode(response.token!);
           localStorage.setItem('userType', decodedToken.user_type);
           localStorage.setItem('username', decodedToken.username);
+          localStorage.setItem('user_id', decodedToken.user_id);
 
           const expiryTime = new Date().getTime() + 3600 * 1000; // Tiempo actual + 1 hora (en milisegundos)
           localStorage.setItem('tokenExpiry', expiryTime.toString());

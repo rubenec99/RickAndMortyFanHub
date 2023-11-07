@@ -111,6 +111,7 @@ router.post("/login", (req, res) => {
           id: user.id,
           username: user.username,
           user_type: user.user_type,
+          user_id: user.id,
         },
         SECRET_KEY,
         {
