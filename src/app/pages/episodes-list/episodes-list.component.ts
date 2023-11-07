@@ -45,6 +45,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   comments: any[] = [];
   episodeId!: number;
   currentUserId: number | null = null;
+  currentRating: number = 5;
 
   loadAllEpisodes(page: number = 1): void {
     this.episodesService
@@ -148,6 +149,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         next: (response: any) => {
           console.log('Comment submission response:', response); // Log the response
           this.commentText = '';
+          this.loadComments();
         },
         error: (error: any) => {
           console.error('Comment submission error:', error); // Log any error
@@ -202,6 +204,25 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   // Método para comprobar si el comentario pertenece al usuario logueado
   isUserComment(commentUserId: number): boolean {
     return this.currentUserId === commentUserId;
+  }
+
+  submitRating(): void {
+    const episodeId = this.selectedEpisode?.id;
+    if (episodeId) {
+      console.log(`Submitting rating for episodeId: ${episodeId}`);
+      this.commentService.addRating(episodeId, this.currentRating).subscribe({
+        next: (response: any) => {
+          console.log('Rating submission response:', response);
+          this.currentRating = 5; // Resetear la calificación a un valor predeterminado si es necesario
+          // Puedes querer actualizar la vista o hacer algo después de enviar la calificación exitosamente
+        },
+        error: (error: any) => {
+          console.error('Rating submission error:', error);
+        },
+      });
+    } else {
+      console.error('No episodeId found for rating submission.');
+    }
   }
 
   ngOnDestroy(): void {

@@ -533,4 +533,72 @@ router.delete("/comments/:commentId", verifyToken, (req, res) => {
   });
 });
 
+/**
+ *
+ ** VALORACIONES
+ *
+ */
+
+// Añadir una valoración a un episodio
+router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
+  const { rating: ratingValue } = req.body; // Asegúrate de que 'rating' es el campo correcto enviado desde el frontend
+  const { episodeId } = req.params;
+  const userId = req.userId; // Obtenido de la verificación del token
+
+  // Antes de insertar, debemos verificar si el usuario ya ha valorado este episodio
+  const findRatingQuery =
+    "SELECT * FROM rating WHERE user_id = ? AND episode_id = ?";
+  db.query(findRatingQuery, [userId, episodeId], (findErr, findResults) => {
+    if (findErr) {
+      console.error("Database error al buscar valoración:", findErr);
+      return res.status(500).send({ error: "Error al buscar valoración" });
+    }
+
+    if (findResults.length > 0) {
+      // El usuario ya ha valorado este episodio, tal vez quieras actualizar la valoración en su lugar
+      const updateRatingQuery =
+        "UPDATE rating SET rating_value = ? WHERE user_id = ? AND episode_id = ?";
+      db.query(
+        updateRatingQuery,
+        [ratingValue, userId, episodeId],
+        (updateErr, updateResults) => {
+          if (updateErr) {
+            console.error(
+              "Database error al actualizar valoración:",
+              updateErr
+            );
+            return res
+              .status(500)
+              .send({ error: "Error al actualizar valoración" });
+          }
+          res.status(200).send({
+            success: "Valoración actualizada con éxito",
+            affectedRows: updateResults.affectedRows, // Número de filas afectadas por la actualización
+          });
+        }
+      );
+    } else {
+      // Inserta la nueva valoración ya que no existe previamente
+      const insertRatingQuery =
+        "INSERT INTO rating (user_id, episode_id, rating_value) VALUES (?, ?, ?)";
+      db.query(
+        insertRatingQuery,
+        [userId, episodeId, ratingValue],
+        (insertErr, insertResults) => {
+          if (insertErr) {
+            console.error("Database error al añadir valoración:", insertErr);
+            return res
+              .status(500)
+              .send({ error: "Error al añadir valoración" });
+          }
+          res.status(201).send({
+            success: "Valoración añadida con éxito",
+            rating_id: insertResults.insertId,
+          });
+        }
+      );
+    }
+  });
+});
+
 module.exports = router;
