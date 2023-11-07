@@ -47,17 +47,6 @@ export class CommentService {
     );
   }
 
-  addRating(episodeId: number, rating: number): Observable<any> {
-    const retrievedToken = localStorage.getItem('authToken');
-    const url = `${this.apiUrl}/episodes/${episodeId}/ratings`;
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      `Bearer ${retrievedToken}`
-    );
-    const body = { rating }; // Solo la calificación es enviada
-    return this.http.post(url, body, { headers });
-  }
-
   // Puedes tener un método genérico para manejar errores
   private handleError(error: any) {
     console.error('An error occurred:', error);

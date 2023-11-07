@@ -52,7 +52,7 @@
             data-bs-target="#commentsModal"
             (click)="openModal(episode)"
           >
-            Comentarios
+            Valorar y comentar
           </button>
         </div>
       </div>
@@ -129,18 +129,11 @@
         <div class="modal-body">
           <div class="rating-section">
             <h6>Valorar este episodio:</h6>
-            <form (ngSubmit)="submitRating()">
-              <select [(ngModel)]="currentRating" name="rating" required>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-              <button type="submit" class="btn btn-success">
-                Enviar Valoración
-              </button>
-            </form>
+            <!-- Escucha el evento ratingChange y llama a submitRating() -->
+            <app-rating
+              [(rating)]="currentRating"
+              (ratingChange)="submitRating()"
+            ></app-rating>
           </div>
           <form (ngSubmit)="submitComment()">
             <textarea

@@ -21,6 +21,8 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
 import { HomeComponent } from './pages/home/home.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+import { StarComponent } from './components/star/star.component';
+import { RatingComponent } from './components/rating/rating.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
     AdminPanelComponent,
     HomeComponent,
     EditProfileComponent,
+    StarComponent,
+    RatingComponent,
   ],
   imports: [
     BrowserModule,

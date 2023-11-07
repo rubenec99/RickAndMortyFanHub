@@ -601,4 +601,27 @@ router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
   });
 });
 
+// Obtener detalles de un episodio, incluyendo la calificación media
+router.get("/episodes/:episodeId/details", (req, res) => {
+  const { episodeId } = req.params;
+  const avgRatingQuery =
+    "SELECT AVG(rating_value) as averageRating FROM rating WHERE episode_id = ?";
+
+  db.query(avgRatingQuery, [episodeId], (error, results) => {
+    if (error) {
+      console.error("Error al obtener la calificación promedio:", error);
+      return res
+        .status(500)
+        .json({ error: "Error al realizar la consulta en la base de datos" });
+    }
+
+    // Asegúrate de manejar el caso en que no hay calificaciones todavía
+    const averageRating = results.length > 0 ? results[0].averageRating : 0;
+
+    res.json({
+      averageRating,
+    });
+  });
+});
+
 module.exports = router;

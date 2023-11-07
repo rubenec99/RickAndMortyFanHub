@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { Subject, throwError } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 
@@ -10,7 +9,7 @@ import { EpisodesService } from 'src/app/services/episodes.service';
 import { CharactersService } from 'src/app/services/characters.service';
 import { CommentService } from 'src/app/services/comments.service';
 import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/backend/models/user.model';
+import { RatingService } from 'src/app/services/rating.service';
 
 @Component({
   selector: 'app-episodes-list',
@@ -18,34 +17,38 @@ import { User } from 'src/backend/models/user.model';
   styleUrls: ['./episodes-list.component.css'],
 })
 export class EpisodesComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+
+  episodes: Episode[] = [];
+  allEpisodes: Episode[] = [];
+  charactersOfEpisode: Character[] = [];
+  uniqueSeasons: string[] = [];
+  comments: any[] = [];
+
+  errorMessage: string | null = null;
   commentText!: string;
+  episodeId!: number;
+  currentUserId: number | null = null;
+  currentRating: number = 0;
+  selectedRating: number = 0;
+  selectedEpisode: Episode | null = null;
+
+  currentPage: number = 1;
+  totalPages: number = 0;
+  seasonFilter: string = '';
+
   constructor(
     private episodesService: EpisodesService,
     private characterService: CharactersService,
     private commentService: CommentService,
-    private userService: UserService
+    private userService: UserService,
+    private ratingService: RatingService
   ) {}
 
   ngOnInit() {
     this.loadAllEpisodes();
     this.setCurrentUserId();
   }
-
-  private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
-
-  episodes: Episode[] = []; // Lista de episodios que se mostrarán en la vista actual
-  currentPage: number = 1; // Página actual en la que se encuentra el usuario
-  totalPages: number = 0; // Número total de páginas disponibles con base en el número de episodios
-  seasonFilter: string = ''; // Filtro seleccionado por el usuario para ver una temporada específica
-  allEpisodes: Episode[] = []; // Episodios recuperados de la API, se utilizan para filtrar
-  selectedEpisode: Episode | null = null; // Episodio seleccionado para mostrar en la modal
-  charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
-  uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
-  errorMessage: string | null = null;
-  comments: any[] = [];
-  episodeId!: number;
-  currentUserId: number | null = null;
-  currentRating: number = 5;
 
   loadAllEpisodes(page: number = 1): void {
     this.episodesService
@@ -104,6 +107,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   openModal(episode: Episode): void {
     this.selectedEpisode = episode;
     this.episodeId = episode.id;
+    this.initializeRating();
 
     const characterIds = episode.characters.map(
       (url) => +url.split('/').pop()!
@@ -158,6 +162,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     } else {
       console.error('No episodeId found for comment submission.'); // Log if there's no episodeId
     }
+    this.initializeRating();
   }
 
   loadComments(): void {
@@ -207,14 +212,18 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   }
 
   submitRating(): void {
+    if (!this.userService.isLoggedIn()) {
+      alert('Debes iniciar sesión para comentar.');
+      return;
+    }
+
     const episodeId = this.selectedEpisode?.id;
     if (episodeId) {
       console.log(`Submitting rating for episodeId: ${episodeId}`);
-      this.commentService.addRating(episodeId, this.currentRating).subscribe({
+      this.ratingService.addRating(episodeId, this.currentRating).subscribe({
         next: (response: any) => {
           console.log('Rating submission response:', response);
-          this.currentRating = 5; // Resetear la calificación a un valor predeterminado si es necesario
-          // Puedes querer actualizar la vista o hacer algo después de enviar la calificación exitosamente
+          this.initializeRating();
         },
         error: (error: any) => {
           console.error('Rating submission error:', error);
@@ -222,6 +231,29 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       });
     } else {
       console.error('No episodeId found for rating submission.');
+    }
+  }
+
+  initializeRating(): void {
+    if (this.selectedEpisode) {
+      this.ratingService
+        .getAverageRating(`${this.selectedEpisode.id}`)
+        .subscribe({
+          next: (response: any) => {
+            const averageRating = response.averageRating
+              ? parseFloat(response.averageRating)
+              : 0;
+            this.currentRating = Math.round(averageRating); // Esto debería ser el promedio de calificaciones, redondeado.
+            console.log(averageRating);
+          },
+          error: (error: any) => {
+            console.error('Error fetching average rating:', error);
+            this.currentRating = 0; // En caso de error, establece la calificación a 0.
+          },
+        });
+    } else {
+      console.error('No episode selected to fetch average rating.');
+      this.currentRating = 0;
     }
   }
 

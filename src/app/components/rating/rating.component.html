@@ -1,0 +1,7 @@
+<app-star
+  *ngFor="let _ of stars; let i = index"
+  [filled]="i <= hoverIndex || (hoverIndex === -1 && i < rating)"
+  (starClick)="rate(i + 1)"
+  (starHover)="hoverEnter(i)"
+  (starHoverLeave)="hoverLeave()"
+></app-star>

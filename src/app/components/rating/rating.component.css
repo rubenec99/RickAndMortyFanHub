@@ -1,0 +1,7 @@
+.filled {
+  color: gold;
+}
+app-star {
+  cursor: pointer;
+  font-size: 25px;
+}
