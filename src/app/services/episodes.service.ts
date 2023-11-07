@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -12,7 +16,7 @@ import { EpisodeResponse, Episode } from '../models/episode.model';
 })
 export class EpisodesService {
   // URL base de la API de episodios de "Rick and Morty".
-  private baseURL = 'https://rickandmortyapi.com/api/episode';
+  private apiUrl = 'https://rickandmortyapi.com/api/episode';
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +27,7 @@ export class EpisodesService {
    * @returns Observable<EpisodeResponse> Lista paginada de episodios.
    */
   getAllEpisodes(page: number = 1): Observable<EpisodeResponse> {
-    const url = `${this.baseURL}?page=${page}`;
+    const url = `${this.apiUrl}?page=${page}`;
     return this.http
       .get<EpisodeResponse>(url)
       .pipe(catchError(this.handleError));
@@ -37,13 +41,13 @@ export class EpisodesService {
    */
   getMultipleEpisodes(ids: number[]): Observable<Episode[]> {
     if (ids.length === 1) {
-      const url = `${this.baseURL}/${ids[0]}`;
+      const url = `${this.apiUrl}/${ids[0]}`;
       return this.http.get<Episode>(url).pipe(
         map((episode) => [episode]),
         catchError(this.handleError)
       );
     } else if (ids.length > 1) {
-      const url = `${this.baseURL}/${ids.join(',')}`;
+      const url = `${this.apiUrl}/${ids.join(',')}`;
       return this.http.get<Episode[]>(url).pipe(catchError(this.handleError));
     } else {
       return of([]);

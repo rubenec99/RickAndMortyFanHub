@@ -5,7 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 import { User } from 'src/backend/models/user.model';
 
-import { Observable, catchError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import {
   RegistrationData,
@@ -107,6 +107,7 @@ export class UserService {
     localStorage.removeItem('tokenExpiry');
     localStorage.removeItem('userType');
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
   }
 
   /**
@@ -265,7 +266,7 @@ export class UserService {
     const token = this.getToken();
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      return decodedToken.user_id; // Asegúrate de que 'user_id' es la clave correcta del ID en tu token.
+      return decodedToken.user_id;
     }
     return null;
   }

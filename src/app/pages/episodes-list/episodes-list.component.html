@@ -116,6 +116,8 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
+          <!-- Este es el ícono o botón que el usuario puede clickear para marcar como visto/no visto -->
+
           <h5 class="modal-title" id="commentsModalLabel">
             Comentarios para {{ selectedEpisode?.name }}
           </h5>
@@ -139,7 +141,7 @@
             <textarea
               [(ngModel)]="commentText"
               name="comment"
-              required
+              required=""
             ></textarea>
             <button type="submit">Enviar Comentario</button>
           </form>

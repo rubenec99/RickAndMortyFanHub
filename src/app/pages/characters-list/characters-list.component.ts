@@ -81,7 +81,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
         catchError((error) => {
           this.errorMessage =
             'No hay personajes con los filtros seleccionados. Por favor, inténtelo de nuevo.';
-          console.error('Error loading characters:', error);
           return throwError(() => error);
         })
       )

@@ -101,20 +101,20 @@ export class CharactersService {
     return throwError(errorMessage);
   }
 
-  /**
-   * Obtiene 5 personajes aleatorios de la API.
-   *
-   * @returns Observable<Character[]> - Datos de los 5 personajes aleatorios.
-   */
   getRandomFiveCharacters(): Observable<Character[]> {
-    return this.getAllCharacters(1).pipe(
-      switchMap((response) => {
-        const totalCharacters = response.info.count;
+    // First get the total count from the API.
+    return this.http.get<{ info: { count: number } }>(this.baseUrl).pipe(
+      switchMap((infoResponse) => {
+        const totalCharacters = infoResponse.info.count;
         const randomIds = this.generateUniqueRandomNumbers(5, totalCharacters);
 
-        // Usar forkJoin para obtener todos los personajes al mismo tiempo.
-        return forkJoin(randomIds.map((id) => this.getCharacterById(id)));
-      })
+        // Create a comma-separated string of random IDs.
+        const randomIdsString = randomIds.join(',');
+
+        // Make a single request to get all five random characters.
+        return this.http.get<Character[]>(`${this.baseUrl}/${randomIdsString}`);
+      }),
+      catchError(this.handleError)
     );
   }
 
