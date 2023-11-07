@@ -463,24 +463,72 @@ router.post("/episodes/:episodeId/comments", verifyToken, (req, res) => {
 router.get("/episodes/:episodeId/comments", (req, res) => {
   const { episodeId } = req.params;
 
-  const query = "SELECT * FROM comment WHERE episode_id = ?";
+  const query = `
+  SELECT c.comment_id, c.user_id, c.episode_id, c.content, c.comment_date, u.username 
+  FROM comment c
+  JOIN user u ON c.user_id = u.id
+  WHERE c.episode_id = ?`;
+
   db.query(query, [episodeId], (err, results) => {
     if (err) {
-      console.error("Database error:", err); // Error en la base de datos
+      console.error("Database error:", err);
       return res
         .status(500)
         .send({ error: "Error al obtener los comentarios" });
     }
 
     const comments = results.map((comment) => ({
-      id: comment.id,
+      id: comment.comment_id,
       userId: comment.user_id,
       episodeId: comment.episode_id,
       content: comment.content,
-      createdAt: comment.created_at,
+      createdAt: comment.comment_date,
+      username: comment.username, // Aquí añadimos el username
     }));
 
     res.status(200).send({ comments: comments });
+  });
+});
+
+router.delete("/comments/:commentId", verifyToken, (req, res) => {
+  const { commentId } = req.params;
+  const userId = req.userId;
+
+  // Primero, verifica que el comentario pertenece al usuario
+  const findCommentQuery = "SELECT user_id FROM comment WHERE comment_id = ?";
+  db.query(findCommentQuery, [commentId], (findErr, findResults) => {
+    if (findErr) {
+      console.error("Database error al buscar comentario:", findErr);
+      return res.status(500).send({ error: "Error al buscar comentario" });
+    }
+
+    if (findResults.length === 0) {
+      return res.status(404).send({ error: "Comentario no encontrado" });
+    }
+
+    // Verifica que el comentario pertenece al usuario que hace la solicitud
+    if (findResults[0].user_id !== userId) {
+      return res
+        .status(403)
+        .send({ error: "No autorizado para borrar este comentario" });
+    }
+
+    // Si el comentario pertenece al usuario, procede a eliminar
+    const deleteCommentQuery = "DELETE FROM comment WHERE comment_id = ?";
+    db.query(deleteCommentQuery, [commentId], (deleteErr, deleteResults) => {
+      if (deleteErr) {
+        console.error("Database error al eliminar comentario:", deleteErr);
+        return res.status(500).send({ error: "Error al eliminar comentario" });
+      }
+
+      if (deleteResults.affectedRows === 0) {
+        // Ninguna fila afectada, lo que significa que el comentario no fue encontrado
+        return res.status(404).send({ error: "Comentario no encontrado" });
+      }
+
+      // Comentario eliminado con éxito
+      res.status(200).send({ success: "Comentario eliminado con éxito" });
+    });
   });
 });
 

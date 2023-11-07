@@ -33,4 +33,23 @@ export class CommentService {
       })
     );
   }
+
+  // Método para eliminar un comentario
+  deleteComment(commentId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const url = `${this.apiUrl}/comments/${commentId}`;
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.delete(url, { headers }).pipe(
+      catchError(this.handleError) // Asegúrate de tener un método para manejar errores.
+    );
+  }
+
+  // Puedes tener un método genérico para manejar errores
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError(() => new Error(error.message || 'An error occurred'));
+  }
 }

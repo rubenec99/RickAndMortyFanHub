@@ -44,12 +44,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   comments: any[] = [];
   episodeId!: number;
 
-  /**
-   * Método para cargar todos los episodios de la API con paginación opcional.
-   *
-   * @param page (Opcional) El número de página que se desea recuperar. Por defecto, es la página 1.
-   * @returns void
-   */
   loadAllEpisodes(page: number = 1): void {
     this.episodesService
       .getAllEpisodes(page)
@@ -75,13 +69,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Método para extraer las temporadas únicas de la lista de episodios.
-   *
-   * Este método analiza cada episodio en la lista y extrae el código de temporada único
-   * (por ejemplo, "Sxx" de "SxxExx"). Luego, almacena las temporadas únicas en el arreglo
-   * "uniqueSeasons" en orden ascendente.
-   */
   extractUniqueSeasons() {
     // Crea un conjunto (Set) para almacenar temporadas únicas
     const seasonsSet = new Set<string>();
@@ -99,14 +86,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     this.uniqueSeasons = Array.from(seasonsSet).sort();
   }
 
-  /**
-   * Método para filtrar los episodios por temporada.
-   *
-   * Si se proporciona un filtro de temporada, se muestran solo los episodios que comienzan con ese número de temporada.
-   * Si no se proporciona ningún filtro, se muestran todos los episodios disponibles.
-   *
-   * @returns void
-   */
   filterBySeason(): void {
     if (this.seasonFilter) {
       // Filtra los episodios que comienzan con el número de temporada especificado
@@ -119,11 +98,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Abre la ventana modal y carga los detalles del personaje para el episodio seleccionado.
-   *
-   * @param episode - El episodio seleccionado.
-   */
   openModal(episode: Episode): void {
     this.selectedEpisode = episode;
     this.episodeId = episode.id;
@@ -153,16 +127,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Método para rastrear los episodios en una lista mediante su ID.
-   *
-   * Este método se utiliza en las directivas *ngFor para ayudar a Angular a rastrear
-   * y gestionar eficientemente los elementos en una lista cuando se producen cambios.
-   *
-   * @param index El índice del elemento en la lista.
-   * @param episode El episodio en la lista correspondiente al índice dado.
-   * @returns El ID del episodio, que se utiliza como valor de seguimiento único.
-   */
   trackByEpisodeId(index: number, episode: Episode): number {
     return episode.id;
   }
@@ -207,13 +171,28 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Método que se ejecuta cuando el componente está a punto de ser destruido.
-   * Se utiliza para emitir un valor a través del `unsubscribe$` Subject, lo que
-   * señala a todos los observables (que estén utilizando `takeUntil(this.unsubscribe$)`)
-   * que se desuscriban para evitar pérdidas de memoria.
-   * Además, completa el `unsubscribe$` Subject para asegurarse de que no emita más valores.
-   */
+  deleteComment(commentId: number): void {
+    // Confirmación para el usuario antes de eliminar el comentario
+    if (
+      !window.confirm('¿Estás seguro de que quieres eliminar este comentario?')
+    ) {
+      return;
+    }
+
+    this.commentService.deleteComment(commentId).subscribe({
+      next: () => {
+        console.log('Comentario eliminado con éxito');
+        // Eliminar el comentario de la lista de comentarios en el frontend
+        this.comments = this.comments.filter(
+          (comment) => comment.id !== commentId
+        );
+      },
+      error: (err) => {
+        console.error('Error al eliminar el comentario:', err);
+      },
+    });
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

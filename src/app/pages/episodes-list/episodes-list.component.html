@@ -133,11 +133,11 @@
           <div *ngIf="comments.length > 0; else noComments">
             <div *ngFor="let comment of comments">
               <p>
-                <strong>{{ comment.userId }}</strong
+                <strong>{{ comment.username }}</strong
                 >: {{ comment.content }}
               </p>
               <p>{{ comment.createdAt | date }}</p>
-              <!-- Aquí puedes añadir más detalles o controles para cada comentario -->
+              <button (click)="deleteComment(comment.id)">Eliminar</button>
             </div>
           </div>
           <ng-template #noComments>
