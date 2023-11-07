@@ -34,15 +34,25 @@
             <strong>Episodio:</strong> {{ episode.episode }} <br />
             <strong>Fecha de emisión:</strong> {{ episode.air_date }}
           </p>
-          <!-- Botón para abrir la modal -->
+          <!-- Botón para abrir la modal de personajes -->
           <button
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#episodeModal"
+            data-bs-target="#charactersModal"
             (click)="openModal(episode)"
           >
             Ver Personajes
+          </button>
+          <!-- Botón para abrir la modal de comentarios -->
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#commentsModal"
+            (click)="openModal(episode)"
+          >
+            Comentarios
           </button>
         </div>
       </div>
@@ -52,15 +62,15 @@
   <!-- Ventana modal para mostrar personajes -->
   <div
     class="modal fade"
-    id="episodeModal"
+    id="charactersModal"
     tabindex="-1"
-    aria-labelledby="exampleModalLabel"
+    aria-labelledby="charactersModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5 class="modal-title" id="charactersModalLabel">
             Personajes en {{ selectedEpisode?.name }}
           </h5>
           <button
@@ -76,6 +86,63 @@
               {{ character.name }}
             </li>
           </ul>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ventana modal para ver y añadir comentarios -->
+  <div
+    class="modal fade"
+    id="commentsModal"
+    tabindex="-1"
+    aria-labelledby="commentsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentsModalLabel">
+            Comentarios para {{ selectedEpisode?.name }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="submitComment()">
+            <textarea
+              [(ngModel)]="commentText"
+              name="comment"
+              required
+            ></textarea>
+            <button type="submit">Enviar Comentario</button>
+          </form>
+          <div *ngIf="comments.length > 0; else noComments">
+            <div *ngFor="let comment of comments">
+              <p>
+                <strong>{{ comment.userId }}</strong
+                >: {{ comment.content }}
+              </p>
+              <p>{{ comment.createdAt | date }}</p>
+              <!-- Aquí puedes añadir más detalles o controles para cada comentario -->
+            </div>
+          </div>
+          <ng-template #noComments>
+            <p>No hay comentarios para este episodio aún.</p>
+          </ng-template>
         </div>
         <div class="modal-footer">
           <button

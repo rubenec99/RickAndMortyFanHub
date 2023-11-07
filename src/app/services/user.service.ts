@@ -5,7 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 import { User } from 'src/backend/models/user.model';
 
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 import {
   RegistrationData,
@@ -228,6 +228,12 @@ export class UserService {
       `${this.apiUrl}/all-users`,
       { params }
     );
+  }
+
+  getUserById(userId: number): Observable<User> {
+    const url = `http://localhost:3000/user/${userId}`;
+
+    return this.http.get<User>(url);
   }
 
   /**

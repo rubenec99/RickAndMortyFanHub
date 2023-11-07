@@ -8,6 +8,9 @@ import { Character } from 'src/app/models/character.model';
 
 import { EpisodesService } from 'src/app/services/episodes.service';
 import { CharactersService } from 'src/app/services/characters.service';
+import { CommentService } from 'src/app/services/comments.service';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/backend/models/user.model';
 
 @Component({
   selector: 'app-episodes-list',
@@ -15,12 +18,15 @@ import { CharactersService } from 'src/app/services/characters.service';
   styleUrls: ['./episodes-list.component.css'],
 })
 export class EpisodesComponent implements OnInit, OnDestroy {
+  commentText!: string;
   constructor(
     private episodesService: EpisodesService,
-    private characterService: CharactersService
+    private characterService: CharactersService,
+    private commentService: CommentService,
+    private userService: UserService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadAllEpisodes();
   }
 
@@ -35,6 +41,8 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   charactersOfEpisode: Character[] = []; // Personajes del episodio seleccionado
   uniqueSeasons: string[] = []; // Array que almacena las temporadas únicas extraídas de la lista de episodios
   errorMessage: string | null = null;
+  comments: any[] = [];
+  episodeId!: number;
 
   /**
    * Método para cargar todos los episodios de la API con paginación opcional.
@@ -118,6 +126,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
    */
   openModal(episode: Episode): void {
     this.selectedEpisode = episode;
+    this.episodeId = episode.id;
 
     const characterIds = episode.characters.map(
       (url) => +url.split('/').pop()!
@@ -137,6 +146,11 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         this.charactersOfEpisode = characters;
         // Abre la ventana modal aquí (Bootstrap se encargará de esto en el HTML)
       });
+
+    // Ahora carga los comentarios para el episodio seleccionado.
+    if (this.episodeId) {
+      this.loadComments();
+    }
   }
 
   /**
@@ -151,6 +165,46 @@ export class EpisodesComponent implements OnInit, OnDestroy {
    */
   trackByEpisodeId(index: number, episode: Episode): number {
     return episode.id;
+  }
+
+  submitComment(): void {
+    if (!this.userService.isLoggedIn()) {
+      alert('Debes iniciar sesión para comentar.');
+      return;
+    }
+
+    const episodeId = this.selectedEpisode?.id;
+    if (episodeId) {
+      console.log(
+        `Attempting to submit comment for episodeId: ${episodeId} with content: "${this.commentText}"`
+      ); // Log the attempt
+      this.commentService.addComment(episodeId, this.commentText).subscribe({
+        next: (response: any) => {
+          console.log('Comment submission response:', response); // Log the response
+          this.commentText = '';
+        },
+        error: (error: any) => {
+          console.error('Comment submission error:', error); // Log any error
+        },
+      });
+    } else {
+      console.error('No episodeId found for comment submission.'); // Log if there's no episodeId
+    }
+  }
+
+  loadComments(): void {
+    if (!this.episodeId) {
+      console.error('Episode ID is undefined, cannot load comments.');
+      return;
+    }
+    this.commentService.getCommentsByEpisode(this.episodeId).subscribe({
+      next: (response) => {
+        this.comments = response.comments;
+      },
+      error: (err) => {
+        console.error('Error fetching comments:', err);
+      },
+    });
   }
 
   /**

@@ -1,0 +1,91 @@
+/* Estilo general */
+body {
+  font-family: "Roboto", sans-serif; /* Cambia a tu fuente preferida */
+  background-color: #ffffff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+h1 {
+  color: #00bcd4;
+  font-size: 2.5rem;
+}
+
+/* Tarjetas de lugares */
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  border: none;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.25);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  color: #00bcd4;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  color: #666; /* Un gris suave para el texto */
+  line-height: 1.6;
+}
+
+.btn-primary {
+  background-color: #00bcd4;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0097a7; /* Una variante más oscura del Azul Portal */
+}
+
+/* Ventana modal */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding: 15px 20px;
+}
+
+.modal-title {
+  color: #00bcd4;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.btn-close {
+  width: 24px;
+  height: 24px;
+  background-size: cover;
+  border: none;
+}
+
+/* Controles de paginación */
+.d-flex {
+  align-items: center; /* Alinea verticalmente los elementos en el centro */
+}
+
+span {
+  color: #666;
+  margin: 0 10px;
+}

@@ -404,4 +404,84 @@ router.post("/check-email", (req, res) => {
   });
 });
 
+/**
+ *
+ ** COMENTARIOS
+ *
+ */
+
+const verifyToken = (req, res, next) => {
+  const tokenHeader = req.headers.authorization;
+  if (!tokenHeader) {
+    return res.status(401).send({ error: "Token no proporcionado" });
+  }
+
+  // Asumiendo que el token sigue el formato "Bearer <token>"
+  const token = tokenHeader.split(" ")[1];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ error: "Token no proporcionado en formato correcto" });
+  }
+
+  // Verificar el token
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.error("Error al verificar token:", err);
+      // Puedes ser más específico con el código de error,
+      // por ejemplo: si es un error de expiración usar `err.name === 'TokenExpiredError'`
+      return res.status(500).send({ error: "Error al decodificar el token" });
+    }
+
+    // Aquí podrías incluso revisar si el token ha expirado manualmente si lo necesitas.
+    // Pero si jwt.verify no arroja un error, usualmente significa que el token es válido.
+    req.userId = decoded.id;
+    next();
+  });
+};
+
+router.post("/episodes/:episodeId/comments", verifyToken, (req, res) => {
+  const { comment: content } = req.body;
+  const { episodeId } = req.params;
+  const userId = req.userId;
+
+  const query =
+    "INSERT INTO comment (user_id, episode_id, content) VALUES (?, ?, ?)";
+  db.query(query, [userId, episodeId, content], (err, results) => {
+    if (err) {
+      console.error("Database error:", err); // Log any database error
+      return res.status(500).send({ error: "Error al añadir comentario" });
+    }
+    const newCommentId = results.insertId;
+    res.status(201).send({
+      success: "Comentario añadido con éxito",
+      comment_id: newCommentId,
+    });
+  });
+});
+
+router.get("/episodes/:episodeId/comments", (req, res) => {
+  const { episodeId } = req.params;
+
+  const query = "SELECT * FROM comment WHERE episode_id = ?";
+  db.query(query, [episodeId], (err, results) => {
+    if (err) {
+      console.error("Database error:", err); // Error en la base de datos
+      return res
+        .status(500)
+        .send({ error: "Error al obtener los comentarios" });
+    }
+
+    const comments = results.map((comment) => ({
+      id: comment.id,
+      userId: comment.user_id,
+      episodeId: comment.episode_id,
+      content: comment.content,
+      createdAt: comment.created_at,
+    }));
+
+    res.status(200).send({ comments: comments });
+  });
+});
+
 module.exports = router;
