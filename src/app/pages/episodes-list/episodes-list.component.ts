@@ -37,6 +37,9 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   totalPages: number = 0;
   seasonFilter: string = '';
 
+  userRating: number | null = null;
+  averageRating: number = 0;
+
   constructor(
     private episodesService: EpisodesService,
     private characterService: CharactersService,
@@ -240,20 +243,38 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         .getAverageRating(`${this.selectedEpisode.id}`)
         .subscribe({
           next: (response: any) => {
-            const averageRating = response.averageRating
+            this.averageRating = response.averageRating
               ? parseFloat(response.averageRating)
               : 0;
-            this.currentRating = Math.round(averageRating); // Esto debería ser el promedio de calificaciones, redondeado.
-            console.log(averageRating);
+            console.log('Average rating:', this.averageRating);
           },
           error: (error: any) => {
             console.error('Error fetching average rating:', error);
-            this.currentRating = 0; // En caso de error, establece la calificación a 0.
+            this.averageRating = 0;
           },
         });
+
+      // Obtén la calificación del usuario si está logueado
+      if (this.userService.isLoggedIn()) {
+        this.ratingService.getRatingByUser(this.selectedEpisode.id).subscribe({
+          next: (userRatingResponse: any) => {
+            this.userRating = userRatingResponse.rating
+              ? parseFloat(userRatingResponse.rating)
+              : null;
+            // Si el usuario ya calificó el episodio, usa esa calificación, de lo contrario muestra las estrellas vacías
+            this.currentRating = this.userRating !== null ? this.userRating : 0;
+          },
+          error: (error: any) => {
+            console.error('Error fetching user rating:', error);
+            this.userRating = null;
+            this.currentRating = 0;
+          },
+        });
+      }
     } else {
-      console.error('No episode selected to fetch average rating.');
+      console.error('No episode selected to fetch ratings.');
       this.currentRating = 0;
+      this.averageRating = 0;
     }
   }
 

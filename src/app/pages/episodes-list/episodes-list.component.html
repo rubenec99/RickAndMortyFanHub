@@ -130,13 +130,27 @@
         </div>
         <div class="modal-body">
           <div class="rating-section">
-            <h6>Valorar este episodio:</h6>
-            <!-- Escucha el evento ratingChange y llama a submitRating() -->
-            <app-rating
-              [(rating)]="currentRating"
-              (ratingChange)="submitRating()"
-            ></app-rating>
+            <!-- Si el usuario no ha valorado el episodio aún -->
+            <ng-container *ngIf="userRating === null; else userHasRated">
+              <h6>Valorar este episodio:</h6>
+              <app-rating
+                [(rating)]="currentRating"
+                (ratingChange)="submitRating()"
+              ></app-rating>
+            </ng-container>
+
+            <!-- Si el usuario ya ha valorado el episodio -->
+            <ng-template #userHasRated>
+              <h6>Tu valoración para este episodio:</h6>
+              <app-rating
+                [(rating)]="currentRating"
+                (ratingChange)="submitRating()"
+              ></app-rating>
+            </ng-template>
+
+            <p>Calificación promedio: {{ averageRating | number : "1.0-1" }}</p>
           </div>
+
           <form (ngSubmit)="submitComment()">
             <textarea
               [(ngModel)]="commentText"

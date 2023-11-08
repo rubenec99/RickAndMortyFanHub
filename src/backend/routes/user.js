@@ -624,4 +624,29 @@ router.get("/episodes/:episodeId/details", (req, res) => {
   });
 });
 
+// Obtener la calificación de un usuario específico para un episodio
+router.get("/episodes/:episodeId/user-rating", verifyToken, (req, res) => {
+  const { episodeId } = req.params;
+  const userId = req.userId; // Obtenido de la verificación del token
+
+  const userRatingQuery =
+    "SELECT rating_value FROM rating WHERE episode_id = ? AND user_id = ?";
+
+  db.query(userRatingQuery, [episodeId, userId], (error, results) => {
+    if (error) {
+      console.error("Error al obtener la calificación del usuario:", error);
+      return res
+        .status(500)
+        .json({ error: "Error al realizar la consulta en la base de datos" });
+    }
+
+    // Manejar el caso en que el usuario no haya calificado todavía
+    const userRating = results.length > 0 ? results[0].rating_value : null;
+
+    res.json({
+      rating: userRating,
+    });
+  });
+});
+
 module.exports = router;

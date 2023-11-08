@@ -21,6 +21,16 @@ export class RatingService {
     return this.http.post(url, body, { headers });
   }
 
+  getRatingByUser(episodeId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const url = `${this.apiUrl}/episodes/${episodeId}/user-rating`;
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.get(url, { headers });
+  }
+
   getAverageRating(episodeId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/episodes/${episodeId}/details`);
   }

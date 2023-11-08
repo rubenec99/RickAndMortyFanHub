@@ -47,7 +47,7 @@ export class UserService {
         catchError(() => of(null))
       );
   }
-  // En tu UserService
+
   checkEmailTaken(email: string): Observable<ValidationErrors | null> {
     return this.http.post<any>(`${this.apiUrl}/check-email`, { email }).pipe(
       map((res) => (res.exists ? { emailTaken: true } : null)),
