@@ -437,6 +437,7 @@ const verifyToken = (req, res, next) => {
     // Aquí podrías incluso revisar si el token ha expirado manualmente si lo necesitas.
     // Pero si jwt.verify no arroja un error, usualmente significa que el token es válido.
     req.userId = decoded.id;
+    req.userType = decoded.user_type;
     next();
   });
 };
@@ -494,6 +495,7 @@ router.get("/episodes/:episodeId/comments", (req, res) => {
 router.delete("/comments/:commentId", verifyToken, (req, res) => {
   const { commentId } = req.params;
   const userId = req.userId;
+  const userType = req.userType;
 
   // Primero, verifica que el comentario pertenece al usuario
   const findCommentQuery = "SELECT user_id FROM comment WHERE comment_id = ?";
@@ -507,14 +509,14 @@ router.delete("/comments/:commentId", verifyToken, (req, res) => {
       return res.status(404).send({ error: "Comentario no encontrado" });
     }
 
-    // Verifica que el comentario pertenece al usuario que hace la solicitud
-    if (findResults[0].user_id !== userId) {
+    // Verifica si el usuario es el propietario del comentario o si es un admin
+    if (findResults[0].user_id !== userId && userType !== "admin") {
       return res
         .status(403)
         .send({ error: "No autorizado para borrar este comentario" });
     }
 
-    // Si el comentario pertenece al usuario, procede a eliminar
+    // Si el comentario pertenece al usuario o si es un admin, proceder a eliminar
     const deleteCommentQuery = "DELETE FROM comment WHERE comment_id = ?";
     db.query(deleteCommentQuery, [commentId], (deleteErr, deleteResults) => {
       if (deleteErr) {

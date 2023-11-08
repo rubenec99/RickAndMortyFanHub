@@ -166,14 +166,16 @@
                 >: {{ comment.content }}
               </p>
               <p>{{ comment.createdAt | date }}</p>
+              <!-- Actualiza la condición aquí para llamar al nuevo método canDeleteComment -->
               <button
-                *ngIf="isUserComment(comment.userId)"
+                *ngIf="canDeleteComment(comment.userId)"
                 (click)="deleteComment(comment.id)"
               >
                 Eliminar
               </button>
             </div>
           </div>
+
           <ng-template #noComments>
             <p>No hay comentarios para este episodio aún.</p>
           </ng-template>

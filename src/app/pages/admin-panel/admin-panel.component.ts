@@ -262,6 +262,7 @@ export class AdminPanelComponent {
     // Compara el tipo de usuario actual con el tipo de usuario original y devuelve el resultado.
     return user.user_type !== original;
   }
+
   toggleSort(sorting: string): void {
     if (this.currentSorting === sorting) {
       this.isAscending = !this.isAscending;

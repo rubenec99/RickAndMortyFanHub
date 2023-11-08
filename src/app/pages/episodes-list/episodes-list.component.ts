@@ -26,7 +26,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   comments: any[] = [];
 
   errorMessage: string | null = null;
-  commentText!: string;
+  commentText: string = ' ';
   episodeId!: number;
   currentUserId: number | null = null;
   currentRating: number = 0;
@@ -147,6 +147,12 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Comprobar que el texto del comentario no esté vacío ni solo contenga espacios en blanco
+    if (!this.commentText.trim()) {
+      alert('El comentario no puede estar vacío.');
+      return;
+    }
+
     const episodeId = this.selectedEpisode?.id;
     if (episodeId) {
       console.log(
@@ -155,8 +161,8 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       this.commentService.addComment(episodeId, this.commentText).subscribe({
         next: (response: any) => {
           console.log('Comment submission response:', response); // Log the response
-          this.commentText = '';
-          this.loadComments();
+          this.commentText = ''; // Clear the comment text
+          this.loadComments(); // Reload the comments
         },
         error: (error: any) => {
           console.error('Comment submission error:', error); // Log any error
@@ -183,6 +189,10 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     });
   }
 
+  isAdmin(): boolean {
+    const userType = localStorage.getItem('userType');
+    return userType === 'admin';
+  }
   deleteComment(commentId: number): void {
     // Confirmación para el usuario antes de eliminar el comentario
     if (
@@ -203,6 +213,11 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         console.error('Error al eliminar el comentario:', err);
       },
     });
+  }
+
+  // Método actualizado para comprobar si se muestra el botón de eliminar
+  canDeleteComment(commentUserId: number): boolean {
+    return this.isUserComment(commentUserId) || this.isAdmin();
   }
 
   setCurrentUserId(): void {
