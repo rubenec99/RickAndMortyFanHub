@@ -15,7 +15,15 @@ import { RegistrationData } from 'src/app/models/user.model';
 import Swal from 'sweetalert2';
 
 import { Subject, Observable, of } from 'rxjs';
-import { takeUntil, map, catchError } from 'rxjs/operators';
+import {
+  takeUntil,
+  map,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  first,
+} from 'rxjs/operators';
 
 import { jwtDecode } from 'jwt-decode';
 
@@ -44,14 +52,14 @@ export class RegisterComponent implements OnInit {
 
         email: [
           '',
-          [Validators.required, Validators.email],
-          this.emailTakenValidator(this.userService),
+          [Validators.required, Validators.email], // Validadores síncronos
+          this.emailTakenValidator.bind(this), // Validador asíncrono
         ],
 
         username: [
           '',
-          Validators.required,
-          this.usernameTakenValidator(this.userService),
+          [Validators.required, Validators.minLength(3)], // Sincronous validators here
+          this.usernameTakenValidator.bind(this), // Async validator here
         ],
 
         birth_date: ['', [Validators.required, this.dateNotInFutureValidator]],
@@ -105,30 +113,26 @@ export class RegisterComponent implements OnInit {
    * @param userService - Servicio para verificar el nombre de usuario.
    * @returns - Función de validación asíncrona.
    */
-  usernameTakenValidator(userService: UserService): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return userService.checkUsername(control.value).pipe(
-        map((res) => (res.exists ? { usernameTaken: true } : null)),
-        catchError(() => of(null))
-      );
-    };
+  usernameTakenValidator(
+    control: AbstractControl
+  ): Observable<ValidationErrors | null> {
+    return control.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((value) => this.userService.checkUsernameTaken(value)),
+      first() // Completa el observable después de la primera respuesta recibida
+    );
   }
 
-  /**
-   * Validador asíncrono que verifica si el email ya está registrado.
-   *
-   * @param userService - Servicio para verificar la existencia del email.
-   * @returns - Función de validación asíncrona.
-   */
-  emailTakenValidator(userService: UserService): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return userService.checkEmail(control.value).pipe(
-        map((response) => {
-          return response.exists ? { emailTaken: true } : null;
-        }),
-        catchError(() => of(null))
-      );
-    };
+  emailTakenValidator(
+    control: AbstractControl
+  ): Observable<ValidationErrors | null> {
+    return control.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((value) => this.userService.checkEmailTaken(value)),
+      first()
+    );
   }
 
   /**

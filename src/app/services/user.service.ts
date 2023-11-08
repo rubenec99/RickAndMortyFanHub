@@ -5,7 +5,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 import { User } from 'src/backend/models/user.model';
 
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 import {
   RegistrationData,
@@ -15,6 +15,7 @@ import {
 } from '../models/user.model';
 
 import { jwtDecode } from 'jwt-decode';
+import { ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -38,24 +39,20 @@ export class UserService {
     );
   }
 
-  /**
-   * Método para comprobar si un nombre de usuario ya está en uso.
-   *
-   * @param username - Nombre de usuario a verificar.
-   * @returns Un observable con la respuesta del servidor indicando si el nombre de usuario ya existe o no.
-   */
-  checkUsername(username: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/check-username`, { username });
+  checkUsernameTaken(username: string): Observable<ValidationErrors | null> {
+    return this.http
+      .post<any>(`${this.apiUrl}/check-username`, { username })
+      .pipe(
+        map((res) => (res.exists ? { usernameTaken: true } : null)),
+        catchError(() => of(null))
+      );
   }
-
-  /**
-   * Método para comprobar si un email ya está en uso.
-   *
-   * @param email - Email a verificar.
-   * @returns Un observable con la respuesta del servidor indicando si el email ya existe o no.
-   */
-  checkEmail(email: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/check-email`, { email: email });
+  // En tu UserService
+  checkEmailTaken(email: string): Observable<ValidationErrors | null> {
+    return this.http.post<any>(`${this.apiUrl}/check-email`, { email }).pipe(
+      map((res) => (res.exists ? { emailTaken: true } : null)),
+      catchError(() => of(null))
+    );
   }
 
   /**

@@ -149,9 +149,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Obtener los cinco primeros personajes
     this.charactersService.getRandomFiveCharacters().subscribe({
-      next: (data) => (this.characters = data),
+      next: (characters) => {
+        if (Array.isArray(characters) && characters.length) {
+          // Ensure we only assign the first five characters to the component's property
+          this.characters = characters.slice(0, 5);
+        }
+      },
       error: (error) => console.error('Error fetching characters', error),
     });
 
