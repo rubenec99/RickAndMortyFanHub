@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,13 @@ export class CommentService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Agrega un comentario a un episodio específico.
+   *
+   * @param episodeId ID del episodio al que se agregará el comentario.
+   * @param comment Contenido del comentario que se agregará.
+   * @returns Observable de la respuesta de la API.
+   */
   addComment(episodeId: number, comment: string): Observable<any> {
     const retrievedToken = localStorage.getItem('authToken');
     const url = `${this.apiUrl}/episodes/${episodeId}/comments`;
@@ -17,24 +25,27 @@ export class CommentService {
       'Authorization',
       `Bearer ${retrievedToken}`
     );
+
     return this.http.post(url, { comment }, { headers });
   }
 
+  /**
+   * Obtiene los comentarios asociados a un episodio específico.
+   *
+   * @param episodeId ID del episodio del que se obtendrán los comentarios.
+   * @returns Observable de la lista de comentarios.
+   */
   getCommentsByEpisode(episodeId: number): Observable<any> {
-    console.log(`Loading comments for episodeId: ${episodeId}`); // Inicio de la llamada
-    return this.http.get(`${this.apiUrl}/episodes/${episodeId}/comments`).pipe(
-      tap((comments) => console.log(`Received comments:`, comments)), // Resultados obtenidos
-      catchError((error) => {
-        console.error(
-          `Error loading comments for episodeId ${episodeId}:`,
-          error
-        ); // Error al cargar comentarios
-        return throwError(() => error);
-      })
-    );
+    const url = `${this.apiUrl}/episodes/${episodeId}/comments`;
+    return this.http.get(url);
   }
 
-  // Método para eliminar un comentario
+  /**
+   * Elimina un comentario específico.
+   *
+   * @param commentId ID del comentario que se eliminará.
+   * @returns Observable de la respuesta de la API.
+   */
   deleteComment(commentId: number): Observable<any> {
     const retrievedToken = localStorage.getItem('authToken');
     const url = `${this.apiUrl}/comments/${commentId}`;
@@ -42,14 +53,7 @@ export class CommentService {
       'Authorization',
       `Bearer ${retrievedToken}`
     );
-    return this.http.delete(url, { headers }).pipe(
-      catchError(this.handleError) // Asegúrate de tener un método para manejar errores.
-    );
-  }
 
-  // Puedes tener un método genérico para manejar errores
-  private handleError(error: any) {
-    console.error('An error occurred:', error);
-    return throwError(() => new Error(error.message || 'An error occurred'));
+    return this.http.delete(url, { headers });
   }
 }

@@ -183,18 +183,20 @@ export class EditProfileComponent implements OnInit {
         delete updatedProfile.confirmPassword;
       } else {
         if (updatedProfile.password !== updatedProfile.confirmPassword) {
-          Swal.fire(
-            'Error',
-            'La contraseña y su confirmación no coinciden.',
-            'error'
-          );
+          Swal.fire({
+            title: '¡Error!',
+            text: 'La contraseña y su confirmación no coinciden.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
           return;
         }
         delete updatedProfile.confirmPassword;
       }
 
       this.userService.updateProfile(updatedProfile).subscribe({
-        next: (response) => {
+        next: () => {
           Swal.fire({
             title: 'Éxito',
             text: 'Perfil actualizado con éxito.',
@@ -203,13 +205,14 @@ export class EditProfileComponent implements OnInit {
             iconColor: '#A8FF44',
           }).then(() => this.router.navigate(['/home']));
         },
-        error: (error) => {
-          console.error('Error actualizando el perfil:', error);
-          Swal.fire(
-            'Error',
-            'Hubo un error actualizando tu perfil. Inténtalo de nuevo.',
-            'error'
-          );
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error actualizar el perfil. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
         },
       });
     } else {
@@ -232,11 +235,13 @@ export class EditProfileComponent implements OnInit {
    */
   onDeleteProfile(): void {
     if (!this.user || this.user.id === undefined) {
-      Swal.fire(
-        'Error',
-        'Error al identificar al usuario. Inténtalo de nuevo.',
-        'error'
-      );
+      Swal.fire({
+        title: '¡Error!',
+        text: 'Error al identificar al usuario. Por favor, inténtelo de nuevo más tarde.',
+        icon: 'error',
+        iconColor: '#FF4565',
+        confirmButtonColor: '#00BCD4',
+      });
       return;
     }
 
@@ -255,7 +260,7 @@ export class EditProfileComponent implements OnInit {
       if (result.isConfirmed) {
         if (this.user && typeof this.user.id !== 'undefined') {
           this.userService.deleteUser(this.user.id).subscribe({
-            next: (response) => {
+            next: () => {
               Swal.fire({
                 title: 'Eliminado',
                 text: 'Perfil eliminado correctamente.',
@@ -267,13 +272,14 @@ export class EditProfileComponent implements OnInit {
                 this.router.navigate(['/home']);
               });
             },
-            error: (error) => {
-              console.error('Error al eliminar el perfil:', error);
-              Swal.fire(
-                'Error',
-                'Hubo un error al eliminar tu perfil. Inténtalo de nuevo.',
-                'error'
-              );
+            error: () => {
+              Swal.fire({
+                title: '¡Error!',
+                text: 'Error al eliminar el perfil. Por favor, inténtelo de nuevo más tarde.',
+                icon: 'error',
+                iconColor: '#FF4565',
+                confirmButtonColor: '#00BCD4',
+              });
             },
           });
         }

@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Subject, throwError } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { Character } from 'src/app/models/character.model';
 
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
+
+import { EMPTY, Subject } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-characters-list',
@@ -16,16 +18,6 @@ import { EpisodesService } from 'src/app/services/episodes.service';
   styleUrls: ['./characters-list.component.css'],
 })
 export class CharactersComponent implements OnInit, OnDestroy {
-  constructor(
-    private charactersService: CharactersService, // Inyecta el servicio de personajes
-    private episodesService: EpisodesService, // Inyecta el servicio de episodios
-    public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
-  ) {}
-
-  ngOnInit(): void {
-    this.loadCharacters(); // Carga los personajes al inicializar el componente
-  }
-
   private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
 
   characters: Character[] = []; // Almacena los personajes obtenidos de la API
@@ -34,7 +26,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
   totalPages: number = 0; // Total de páginas disponibles
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
   selectedCharacter: Character | null = null; // Almacena el personaje seleccionado
-  errorMessage: string | null = null;
 
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
@@ -58,17 +49,29 @@ export class CharactersComponent implements OnInit, OnDestroy {
   selectedStatus: string = ''; // Almacena el estatus seleccionado
   selectedSpecies: string = ''; // Almacena la especie seleccionada
 
+  constructor(
+    private charactersService: CharactersService, // Inyecta el servicio de personajes
+    private episodesService: EpisodesService, // Inyecta el servicio de episodios
+    public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
+  ) {}
+
+  ngOnInit(): void {
+    this.loadCharacters(); // Carga los personajes al inicializar el componente
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   /**
-   * Método para cargar los personajes de la API.
-   *
-   * Obtiene los personajes de la página actual, aplicando los filtros seleccionados
-   * por género, estado y especie si se han especificado.
-   *
-   * @returns void
+   * Carga los personajes de la API de Rick y Morty utilizando los parámetros de filtrado actuales.
+   * Se suscribe a los cambios del servicio de personajes, solicitando la información basada en la página actual,
+   * y los filtros de género, estado y especie seleccionados. Si la API retorna resultados, actualiza
+   * la lista de personajes y la cantidad de páginas total. Si no hay resultados o ocurre un error, muestra
+   * una notificación al usuario con la información correspondiente.
    */
   loadCharacters(): void {
-    this.errorMessage = null;
-
     this.charactersService
       .getAllCharacters(
         this.currentPage,
@@ -76,73 +79,90 @@ export class CharactersComponent implements OnInit, OnDestroy {
         this.selectedStatus,
         this.selectedSpecies
       )
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        catchError((error) => {
-          this.errorMessage =
-            'No hay personajes con los filtros seleccionados. Por favor, inténtelo de nuevo.';
-          return throwError(() => error);
-        })
-      )
-      .subscribe((response) => {
-        // Actualiza la lista de personajes con la respuesta de la API
-        this.characters = response.results;
-
-        // Actualiza el número total de páginas disponibles
-        this.totalPages = response.info.pages;
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response) => {
+          if ('results' in response) {
+            this.characters = response.results;
+            this.totalPages = response.info.pages;
+          } else {
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Error al cargar los personajes. Por favor, inténtelo de nuevo más tarde.',
+              icon: 'error',
+              iconColor: '#FF4565',
+              confirmButtonColor: '#00BCD4',
+            });
+          }
+        },
+        error: () => {
+          Swal.fire({
+            title: '¡Atención!',
+            text: 'No hay personajes con los filtros seleccionados.',
+            icon: 'info',
+            iconColor: '#FFD83D',
+            confirmButtonColor: '#00BCD4',
+          });
+        },
       });
   }
 
   /**
-   * Abre un modal para mostrar detalles del personaje seleccionado y los episodios en los que aparece.
+   * Abre un modal con detalles del personaje seleccionado.
+   * Primero establece el personaje actualmente seleccionado a la propiedad correspondiente.
+   * Luego, extrae los identificadores de los episodios del objeto del personaje, realiza una solicitud
+   * para obtener los detalles de múltiples episodios y se suscribe a la respuesta.
+   * Si la respuesta es exitosa y devuelve un arreglo, mapea los nombres de los episodios a la propiedad 'episodes'.
+   * En caso de errores en la respuesta o fallos en la solicitud, muestra una notificación al usuario.
+   * Finalmente, abre el modal con el contenido especificado.
    *
-   * @param character - El personaje seleccionado que se desea mostrar en el modal.
-   * @param content - El contenido del modal que se va a abrir.
+   * @param character El personaje seleccionado cuyos detalles se van a mostrar.
+   * @param content El contenido que se va a cargar dentro del modal.
    */
   openModal(character: Character, content: any): void {
-    this.errorMessage = null;
-
-    // Asigna el personaje seleccionado a la variable "selectedCharacter" del componente.
     this.selectedCharacter = character;
 
-    // Extrae los IDs de episodio de las URLs de episodios del personaje.
-    // Se asegura de que cada ID sea un número válido, eliminando cualquier valor que no sea un número.
     const episodeIds = character.episode
       .map((url) => parseInt(url.split('/').pop() || '0'))
       .filter((id) => !isNaN(id));
 
     this.episodesService
       .getMultipleEpisodes(episodeIds)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        catchError((error) => {
-          this.errorMessage =
-            'Error al cargar los detalles del personaje. Por favor, inténtelo de nuevo más tarde.';
-          console.error('Error loading episode details:', error);
-          return throwError(() => error); // Modificación aquí
-        })
-      )
-      .subscribe((episodes) => {
-        if (Array.isArray(episodes)) {
-          // Si la respuesta es un array (como se espera), actualiza la lista de episodios con los nombres de los episodios obtenidos.
-          this.episodes = episodes.map((ep) => ep.name);
-        } else {
-          // Si la respuesta no tiene el formato esperado, muestra un error en consola.
-          this.errorMessage =
-            'Formato de respuesta inesperado al obtener detalles del episodio.';
-          console.error('Unexpected response format:', episodes);
-        }
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (episodes) => {
+          if (Array.isArray(episodes)) {
+            this.episodes = episodes.map((ep) => ep.name);
+          } else {
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Error en el formato de respuesta al obtener los detalles del episodio. Por favor, inténtelo de nuevo más tarde.',
+              icon: 'error',
+              iconColor: '#FF4565',
+              confirmButtonColor: '#00BCD4',
+            });
+          }
+        },
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al cargar los detalles del episodio. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
+        },
       });
 
-    // Utiliza el servicio "modalService" para abrir el modal, pasando el contenido que debe ser mostrado en el modal.
-    // Además, centra el modal en la pantalla.
     this.modalService.open(content, { centered: true });
   }
 
   /**
-   * Método para realizar una búsqueda de personajes por nombre.
-   *
-   * @returns void
+   * Realiza la búsqueda de personajes por nombre basada en el término introducido.
+   * Si no hay término de búsqueda o este es solo espacios en blanco, se recargan todos los personajes.
+   * Si hay un término de búsqueda, se realiza una petición para buscar los personajes por ese nombre.
+   * En caso de un error durante la búsqueda, se muestra una notificación de error al usuario
+   * y se procede a cargar todos los personajes nuevamente.
    */
   searchCharacters(): void {
     if (!this.searchTerm.trim()) {
@@ -151,23 +171,38 @@ export class CharactersComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.errorMessage = null;
-
     // Realiza una búsqueda de personajes por nombre utilizando el término de búsqueda
     this.charactersService
       .searchCharactersByName(this.searchTerm)
       .pipe(
         takeUntil(this.unsubscribe$),
-        catchError((error) => {
-          this.errorMessage =
-            'No se encontraron personajes. Por favor, inténtelo de nuevo.';
-          console.error('Error searching characters:', error);
-          return throwError(() => error); // Modificación aquí
+        catchError(() => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'No hay personajes con el nombre introducido.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
+          this.loadCharacters();
+          return EMPTY;
         })
       )
-      .subscribe((response) => {
-        this.characters = response.results;
-        this.totalPages = response.info.pages;
+      .subscribe({
+        next: (response) => {
+          this.characters = response.results;
+          this.totalPages = response.info.pages;
+        },
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'No hay personajes con el nombre introducido.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
+          this.loadCharacters();
+        },
       });
   }
 
@@ -175,7 +210,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * Maneja el evento de presionar una tecla en el cuadro de búsqueda.
    *
    * @param event El evento de teclado que se ha desencadenado.
-   * @returns void
    */
   onSearchKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
@@ -210,8 +244,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
    *
    * Si la página actual es menor que el total de páginas disponibles,
    * incrementa la página actual y recarga los personajes de la siguiente página.
-   *
-   * @returns void
    */
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
@@ -225,25 +257,11 @@ export class CharactersComponent implements OnInit, OnDestroy {
    *
    * Si la página actual es mayor que 1, decrementa la página actual
    * y recarga los personajes de la página anterior.
-   *
-   * @returns void
    */
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--; // Decrementa la página actual
       this.loadCharacters(); // Recarga los personajes de la página anterior
     }
-  }
-
-  /**
-   * Método que se ejecuta cuando el componente está a punto de ser destruido.
-   * Se utiliza para emitir un valor a través del `unsubscribe$` Subject, lo que
-   * señala a todos los observables (que estén utilizando `takeUntil(this.unsubscribe$)`)
-   * que se desuscriban para evitar pérdidas de memoria.
-   * Además, completa el `unsubscribe$` Subject para asegurarse de que no emita más valores.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 }

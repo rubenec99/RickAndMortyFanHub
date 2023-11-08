@@ -1,0 +1,111 @@
+<!-- Sección de Trivia Interactiva -->
+<div class="container my-3">
+  <div class="text-center mb-4">
+    <button class="btn-characters-title">Trivia de Rick & Morty</button>
+  </div>
+
+  <div class="mb-4" *ngIf="showProgressBar">
+    <div class="progress">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [style.width]="getProgressPercentage() + '%'"
+        [attr.aria-valuenow]="getProgressPercentage()"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        {{ correctAnswersCount }}/{{ displayedQuestions.length }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Primera fila con 3 preguntas -->
+  <div class="row justify-content-center">
+    <ng-container *ngFor="let question of displayedQuestions; let i = index">
+      <ng-container *ngIf="i < 3">
+        <div
+          class="col-lg-4 col-md-6 mb-3"
+          [class.correct-answer]="answerStatus[i]"
+          [class.wrong-answer]="answerStatus[i] === false"
+        >
+          <div class="card shadow-sm h-100">
+            <div class="card-body p-3 d-flex flex-column">
+              <p class="card-text mb-2">
+                {{ question.question }}
+              </p>
+              <div
+                *ngFor="let option of question.options; let j = index"
+                class="form-check mb-2"
+              >
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="trivia-{{ i }}"
+                  id="trivia-{{ i }}-{{ j }}"
+                  value="{{ j }}"
+                />
+                <label class="form-check-label" for="trivia-{{ i }}-{{ j }}">
+                  {{ option }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <!-- Segunda fila con 2 preguntas -->
+  <div class="row justify-content-center">
+    <ng-container *ngFor="let question of displayedQuestions; let i = index">
+      <ng-container *ngIf="i >= 3">
+        <div
+          class="col-lg-4 col-md-6 mb-3"
+          [class.correct-answer]="answerStatus[i]"
+          [class.wrong-answer]="answerStatus[i] === false"
+        >
+          <div class="card shadow-sm h-100">
+            <div class="card-body p-3 d-flex flex-column">
+              <p class="card-text mb-2">
+                {{ question.question }}
+              </p>
+              <div
+                *ngFor="let option of question.options; let j = index"
+                class="form-check mb-2"
+              >
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="trivia-{{ i }}"
+                  id="trivia-{{ i }}-{{ j }}"
+                  value="{{ j }}"
+                />
+                <label class="form-check-label" for="trivia-{{ i }}-{{ j }}">
+                  {{ option }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <!-- Botón para verificar todas las respuestas -->
+  <div class="text-center mt-4">
+    <!-- Mensaje de respuesta -->
+    <div
+      class="mt-3 feedback-text"
+      *ngIf="feedbackMessage"
+      [ngClass]="{ 'show-feedback': feedbackMessage }"
+    >
+      {{ feedbackMessage }}
+    </div>
+    <br />
+    <div>
+      <button class="btn-trivia" (click)="checkAllAnswers()">
+        <i class="animation"></i>Comprobar<i class="animation"></i>
+      </button>
+    </div>
+  </div>
+</div>

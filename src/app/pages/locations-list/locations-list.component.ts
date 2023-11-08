@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { Location } from 'src/app/models/location.model';
 import { Character } from 'src/app/models/character.model';
 
 import { LocationsService } from 'src/app/services/locations.service';
 import { CharactersService } from 'src/app/services/characters.service';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-location-list',
@@ -15,6 +17,15 @@ import { CharactersService } from 'src/app/services/characters.service';
   styleUrls: ['./locations-list.component.css'],
 })
 export class LocationsComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
+
+  locations: Location[] = []; // Array que almacena las localizaciones obtenidas de la API
+  currentPage: number = 1; // Número de página actual para la paginación de localizaciones
+  totalPages: number = 0; // Número total de páginas disponibles para la paginación de localizaciones
+  residents: Character[] = []; // Array que almacena a los residentes de una ubicación
+  selectedLocation: Location | null = null; // Ubicación seleccionada actualmente para mostrar detalles
+  residentsOfLocation: Character[] = []; // Array que almacena a los residentes de la ubicación seleccionada
+
   constructor(
     private locationsService: LocationsService,
     private characterService: CharactersService
@@ -24,21 +35,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
     this.loadAllLocations();
   }
 
-  private unsubscribe$ = new Subject<void>(); // Instancia de Subject que emite un valor cuando es necesario desuscribirse de observables.
-
-  locations: Location[] = []; // Arreglo que almacena las localizaciones obtenidas de la API
-  currentPage: number = 1; // Número de página actual para la paginación de localizaciones
-  totalPages: number = 0; // Número total de páginas disponibles para la paginación de localizaciones
-  residents: Character[] = []; // Arreglo que almacena a los residentes de una ubicación
-  selectedLocation: Location | null = null; // Ubicación seleccionada actualmente para mostrar detalles
-  residentsOfLocation: Character[] = []; // Arreglo que almacena a los residentes de la ubicación seleccionada
-  errorMessage: string | null = null;
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   /**
-   * Método para cargar todas las localizaciones desde la API con paginación opcional.
+   * Carga todas las ubicaciones desde el servidor utilizando el servicio 'locationsService'.
+   * Puede recibir un número de página para cargar un conjunto específico de resultados.
    *
-   * @param page (Opcional) El número de página que se desea recuperar. Por defecto, es la página 1.
-   * @returns void
+   * @param {number} page El número de página de los resultados que se quiere cargar, por defecto es 1.
    */
   loadAllLocations(page: number = 1): void {
     this.locationsService
@@ -48,18 +54,24 @@ export class LocationsComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.locations = response.results;
           this.totalPages = response.info.pages;
-          this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
         },
-        error: (error) => {
-          this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al cargar las ubicaciones. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
         },
       });
   }
 
   /**
-   * Abre un modal que muestra los detalles de una ubicación y sus residentes.
+   * Abre una ventana modal con los detalles de la ubicación seleccionada.
+   * Carga los residentes de la ubicación utilizando el servicio 'characterService'.
    *
-   * @param location - La ubicación de la que se desean ver los detalles.
+   * @param {Location} location El objeto de la ubicación seleccionada.
    */
   openModal(location: Location): void {
     this.selectedLocation = location;
@@ -72,10 +84,15 @@ export class LocationsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (residents) => {
           this.residentsOfLocation = residents;
-          this.errorMessage = null; // Limpia el mensaje de error en caso de éxito
         },
-        error: (error) => {
-          this.errorMessage = error; // Asigna el mensaje de error en caso de fallo
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al cargar los residentes. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
         },
       });
   }
@@ -122,17 +139,5 @@ export class LocationsComponent implements OnInit, OnDestroy {
       this.currentPage--; // Decrementa la página actual
       this.loadAllLocations(this.currentPage); // Carga las ubicaciones de la página anterior
     }
-  }
-
-  /**
-   * Método que se ejecuta cuando el componente está a punto de ser destruido.
-   * Se utiliza para emitir un valor a través del `unsubscribe$` Subject, lo que
-   * señala a todos los observables (que estén utilizando `takeUntil(this.unsubscribe$)`)
-   * que se desuscriban para evitar pérdidas de memoria.
-   * Además, completa el `unsubscribe$` Subject para asegurarse de que no emita más valores.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 }

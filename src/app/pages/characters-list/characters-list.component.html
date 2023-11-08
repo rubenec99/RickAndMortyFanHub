@@ -65,95 +65,82 @@
     </div>
   </div>
 
-  <!-- Mensaje de error -->
-  <div
-    *ngIf="errorMessage; else showCharacters"
-    class="alert alert-danger mb-4"
-  >
-    {{ errorMessage }}
-  </div>
+  <div class="characters-container">
+    <div *ngFor="let character of characters" class="character-card">
+      <!-- Imagen del personaje -->
+      <img
+        [src]="character.image"
+        alt="{{ character.name }}"
+        class="character-image"
+      />
 
-  <ng-template #showCharacters>
-    <div class="characters-container">
-      <div *ngFor="let character of characters" class="character-card">
-        <!-- Imagen del personaje -->
-        <img
-          [src]="character.image"
-          alt="{{ character.name }}"
-          class="character-image"
-        />
+      <div class="character-details">
+        <!-- Nombre del personaje -->
+        <h5 class="character-name">{{ character.name }}</h5>
 
-        <div class="character-details">
-          <!-- Nombre del personaje -->
-          <h5 class="character-name">{{ character.name }}</h5>
-
-          <!-- Estado del personaje -->
-          <div class="character-status">
-            <span class="icon">
-              <i
-                *ngIf="character.status === 'Alive'"
-                class="fa-solid fa-circle alive"
-              ></i>
-              <i
-                *ngIf="character.status === 'Dead'"
-                class="fa-solid fa-circle dead"
-              ></i>
-              <i
-                *ngIf="
-                  character.status !== 'Alive' && character.status !== 'Dead'
-                "
-                class="fa-solid fa-circle unknown"
-              ></i>
-            </span>
-            {{ character.status }}
-          </div>
-
-          <!-- Género del personaje -->
-          <div class="character-gender">
-            <span class="icon">
-              <i
-                *ngIf="character.gender === 'Male'"
-                class="fa-solid fa-mars"
-              ></i>
-              <i
-                *ngIf="character.gender === 'Female'"
-                class="fa-solid fa-venus"
-              ></i>
-              <i
-                *ngIf="character.gender === 'Genderless'"
-                class="fa-solid fa-genderless"
-              ></i>
-              <i
-                *ngIf="
-                  character.gender !== 'Male' &&
-                  character.gender !== 'Female' &&
-                  character.gender !== 'Genderless'
-                "
-                class="fa-solid fa-question"
-              ></i>
-            </span>
-            {{ character.gender }}
-          </div>
-
-          <!-- Localización del personaje -->
-          <div class="character-location">
-            <span class="icon">
-              <i class="fa-solid fa-location-pin"></i>
-            </span>
-            {{ character.location.name }}
-          </div>
-
-          <!-- Botón para abrir el modal de detalles -->
-          <button
-            class="details-button"
-            (click)="openModal(character, characterModal)"
-          >
-            Ver detalles
-          </button>
+        <!-- Estado del personaje -->
+        <div class="character-status">
+          <span class="icon">
+            <i
+              *ngIf="character.status === 'Alive'"
+              class="fa-solid fa-circle alive"
+            ></i>
+            <i
+              *ngIf="character.status === 'Dead'"
+              class="fa-solid fa-circle dead"
+            ></i>
+            <i
+              *ngIf="
+                character.status !== 'Alive' && character.status !== 'Dead'
+              "
+              class="fa-solid fa-circle unknown"
+            ></i>
+          </span>
+          {{ character.status }}
         </div>
+
+        <!-- Género del personaje -->
+        <div class="character-gender">
+          <span class="icon">
+            <i *ngIf="character.gender === 'Male'" class="fa-solid fa-mars"></i>
+            <i
+              *ngIf="character.gender === 'Female'"
+              class="fa-solid fa-venus"
+            ></i>
+            <i
+              *ngIf="character.gender === 'Genderless'"
+              class="fa-solid fa-genderless"
+            ></i>
+            <i
+              *ngIf="
+                character.gender !== 'Male' &&
+                character.gender !== 'Female' &&
+                character.gender !== 'Genderless'
+              "
+              class="fa-solid fa-question"
+            ></i>
+          </span>
+          {{ character.gender }}
+        </div>
+
+        <!-- Localización del personaje -->
+        <div class="character-location">
+          <span class="icon">
+            <i class="fa-solid fa-location-pin"></i>
+          </span>
+          {{ character.location.name }}
+        </div>
+
+        <!-- Botón para abrir el modal de detalles -->
+        <button
+          class="details-button"
+          (click)="openModal(character, characterModal)"
+        >
+          Ver detalles
+        </button>
       </div>
     </div>
-  </ng-template>
+  </div>
 
   <!-- Plantilla para el modal de detalles del personaje -->
   <ng-template #characterModal>

@@ -169,9 +169,8 @@ router.post("/delete-multiple", (req, res) => {
  ** UPDATES
  *
  */
-/**
- * Endpoint para actualizar el tipo de usuario.
- */
+
+// Endpoint para actualizar el tipo de usuario.
 router.put("/update-type", (req, res) => {
   const { userId, newUserType } = req.body;
 
@@ -210,7 +209,7 @@ router.put("/update-profile", async (req, res) => {
     user.last_name = capitalize(user.last_name);
   }
 
-  // No encriptamos la contraseña si no ha sido cambiada.
+  // No encripta la contraseña si no ha sido cambiada.
   if (user.password && user.password !== "") {
     try {
       // Salt y hash de la contraseña
@@ -218,14 +217,13 @@ router.put("/update-profile", async (req, res) => {
       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
       user.password = hashedPassword;
     } catch (err) {
-      console.error("Error encriptando la contraseña:", err);
       return res.status(500).send({
         error: "Error encriptando la contraseña",
         details: err.message,
       });
     }
   } else {
-    // Si la contraseña está vacía, no la actualizamos.
+    // Si la contraseña está vacía, no se actualiza.
     delete user.password;
   }
 
@@ -250,7 +248,6 @@ router.put("/update-profile", async (req, res) => {
 
   db.query(query, queryParams, (err) => {
     if (err) {
-      console.error("Error en la consulta:", err);
       return res.status(500).send({
         error: "Error actualizando el perfil",
         details: err.message,
@@ -283,7 +280,7 @@ router.get("/all-users", (req, res) => {
 
   const query = `
     SELECT id, first_name, last_name, email, username, user_type, birth_date 
-    FROM user 
+    FROM user
     ORDER BY ${sortBy} ${direction}
     LIMIT ${limit} OFFSET ${offset}
   `;
@@ -411,13 +408,13 @@ router.post("/check-email", (req, res) => {
  *
  */
 
+// Verifica el token de autenticación proporcionado en la solicitud HTTP.
 const verifyToken = (req, res, next) => {
   const tokenHeader = req.headers.authorization;
   if (!tokenHeader) {
     return res.status(401).send({ error: "Token no proporcionado" });
   }
 
-  // Asumiendo que el token sigue el formato "Bearer <token>"
   const token = tokenHeader.split(" ")[1];
   if (!token) {
     return res
@@ -428,20 +425,16 @@ const verifyToken = (req, res, next) => {
   // Verificar el token
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      console.error("Error al verificar token:", err);
-      // Puedes ser más específico con el código de error,
-      // por ejemplo: si es un error de expiración usar `err.name === 'TokenExpiredError'`
       return res.status(500).send({ error: "Error al decodificar el token" });
     }
 
-    // Aquí podrías incluso revisar si el token ha expirado manualmente si lo necesitas.
-    // Pero si jwt.verify no arroja un error, usualmente significa que el token es válido.
     req.userId = decoded.id;
     req.userType = decoded.user_type;
     next();
   });
 };
 
+// Endpoint para añadir un comentario a un episodio
 router.post("/episodes/:episodeId/comments", verifyToken, (req, res) => {
   const { comment: content } = req.body;
   const { episodeId } = req.params;
@@ -451,7 +444,6 @@ router.post("/episodes/:episodeId/comments", verifyToken, (req, res) => {
     "INSERT INTO comment (user_id, episode_id, content) VALUES (?, ?, ?)";
   db.query(query, [userId, episodeId, content], (err, results) => {
     if (err) {
-      console.error("Database error:", err); // Log any database error
       return res.status(500).send({ error: "Error al añadir comentario" });
     }
     const newCommentId = results.insertId;
@@ -462,6 +454,7 @@ router.post("/episodes/:episodeId/comments", verifyToken, (req, res) => {
   });
 });
 
+// Endpoint para obtener los comentarios asociados a un episodio en específico
 router.get("/episodes/:episodeId/comments", (req, res) => {
   const { episodeId } = req.params;
 
@@ -473,7 +466,6 @@ router.get("/episodes/:episodeId/comments", (req, res) => {
 
   db.query(query, [episodeId], (err, results) => {
     if (err) {
-      console.error("Database error:", err);
       return res
         .status(500)
         .send({ error: "Error al obtener los comentarios" });
@@ -485,13 +477,14 @@ router.get("/episodes/:episodeId/comments", (req, res) => {
       episodeId: comment.episode_id,
       content: comment.content,
       createdAt: comment.comment_date,
-      username: comment.username, // Aquí añadimos el username
+      username: comment.username,
     }));
 
     res.status(200).send({ comments: comments });
   });
 });
 
+// Endpoint para eliminar comentarios
 router.delete("/comments/:commentId", verifyToken, (req, res) => {
   const { commentId } = req.params;
   const userId = req.userId;
@@ -501,7 +494,6 @@ router.delete("/comments/:commentId", verifyToken, (req, res) => {
   const findCommentQuery = "SELECT user_id FROM comment WHERE comment_id = ?";
   db.query(findCommentQuery, [commentId], (findErr, findResults) => {
     if (findErr) {
-      console.error("Database error al buscar comentario:", findErr);
       return res.status(500).send({ error: "Error al buscar comentario" });
     }
 
@@ -520,7 +512,6 @@ router.delete("/comments/:commentId", verifyToken, (req, res) => {
     const deleteCommentQuery = "DELETE FROM comment WHERE comment_id = ?";
     db.query(deleteCommentQuery, [commentId], (deleteErr, deleteResults) => {
       if (deleteErr) {
-        console.error("Database error al eliminar comentario:", deleteErr);
         return res.status(500).send({ error: "Error al eliminar comentario" });
       }
 
@@ -541,23 +532,22 @@ router.delete("/comments/:commentId", verifyToken, (req, res) => {
  *
  */
 
-// Añadir una valoración a un episodio
+// Enpoint para añadir una valoración a un episodio
 router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
-  const { rating: ratingValue } = req.body; // Asegúrate de que 'rating' es el campo correcto enviado desde el frontend
+  const { rating: ratingValue } = req.body;
   const { episodeId } = req.params;
-  const userId = req.userId; // Obtenido de la verificación del token
+  const userId = req.userId;
 
-  // Antes de insertar, debemos verificar si el usuario ya ha valorado este episodio
+  // Antes de insertar, se verifica si el usuario ya ha valorado este episodio
   const findRatingQuery =
     "SELECT * FROM rating WHERE user_id = ? AND episode_id = ?";
   db.query(findRatingQuery, [userId, episodeId], (findErr, findResults) => {
     if (findErr) {
-      console.error("Database error al buscar valoración:", findErr);
       return res.status(500).send({ error: "Error al buscar valoración" });
     }
 
     if (findResults.length > 0) {
-      // El usuario ya ha valorado este episodio, tal vez quieras actualizar la valoración en su lugar
+      // El usuario ya ha valorado este episodio, se actualiza la valoración
       const updateRatingQuery =
         "UPDATE rating SET rating_value = ? WHERE user_id = ? AND episode_id = ?";
       db.query(
@@ -565,10 +555,6 @@ router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
         [ratingValue, userId, episodeId],
         (updateErr, updateResults) => {
           if (updateErr) {
-            console.error(
-              "Database error al actualizar valoración:",
-              updateErr
-            );
             return res
               .status(500)
               .send({ error: "Error al actualizar valoración" });
@@ -588,7 +574,6 @@ router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
         [userId, episodeId, ratingValue],
         (insertErr, insertResults) => {
           if (insertErr) {
-            console.error("Database error al añadir valoración:", insertErr);
             return res
               .status(500)
               .send({ error: "Error al añadir valoración" });
@@ -603,7 +588,7 @@ router.post("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
   });
 });
 
-// Obtener detalles de un episodio, incluyendo la calificación media
+// Endpoint para obtener detalles de un episodio, incluyendo la calificación media
 router.get("/episodes/:episodeId/details", (req, res) => {
   const { episodeId } = req.params;
   const avgRatingQuery =
@@ -611,13 +596,11 @@ router.get("/episodes/:episodeId/details", (req, res) => {
 
   db.query(avgRatingQuery, [episodeId], (error, results) => {
     if (error) {
-      console.error("Error al obtener la calificación promedio:", error);
       return res
         .status(500)
         .json({ error: "Error al realizar la consulta en la base de datos" });
     }
 
-    // Asegúrate de manejar el caso en que no hay calificaciones todavía
     const averageRating = results.length > 0 ? results[0].averageRating : 0;
 
     res.json({
@@ -636,7 +619,6 @@ router.get("/episodes/:episodeId/user-rating", verifyToken, (req, res) => {
 
   db.query(userRatingQuery, [episodeId, userId], (error, results) => {
     if (error) {
-      console.error("Error al obtener la calificación del usuario:", error);
       return res
         .status(500)
         .json({ error: "Error al realizar la consulta en la base de datos" });

@@ -1,73 +1,40 @@
 import { Injectable } from '@angular/core';
-
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
-
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 import { EpisodeResponse, Episode } from '../models/episode.model';
+
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EpisodesService {
-  // URL base de la API de episodios de "Rick and Morty".
   private apiUrl = 'https://rickandmortyapi.com/api/episode';
 
   constructor(private http: HttpClient) {}
-
   /**
-   * Recupera una lista de episodios desde la API con opciones de paginación.
+   * Obtiene una lista de episodios.
    *
-   * @param page (Opcional) Página de resultados. Por defecto es la página 1.
-   * @returns Observable<EpisodeResponse> Lista paginada de episodios.
+   * @param página Número de página a recuperar. El valor predeterminado es 1.
+   * @returns Observable del objeto EpisodeResponse.
    */
   getAllEpisodes(page: number = 1): Observable<EpisodeResponse> {
     const url = `${this.apiUrl}?page=${page}`;
-    return this.http
-      .get<EpisodeResponse>(url)
-      .pipe(catchError(this.handleError));
+    return this.http.get<EpisodeResponse>(url);
   }
 
   /**
-   * Recupera múltiples episodios basados en una lista de IDs.
+   * Obtiene una lista de episodios por sus IDs.
    *
-   * @param ids - Lista de IDs de episodios.
-   * @returns Observable<Episode[]> - Datos de los episodios correspondientes a los IDs.
+   * @param ids IDs de los episodios a recuperar.
+   * @returns Observable de un array de objetos Episode.
    */
   getMultipleEpisodes(ids: number[]): Observable<Episode[]> {
-    if (ids.length === 1) {
-      const url = `${this.apiUrl}/${ids[0]}`;
-      return this.http.get<Episode>(url).pipe(
-        map((episode) => [episode]),
-        catchError(this.handleError)
-      );
-    } else if (ids.length > 1) {
-      const url = `${this.apiUrl}/${ids.join(',')}`;
-      return this.http.get<Episode[]>(url).pipe(catchError(this.handleError));
-    } else {
+    if (ids.length === 0) {
       return of([]);
     }
-  }
 
-  /**
-   * Maneja y procesa errores de tipo HTTP.
-   *
-   * @param error - El error HTTP que se debe manejar.
-   * @returns - Lanza un observable con el mensaje de error.
-   */
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Error desconocido!';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      errorMessage = `Error Código: ${error.status}\nMensaje: ${error.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(errorMessage);
+    const url = `${this.apiUrl}/${ids.length === 1 ? ids[0] : ids.join(',')}`;
+    return this.http.get<Episode[]>(url);
   }
 }

@@ -2,11 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import { ValidationErrors } from '@angular/forms';
 
 import { User } from 'src/backend/models/user.model';
-
-import { Observable, catchError, map, of } from 'rxjs';
-
 import {
   RegistrationData,
   RegistrationResponse,
@@ -14,23 +12,23 @@ import {
   LoginResponse,
 } from '../models/user.model';
 
+import { Observable, map } from 'rxjs';
+
 import { jwtDecode } from 'jwt-decode';
-import { ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  // URL base del API para las operaciones del usuario.
   private apiUrl = 'http://localhost:3000/user';
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Método para registrar un nuevo usuario.
+   * Registra un nuevo usuario en el sistema utilizando los datos proporcionados.
    *
-   * @param formData - Datos del usuario a registrar.
-   * @returns Un observable con la respuesta del servidor al registro.
+   * @param {RegistrationData} formData Los datos del usuario que se utilizarán para el registro.
+   * @returns {Observable<RegistrationResponse>} Un observable que emite una respuesta de registro.
    */
   registerUser(formData: RegistrationData): Observable<RegistrationResponse> {
     return this.http.post<RegistrationResponse>(
@@ -39,45 +37,48 @@ export class UserService {
     );
   }
 
+  /**
+   * Comprueba si un nombre de usuario está siendo usada o está disponible.
+   *
+   * @param {string} username El nombre de usuario que se va a comprobar.
+   * @returns {Observable<ValidationErrors | null>} Un observable que emite un objeto de errores si el nombre de usuario está tomado, o nulo si está disponible.
+   */
   checkUsernameTaken(username: string): Observable<ValidationErrors | null> {
     return this.http
       .post<any>(`${this.apiUrl}/check-username`, { username })
-      .pipe(
-        map((res) => (res.exists ? { usernameTaken: true } : null)),
-        catchError(() => of(null))
-      );
-  }
-
-  checkEmailTaken(email: string): Observable<ValidationErrors | null> {
-    return this.http.post<any>(`${this.apiUrl}/check-email`, { email }).pipe(
-      map((res) => (res.exists ? { emailTaken: true } : null)),
-      catchError(() => of(null))
-    );
+      .pipe(map((res) => (res.exists ? { usernameTaken: true } : null)));
   }
 
   /**
-   * Realiza la petición de inicio de sesión al servidor.
+   * Comprueba si una dirección de correo electrónico está siendo usada o está disponible.
    *
-   * @param credentials - Datos de inicio de sesión del usuario que contiene el nombre de usuario y la contraseña.
-   * @returns - Un observable con la respuesta del inicio de sesión.
+   * @param {string} email La dirección de correo electrónico que se va a comprobar.
+   * @returns {Observable<ValidationErrors | null>} Un observable que emite un objeto de errores si la dirección de correo electrónico está tomada, o nulo si está disponible.
    */
+  checkEmailTaken(email: string): Observable<ValidationErrors | null> {
+    return this.http
+      .post<any>(`${this.apiUrl}/check-email`, { email })
+      .pipe(map((res) => (res.exists ? { emailTaken: true } : null)));
+  }
+
   loginUser(credentials: LoginData): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
   }
 
   /**
-   * Almacena el token de autenticación en el almacenamiento local.
+   * Establece el token de autenticación en el almacenamiento local del navegador.
    *
-   * @param token - Token de autenticación que se desea almacenar.
+   * @param {string} token El token de autenticación que se va a almacenar.
    */
   setToken(token: string): void {
     localStorage.setItem('authToken', token);
   }
 
   /**
-   * Recupera el token de autenticación del localStorage y verifica si ha expirado.
+   * Obtiene el token de autenticación del almacenamiento local y verifica si ha expirado.
+   * Si el token ha expirado, cierra la sesión del usuario y devuelve null.
    *
-   * @returns {string | null} - Devuelve el token de autenticación si es válido, o null si ha expirado o no está presente.
+   * @returns {string | null} El token de autenticación si aún es válido, o null si ha expirado.
    */
   getToken(): string | null {
     const retrievedToken = localStorage.getItem('authToken');
@@ -97,7 +98,8 @@ export class UserService {
   }
 
   /**
-   * Cierra la sesión del usuario eliminando el token de autenticación y su tiempo de expiración del localStorage.
+   * Cierra la sesión del usuario eliminando los datos de autenticación y la información de la sesión
+   * del almacenamiento local del navegador.
    */
   logoutUser(): void {
     localStorage.removeItem('authToken');
@@ -108,10 +110,10 @@ export class UserService {
   }
 
   /**
-   * Obtiene la fecha/hora de expiración del token de autenticación desde el localStorage.
+   * Obtiene la fecha/hora de expiración del token de autenticación desde el almacenamiento local y la
+   * convierte a un número. Retorna la fecha/hora de expiración como número si existe, o null si no se encuentra.
    *
-   * @returns {number | null} Retorna la fecha/hora de expiración del token en milisegundos desde
-   *                          la época Unix (1 de enero de 1970) si está presente. Si no, retorna null.
+   * @returns {number | null} La fecha/hora de expiración del token como número, o null si no se encuentra.
    */
   getTokenExpiry(): number | null {
     const expiry = localStorage.getItem('tokenExpiry');
@@ -122,15 +124,15 @@ export class UserService {
   }
 
   /**
-   * Determina si el token de autenticación almacenado ha expirado.
+   * Verifica si el token de autenticación ha expirado comparando la fecha/hora actual
+   * con la fecha/hora de expiración del token almacenada en el almacenamiento local.
    *
-   * @returns {boolean} Retorna 'true' si el token ha expirado o no tiene fecha/hora de expiración.
-   *                    Retorna 'false' si el token aún es válido.
+   * @returns {boolean} true si el token ha expirado, false si aún es válido o no existe.
    */
   tokenHasExpired(): boolean {
     const expiryTime = this.getTokenExpiry();
 
-    // Si no hay fecha/hora de expiración, asumimos que el token ha expirado.
+    // Si no hay fecha/hora de expiración, se asume que el token ha expirado.
     if (!expiryTime) {
       return true;
     }
@@ -148,9 +150,10 @@ export class UserService {
   }
 
   /**
-   * Determina si un usuario está logueado basado en la presencia y validez del token de autenticación.
+   * Verifica si el usuario ha iniciado sesión al comprobar la existencia del token de autenticación y
+   * si el token ha expirado o no.
    *
-   * @returns {boolean} Retorna 'true' si hay un token válido en el almacenamiento local, de lo contrario, 'false'.
+   * @returns {boolean} true si el usuario ha iniciado sesión y el token es válido, false si no ha iniciado sesión o el token ha expirado.
    */
   isLoggedIn(): boolean {
     const token = this.getToken();
@@ -161,11 +164,11 @@ export class UserService {
   }
 
   /**
-   * Cambia el tipo de usuario (normal o administrador) para un usuario específico.
+   * Cambia el tipo de usuario de un usuario específico mediante una solicitud PUT.
    *
-   * @param userId El ID del usuario cuyo tipo se va a cambiar.
-   * @param newUserType El nuevo tipo de usuario ('normal' o 'admin').
-   * @returns Un Observable que emite la respuesta del servidor.
+   * @param {number} userId El ID del usuario cuyo tipo se va a cambiar.
+   * @param {string} newUserType El nuevo tipo de usuario que se asignará.
+   * @returns {Observable<any>} Observable que representa la respuesta de la solicitud.
    */
   changeUserType(userId: number, newUserType: string): Observable<any> {
     const url = 'http://localhost:3000/user/update-type';
@@ -179,10 +182,10 @@ export class UserService {
   }
 
   /**
-   * Elimina un usuario específico por su ID.
+   * Elimina un usuario específico mediante una solicitud DELETE.
    *
-   * @param userId El ID del usuario que se eliminará.
-   * @returns Un Observable que emite la respuesta del servidor.
+   * @param {number} userId El ID del usuario que se va a eliminar.
+   * @returns {Observable<any>} Observable que representa la respuesta de la solicitud.
    */
   deleteUser(userId: number): Observable<any> {
     const url = `${this.apiUrl}/delete-user/${userId}`;
@@ -191,9 +194,10 @@ export class UserService {
   }
 
   /**
-   * Elimina múltiples usuarios basado en sus IDs.
+   * Elimina múltiples usuarios a la vez mediante una solicitud POST.
    *
-   * @param userIds Array de IDs de usuarios a eliminar.
+   * @param {number[]} userIds Un array de IDs de usuarios que se van a eliminar.
+   * @returns {Observable<any>} Observable que representa la respuesta de la solicitud.
    */
   deleteMultipleUsers(userIds: number[]): Observable<any> {
     const endpoint = `${this.apiUrl}/delete-multiple`;
@@ -201,16 +205,13 @@ export class UserService {
   }
 
   /**
-   * Obtiene una lista de usuarios con base en ciertos parámetros de paginación y ordenamiento.
+   * Obtiene una lista paginada de todos los usuarios disponibles.
    *
-   * @param {number} page - Número de página que se quiere consultar. Por defecto es 0.
-   * @param {number} limit - Número máximo de usuarios a retornar por página. Por defecto es 15.
-   * @param {string} sortBy - Campo por el cual se quiere ordenar la lista de usuarios. Por defecto es 'id'.
-   * @param {string} direction - Dirección del ordenamiento: 'ASC' para ascendente y 'DESC' para descendente. Por defecto es 'ASC'.
-   *
-   * @returns {Observable<{ data: User[]; total: number }>} Un Observable que contiene un objeto con:
-   *    - data: Un arreglo de usuarios.
-   *    - total: El número total de usuarios que cumplen con el criterio de búsqueda.
+   * @param {number} page El número de página que se desea recuperar (por defecto 0).
+   * @param {number} limit El número máximo de usuarios por página (por defecto 10).
+   * @param {string} sortBy El campo por el cual se debe ordenar la lista (por defecto 'id').
+   * @param {string} direction La dirección de la ordenación ('ASC' para ascendente o 'DESC' para descendente, por defecto 'ASC').
+   * @returns {Observable<{ data: User[]; total: number }>} Observable que representa la respuesta de la solicitud, que incluye los datos de usuarios y el total de usuarios.
    */
   getAllUsers(
     page: number = 0,
@@ -230,6 +231,12 @@ export class UserService {
     );
   }
 
+  /**
+   * Obtiene información detallada de un usuario por su ID.
+   *
+   * @param {number} userId El ID del usuario que se desea obtener.
+   * @returns {Observable<User>} Observable que representa la respuesta de la solicitud, que incluye los datos del usuario.
+   */
   getUserById(userId: number): Observable<User> {
     const url = `http://localhost:3000/user/${userId}`;
 
@@ -237,19 +244,16 @@ export class UserService {
   }
 
   /**
-   * Obtiene el tipo de usuario.
+   * Obtiene el tipo de usuario actual mediante el token de autenticación.
    *
-   * @returns {Observable<{ user_type: string }>}
-   *
-   * @throws {Error}
-   *
+   * @returns {Observable<{ user_type: string }>} Observable que representa la respuesta de la solicitud, que incluye el tipo de usuario actual.
+   * @throws {Error} Si el token no se encuentra en el almacenamiento local.
    */
   getUserType(): Observable<{ user_type: string }> {
     const token = this.getToken();
 
     if (!token) {
-      // Aquí puedes manejar el caso en el que no haya token. Por ejemplo, lanzar un error.
-      throw new Error('No token found');
+      throw new Error('Token no encontrado');
     }
 
     const headers = new HttpHeaders().set('Authorization', token);
@@ -259,6 +263,11 @@ export class UserService {
     });
   }
 
+  /**
+   * Obtiene el ID del usuario actual a partir del token de autenticación.
+   *
+   * @returns {number | null} El ID del usuario actual o null si no se encuentra un token de autenticación.
+   */
   getCurrentUserId(): number | null {
     const token = this.getToken();
     if (token) {
@@ -269,12 +278,10 @@ export class UserService {
   }
 
   /**
-   * Solicita el perfil del usuario al servidor a través de una petición HTTP GET.
+   * Obtiene el perfil del usuario autenticado.
    *
-   * @returns {Observable<User>} Retorna un Observable que emitirá el perfil del usuario
-   *                             cuando se obtenga una respuesta del servidor.
-   * @throws {Error} Si no se encuentra un token de autenticación en el almacenamiento local,
-   *                 se lanza un error.
+   * @returns {Observable<User>} Observable que representa la respuesta de la solicitud, que incluye los datos del perfil del usuario.
+   * @throws {Error} Si el token de autenticación no se encuentra en el almacenamiento local.
    */
   getProfile(): Observable<User> {
     let headers = new HttpHeaders();
@@ -284,22 +291,17 @@ export class UserService {
     if (token) {
       headers = headers.append('Authorization', token);
     } else {
-      // Si no se encuentra un token, lanzar un error ya que es necesario para la solicitud.
-      throw new Error('No authentication token found.');
+      throw new Error('Token de autenticación no encontrado.');
     }
 
     return this.http.get<User>(`${this.apiUrl}/profile`, { headers });
   }
 
   /**
-   * Actualiza el perfil del usuario en el servidor.
+   * Actualiza el perfil del usuario.
    *
-   * @param {User} user - El perfil del usuario que se quiere actualizar.
-   * @returns {Observable<any>} Retorna un Observable que emitirá la respuesta
-   *                            del servidor tras la actualización.
-   * @throws {Error} Si el token de autenticación no está disponible,
-   *                 TypeScript generará un error de tiempo de compilación debido al operador '!'
-   *                 (usado para asegurarse de que `getToken()` no devuelve null o undefined).
+   * @param {User} user Los datos del usuario que se desean actualizar.
+   * @returns {Observable<any>} Observable que representa la respuesta de la solicitud de actualización del perfil.
    */
   updateProfile(user: User): Observable<any> {
     const headers = new HttpHeaders({

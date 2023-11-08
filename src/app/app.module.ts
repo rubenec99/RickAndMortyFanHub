@@ -23,7 +23,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { StarComponent } from './components/star/star.component';
 import { RatingComponent } from './components/rating/rating.component';
-
+import { TriviaComponent } from './pages/trivia/trivia.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,6 +39,7 @@ import { RatingComponent } from './components/rating/rating.component';
     EditProfileComponent,
     StarComponent,
     RatingComponent,
+    TriviaComponent,
   ],
   imports: [
     BrowserModule,

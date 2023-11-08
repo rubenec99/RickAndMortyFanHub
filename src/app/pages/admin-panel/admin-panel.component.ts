@@ -47,14 +47,30 @@ export class AdminPanelComponent {
           this.originalUserTypes.set(user.id, user.user_type);
         });
       },
-      error: (error) => {
-        console.error('Error obteniendo usuarios:', error);
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al obtener los usuarios. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
       },
     });
   }
 
   /**
-   * Método para cargar la lista de usuarios desde el servicio.
+   * Carga los usuarios de la base de datos y actualiza la vista con los nuevos datos.
+   * Esta función se encarga de solicitar a la API la lista de usuarios con los parámetros
+   * de paginación, ordenación y dirección especificados. Gestiona la respuesta exitosa
+   * actualizando el estado del componente con la nueva lista de usuarios y sus tipos originales,
+   * y maneja los errores mostrando una alerta al usuario.
+   *
+   * @param page El número de página de usuarios a cargar, por defecto es la página actual del componente.
+   * @param limit La cantidad de usuarios a retornar por página, por defecto es el tamaño de página del componente.
+   * @param sortBy El criterio de ordenación de los usuarios, por defecto es el campo de ordenación actual del componente.
+   * @param direction La dirección de ordenación, ascendente o descendente, por defecto depende del estado actual de ordenación del componente.
+   * @returns No retorna nada ya que su propósito es actualizar el estado del componente.
    */
   loadUsers(
     page: number = this.currentPage,
@@ -75,8 +91,14 @@ export class AdminPanelComponent {
           this.originalUserTypes.set(user.id, user.user_type);
         });
       },
-      error: (error) => {
-        console.error('Error obteniendo usuarios:', error);
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error obteniendo usuarios. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
       },
     });
   }
@@ -90,15 +112,21 @@ export class AdminPanelComponent {
   updateUserType(userId: number, newUserType: string): void {
     // Llama al servicio para cambiar el tipo de usuario.
     this.userService.changeUserType(userId, newUserType).subscribe({
-      next: (response) => {
+      next: () => {
         // Actualiza el valor original del tipo de usuario para el usuario recién actualizado.
         this.originalUserTypes.set(userId, newUserType);
 
         // Recarga la lista de usuarios después de la actualización.
         this.loadUsers();
       },
-      error: (error) => {
-        console.error('Hubo un error al actualizar el tipo de usuario.', error);
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al actualizar los privilegios del usuario. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
       },
     });
   }
@@ -141,7 +169,7 @@ export class AdminPanelComponent {
    */
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
-      next: (response) => {
+      next: () => {
         Swal.fire({
           title: 'Eliminado',
           text: 'El usuario ha sido eliminado correctamente.',
@@ -153,8 +181,14 @@ export class AdminPanelComponent {
         // Recarga la lista de usuarios después de la eliminación.
         this.loadUsers();
       },
-      error: (error) => {
-        Swal.fire('Error', 'Hubo un error al eliminar el usuario.', 'error');
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al eliminar usuario. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
       },
     });
   }
@@ -197,7 +231,6 @@ export class AdminPanelComponent {
     const selectedUserIds = selectedUsers.map((user) => user.id);
 
     if (selectedUserIds.length === 0) {
-      // Muestra una alerta informativa si no se selecciona ningún usuario.
       Swal.fire({
         title: 'No hay usuarios seleccionados',
         text: 'Por favor, selecciona usuarios para eliminar.',
@@ -224,7 +257,7 @@ export class AdminPanelComponent {
       if (result.isConfirmed) {
         // Si se confirma la eliminación, llama al servicio para eliminar los usuarios seleccionados.
         this.userService.deleteMultipleUsers(selectedUserIds).subscribe({
-          next: (response) => {
+          next: () => {
             // Después de la eliminación, recarga la lista de usuarios.
             this.loadUsers();
             Swal.fire({
@@ -235,12 +268,14 @@ export class AdminPanelComponent {
               confirmButtonColor: '#00BCD4',
             });
           },
-          error: (error) => {
-            Swal.fire(
-              'Error',
-              'Ocurrió un error al eliminar los usuarios.',
-              'error'
-            );
+          error: () => {
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Error al eliminar los usuarios. Por favor, inténtelo de nuevo más tarde.',
+              icon: 'error',
+              iconColor: '#FF4565',
+              confirmButtonColor: '#00BCD4',
+            });
           },
         });
       }
@@ -268,7 +303,7 @@ export class AdminPanelComponent {
       this.isAscending = !this.isAscending;
     } else {
       this.currentSorting = sorting;
-      this.isAscending = true; // Por defecto, establecer el orden ascendente al cambiar de columna
+      this.isAscending = true; // Por defecto, establece el orden ascendente al cambiar de columna
     }
 
     this.loadUsers(
@@ -286,7 +321,7 @@ export class AdminPanelComponent {
   changePage(page: number): void {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
-      this.loadUsers(); // cargar la página seleccionada
+      this.loadUsers(); // Cargar la página seleccionada
     }
   }
 

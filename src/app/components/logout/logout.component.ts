@@ -14,7 +14,8 @@ export class LogoutComponent {
   constructor(private userService: UserService, private router: Router) {}
 
   /**
-   * Muestra un mensaje de confirmación para verificar si el usuario realmente desea cerrar la sesión.
+   * Muestra una ventana de confirmación para que el usuario pueda confirmar su intención de cerrar sesión.
+   * En caso afirmativo, muestra una notificación de éxito y procede a ejecutar la función `onLogout`
    */
   confirmLogout() {
     Swal.fire({

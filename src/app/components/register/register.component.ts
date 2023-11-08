@@ -1,24 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import {
   FormBuilder,
   FormGroup,
   Validators,
   AbstractControl,
   ValidationErrors,
-  AsyncValidatorFn,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 
-import { UserService } from 'src/app/services/user.service';
 import { RegistrationData } from 'src/app/models/user.model';
 
-import Swal from 'sweetalert2';
+import { UserService } from 'src/app/services/user.service';
 
-import { Subject, Observable, of } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import {
   takeUntil,
-  map,
-  catchError,
   debounceTime,
   distinctUntilChanged,
   switchMap,
@@ -27,12 +24,14 @@ import {
 
 import { jwtDecode } from 'jwt-decode';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   private destroy$ = new Subject<void>();
 
@@ -42,6 +41,9 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
 
+  /**
+   * Inicializa el componente y crea el formulario de registro con sus respectivas validaciones.
+   */
   ngOnInit() {
     // Inicialización del formulario de registro con validaciones.
     this.registerForm = this.formBuilder.group(
@@ -64,13 +66,15 @@ export class RegisterComponent implements OnInit {
 
         birth_date: ['', [Validators.required, this.dateNotInFutureValidator]],
 
-        // Campo para la contraseña con validaciones requeridas, y un patrón específico.
-        // El patrón requiere:
-        // - Al menos 1 letra minúscula
-        // - Al menos 1 letra mayúscula
-        // - Al menos 1 número
-        // - Al menos 1 carácter especial de este conjunto (@$!%?&)
-        // - Una longitud de entre 8 y 16 caracteres.
+        /**
+         * Campo para la contraseña con validaciones requeridas, y un patrón específico.
+         * El patrón requiere:
+         * - Al menos 1 letra minúscula
+         * - Al menos 1 letra mayúscula
+         * - Al menos 1 número
+         * - Al menos 1 carácter especial de este conjunto (@$!%?&)
+         * - Una longitud de entre 8 y 16 caracteres.
+         */
         password: [
           '',
           [
@@ -90,10 +94,19 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
+   * Se encarga de emitir un valor y luego completar el subject `destroy$` para
+   * efectuar una limpieza y evitar fugas de memoria por suscripciones no cerradas.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
    * Validador que asegura que el valor ingresado no contenga números.
    *
-   * @param control - Control del formulario a validar.
-   * @returns - Objeto de errores o null.
+   * @param control Control del formulario a validar.
+   * @returns Un objeto de errores o null.
    */
   noNumberValidator(
     control: AbstractControl
@@ -108,22 +121,34 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Validador asíncrono para verificar si un nombre de usuario ya está tomado.
+   * Crea un validador asíncrono que verifica si un nombre de usuario ya ocupado.
+   * Utiliza `valueChanges` del control para reaccionar a cada cambio con un retraso
+   * y sin repetir valores idénticos consecutivos para reducir las solicitudes innecesarias.
    *
-   * @param userService - Servicio para verificar el nombre de usuario.
-   * @returns - Función de validación asíncrona.
+   * @param control El control de formulario AbstractControl que contiene el valor del nombre de usuario.
+   * @returns Un Observable que emite un objeto de errores de validación si el nombre de usuario
+   *          está tomado, o `null` si no hay errores.
    */
   usernameTakenValidator(
     control: AbstractControl
   ): Observable<ValidationErrors | null> {
     return control.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(500), // Espera 500ms
       distinctUntilChanged(),
       switchMap((value) => this.userService.checkUsernameTaken(value)),
       first() // Completa el observable después de la primera respuesta recibida
     );
   }
 
+  /**
+   * Implementa un validador asíncrono que determina si el correo electrónico ya ha sido registrado.
+   * Este método se basa en el operador `valueChanges` del control para emitir el valor del campo
+   * y verificar su disponibilidad, minimizando las solicitudes a través de técnicas reactivas.
+   *
+   * @param control El control del formulario AbstractControl que contiene el valor del campo de correo electrónico.
+   * @returns Un Observable que emite un objeto de errores de validación si el correo electrónico
+   *          ya está registrado, o `null` si está disponible.
+   */
   emailTakenValidator(
     control: AbstractControl
   ): Observable<ValidationErrors | null> {
@@ -139,7 +164,7 @@ export class RegisterComponent implements OnInit {
    * Validador que verifica si la contraseña y su confirmación son iguales.
    *
    * @param control - Grupo de controles del formulario.
-   * @returns - Objeto de errores si las contraseñas no coinciden, de lo contrario, null.
+   * @returns Un objeto de errores si las contraseñas no coinciden, de lo contrario, null.
    */
   passwordsMatchValidator(control: FormGroup): ValidationErrors | null {
     const password = control.get('password');
@@ -154,8 +179,8 @@ export class RegisterComponent implements OnInit {
   /**
    * Validador que asegura que la fecha seleccionada no esté en el futuro.
    *
-   * @param control - Control del formulario con la fecha a validar.
-   * @returns - Objeto de errores si la fecha está en el futuro, de lo contrario, null.
+   * @param control Control del formulario con la fecha a validar.
+   * @returns Objeto de errores si la fecha está en el futuro, de lo contrario, null.
    */
   dateNotInFutureValidator(control: AbstractControl): ValidationErrors | null {
     const selectedDate = new Date(control.value);
@@ -168,9 +193,7 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Método para remover el backdrop de Bootstrap. Esto se usa normalmente
-   * para limpiar el overlay oscuro detrás de modales al cerrar un modal
-   * de Bootstrap.
+   * Método para remover el backdrop de Bootstrap.
    */
   removeBootstrapBackdrop() {
     const backdrop = document.querySelector('.modal-backdrop');
@@ -181,10 +204,10 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Intenta iniciar sesión automáticamente usando los datos proporcionados de un formulario de registro.
+   * Intenta iniciar sesión automáticamente usando los datos proporcionados del formulario de registro.
    * Esta función se usa después de que un usuario se haya registrado con éxito, para iniciar sesión automáticamente.
    *
-   * @param formData - Los datos del formulario de registro, que contienen el nombre de usuario y la contraseña.
+   * @param formData Los datos del formulario de registro, que contienen el nombre de usuario y la contraseña.
    */
   autoLogin(formData: RegistrationData) {
     const LoginData = {
@@ -204,19 +227,23 @@ export class RegisterComponent implements OnInit {
 
             this.router.navigate(['/home']);
           } else {
-            Swal.fire('Error', 'No se recibió el token del servidor', 'error');
+            Swal.fire({
+              title: '¡Error!',
+              text: 'Error, no se recibió el token del servidor. Por favor, inténtelo de nuevo más tarde.',
+              icon: 'error',
+              iconColor: '#FF4565',
+              confirmButtonColor: '#00BCD4',
+            });
           }
         } else {
-          Swal.fire(
-            'Error',
-            'Error al iniciar sesión automáticamente',
-            'error'
-          );
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al iniciar sesión automáticamente. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
         }
-      },
-      error: (error) => {
-        console.error('Error al iniciar sesión automáticamente:', error);
-        Swal.fire('Error', 'Error al iniciar sesión automáticamente', 'error');
       },
     });
   }
@@ -251,18 +278,21 @@ export class RegisterComponent implements OnInit {
                 title: 'Error',
                 text: response.error,
                 icon: 'error',
+                iconColor: '#FF4565',
+                confirmButtonColor: '#00BCD4',
                 didClose: () => {
                   this.removeBootstrapBackdrop();
                 },
               });
             }
           },
-          error: (error) => {
-            console.error('Error al registrar usuario:', error);
+          error: () => {
             Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error inesperado. Intente de nuevo.',
+              title: '¡Error!',
+              text: 'Ocurrió un error inesperado. Por faovr, inténtelo de nuevo más tarde.',
               icon: 'error',
+              iconColor: '#FF4565',
+              confirmButtonColor: '#00BCD4',
             });
           },
         });
