@@ -194,6 +194,30 @@
             </div>
           </div>
 
+          <!-- Politica de privacidad Checkbox -->
+          <div class="mb-3 form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="termsCheckbox"
+              formControlName="terms"
+            />
+            <label class="acp-term" for="termsCheckbox">
+              Acepto la
+              <a href="/politica-de-privacidad" target="_blank"
+                >política de privacidad.</a
+              >
+            </label>
+            <div
+              *ngIf="
+                registerForm.get('termsCheckbox')?.hasError('required') &&
+                registerForm.get('required')?.touched
+              "
+              class="text-danger"
+            >
+              Debe aceptar la política de privacidad para continuar.
+            </div>
+          </div>
           <!-- Botón para registrarse -->
           <div class="mb-3">
             <button type="submit" class="btn btn-primary register-button">

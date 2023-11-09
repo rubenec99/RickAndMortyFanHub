@@ -1,13 +1,17 @@
 import { Component } from '@angular/core';
 
+import { Character } from 'src/app/models/character.model';
+
+import { CharactersService } from 'src/app/services/characters.service';
+
 import { TriviaQuestion } from 'src/app/models/trivia-question.model';
 
 @Component({
   selector: 'app-trivia',
-  templateUrl: './trivia.component.html',
-  styleUrls: ['./trivia.component.css'],
+  templateUrl: './minigames.component.html',
+  styleUrls: ['./minigames.component.css'],
 })
-export class TriviaComponent {
+export class MinigamesComponent {
   triviaQuestions: TriviaQuestion[] = [
     {
       question: '¿Cuál es el nombre completo de Morty?',
@@ -242,9 +246,18 @@ export class TriviaComponent {
   showProgressBar: boolean = false;
   allCorrect: boolean = false;
 
+  charactersOptions: Character[] = [];
+  correctCharacter: Character | null = null;
+  selectedCharacterId: number | null = null;
+  isCorrect: boolean | null = null;
+  loading: boolean = false;
+
+  constructor(private charactersService: CharactersService) {}
+
   ngOnInit(): void {
     // Obtener un conjunto de preguntas al azar
     this.getRandomQuestions();
+    this.loadRandomCharacters();
   }
 
   /**
@@ -305,5 +318,60 @@ export class TriviaComponent {
    */
   getProgressPercentage(): number {
     return (this.correctAnswersCount / this.displayedQuestions.length) * 100;
+  }
+
+  /**
+   * Carga personajes aleatorios para el juego.
+   */
+  loadRandomCharacters(): void {
+    // Resetear el estado del mensaje y el personaje seleccionado.
+    this.isCorrect = null;
+    this.selectedCharacterId = null;
+
+    this.loading = true;
+    this.charactersService.getRandomCharacters(3).subscribe((characters) => {
+      this.charactersOptions = characters;
+      this.correctCharacter =
+        characters[Math.floor(Math.random() * characters.length)];
+      this.loading = false;
+    });
+  }
+
+  /**
+   * Verifica si la respuesta seleccionada es correcta.
+   * @param character - El personaje seleccionado por el usuario.
+   */
+  checkAnswer(character: Character): void {
+    this.isCorrect = character.id === this.correctCharacter!.id;
+
+    if (this.isCorrect) {
+      // Esperar 3 segundos antes de cargar nuevos personajes.
+      setTimeout(() => {
+        this.loadRandomCharacters();
+      }, 1000);
+    }
+  }
+
+  /**
+   * Establece el ID del personaje seleccionado por el usuario.
+   * @param id - El ID del personaje seleccionado.
+   */
+  selectCharacter(id: number): void {
+    this.selectedCharacterId = id;
+  }
+
+  /**
+   * Método para resetear el juego de las preguntas
+   */
+  resetGame(): void {
+    // Restablece el estado del juego
+    this.correctAnswersCount = 0;
+    this.showProgressBar = false;
+    this.allCorrect = false;
+    this.answerStatus = [];
+    this.feedbackMessage = '';
+
+    // Carga nuevas preguntas y personajes
+    this.getRandomQuestions();
   }
 }

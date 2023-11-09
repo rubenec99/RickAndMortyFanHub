@@ -148,6 +148,10 @@
   background: transparent;
 }
 
+.modal-footer {
+  justify-content: center;
+}
+
 /* -------------------- BOTÓN LOGIN -------------------- */
 
 .form .login-button {
@@ -198,4 +202,28 @@
 .custom-button:active {
   transform: scale(0.95);
   box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
+}
+
+/* -------------------- BOTÓN PARA CREAR CUENTA NUEVA -------------------- */
+
+.btn-link {
+  color: #00bcd4; /* Color que ya utilizamos en otros elementos para mantener la coherencia */
+  text-decoration: underline; /* Subrayado para enfatizar que es un enlace */
+  border: none; /* No border to maintain it as a text link appearance */
+  background: transparent; /* Sin fondo para que parezca un enlace en lugar de un botón */
+  transition: color 0.2s ease-in-out; /* Transición suave al cambiar de color */
+  display: inline-block; /* Hace que el botón se comporte como un enlace y permite el margin-top */
+  cursor: pointer;
+}
+
+.btn-link:hover,
+.btn-link:focus {
+  color: #009fa8; /* Un tono más oscuro al pasar el ratón por encima para interactividad */
+  text-decoration: none; /* Quitamos el subrayado al pasar el ratón para indicar que es clickeable */
+  outline: none; /* Quitamos el outline al enfocar para una estética limpia */
+  background-color: transparent; /* Mantenemos el fondo transparente al pasar el ratón y enfocar */
+}
+
+.acc-msg {
+  color: #1f1f2e;
 }

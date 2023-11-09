@@ -8,7 +8,7 @@ import { LocationsComponent } from './pages/locations-list/locations-list.compon
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
 import { AdminGuard } from './guards/admin.guard';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
-import { TriviaComponent } from './pages/trivia/trivia.component';
+import { MinigamesComponent } from './pages/minigames/minigames.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'characters', component: CharactersComponent },
   { path: 'episodes', component: EpisodesComponent },
   { path: 'locations', component: LocationsComponent },
-  { path: 'trivia', component: TriviaComponent },
+  { path: 'minigames', component: MinigamesComponent },
   { path: 'profile', component: EditProfileComponent },
   {
     path: 'admin',

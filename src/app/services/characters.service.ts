@@ -99,6 +99,26 @@ export class CharactersService {
   }
 
   /**
+   * Obtiene una cantidad especificada de personajes aleatorios.
+   *
+   * @param {number} count La cantidad de personajes aleatorios que se desean obtener.
+   *
+   * @returns {Observable<Character[]>} Un observable que emite un arreglo de objetos de personajes aleatorios.
+   */
+  getRandomCharacters(count: number): Observable<Character[]> {
+    return this.http.get<{ info: { count: number } }>(this.baseUrl).pipe(
+      switchMap((infoResponse) => {
+        const totalCharacters = infoResponse.info.count;
+        const randomIds = this.generateUniqueRandomNumbers(
+          count,
+          totalCharacters
+        );
+        return this.getCharactersByIds(randomIds);
+      })
+    );
+  }
+
+  /**
    * Genera un conjunto de números aleatorios únicos dentro de un rango especificado.
    *
    * @param {number} count La cantidad de números aleatorios únicos que se desean generar.

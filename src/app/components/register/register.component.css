@@ -282,3 +282,21 @@
   transform: scale(0.95);
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
 }
+
+a {
+  color: #1f1f2e; /* Color que ya utilizamos en otros elementos para mantener la coherencia */
+  text-decoration: underline; /* Subrayado para enfatizar que es un enlace */
+  border: none; /* No border to maintain it as a text link appearance */
+  background: transparent; /* Sin fondo para que parezca un enlace en lugar de un botón */
+  transition: color 0.2s ease-in-out; /* Transición suave al cambiar de color */
+  display: inline-block; /* Hace que el botón se comporte como un enlace y permite el margin-top */
+  cursor: pointer;
+}
+
+a:hover,
+a:focus {
+  color: #181820; /* Un tono más oscuro al pasar el ratón por encima para interactividad */
+  text-decoration: none; /* Quitamos el subrayado al pasar el ratón para indicar que es clickeable */
+  outline: none; /* Quitamos el outline al enfocar para una estética limpia */
+  background-color: transparent; /* Mantenemos el fondo transparente al pasar el ratón y enfocar */
+}

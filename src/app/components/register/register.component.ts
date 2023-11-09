@@ -86,6 +86,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         ],
 
         confirmPassword: ['', Validators.required],
+        terms: [false, Validators.requiredTrue],
       },
       {
         validator: this.passwordsMatchValidator,

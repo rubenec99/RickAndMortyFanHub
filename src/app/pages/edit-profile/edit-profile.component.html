@@ -1,8 +1,7 @@
 <div class="container-form">
   <div *ngIf="editProfileForm" class="container mt-5">
     <h2 class="heading mb-4">
-      Perfil de {{ editProfileForm.get("first_name")?.value }}
-      {{ editProfileForm.get("last_name")?.value }}
+      Perfil de {{ user?.first_name }}&nbsp;{{ user?.last_name }}
     </h2>
 
     <form [formGroup]="editProfileForm" (submit)="onSubmit()" class="form">

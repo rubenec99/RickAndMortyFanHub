@@ -1,7 +1,44 @@
+<!-- Sección Minijuego Interactivo -->
+<div class="game-container my-3">
+  <div class="game-header text-center mb-4">
+    <h2>¿Quién es?</h2>
+  </div>
+  <div *ngIf="!loading" class="game-content">
+    <div *ngIf="correctCharacter" class="character-image-container">
+      <img
+        [src]="correctCharacter.image"
+        alt="Guess who?"
+        [ngClass]="{
+          'shadow-correct': isCorrect,
+          'shadow-incorrect': isCorrect === false
+        }"
+        class="character-image"
+      />
+    </div>
+
+    <div *ngIf="charactersOptions.length > 0" class="character-choices">
+      <ul class="choices-list">
+        <li *ngFor="let character of charactersOptions" class="choice-item">
+          <button (click)="checkAnswer(character)" class="choice-btn">
+            {{ character.name }}
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="isCorrect === true" class="feedback-message correct">
+      ¡Correcto!
+    </div>
+    <div *ngIf="isCorrect === false" class="feedback-message incorrect">
+      ¡Incorrecto! Prueba de nuevo.
+    </div>
+  </div>
+</div>
+
 <!-- Sección de Trivia Interactiva -->
 <div class="container my-3">
   <div class="text-center mb-4">
-    <button class="btn-characters-title">Trivia de Rick & Morty</button>
+    <button class="btn-characters-title">Trivia de rick & morty</button>
   </div>
 
   <div class="mb-4" *ngIf="showProgressBar">
@@ -105,6 +142,12 @@
     <div>
       <button class="btn-trivia" (click)="checkAllAnswers()">
         <i class="animation"></i>Comprobar<i class="animation"></i>
+      </button>
+    </div>
+    <!-- Botón para reiniciar el juego -->
+    <div class="text-center mt-4">
+      <button class="btn-trivia" (click)="resetGame()">
+        <i class="animation"></i>Reiniciar Juego<i class="animation"></i>
       </button>
     </div>
   </div>
