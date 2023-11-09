@@ -4,6 +4,7 @@ import { Character } from 'src/app/models/character.model';
 
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
+import { TranslationService } from 'src/app/services/translation.service';
 
 import { EMPTY, Subject } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -32,12 +33,12 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * Estas propiedades se utilizan para mostrar opciones de filtro y realizar búsquedas avanzadas.
    */
   allGenders: string[] = ['Male', 'Female', 'Unknow', 'Genderless'];
-  allStatuses: string[] = ['Alive', 'Unknow', 'dead'];
+  allStatuses: string[] = ['Alive', 'Unknow', 'Dead'];
   allSpecies: string[] = [
     'Human',
     'Alien',
     'Humanoid',
-    'unknow',
+    'Unknow',
     'Poopybutthole',
     'Mythological Creature',
     'Animal',
@@ -52,7 +53,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
   constructor(
     private charactersService: CharactersService, // Inyecta el servicio de personajes
     private episodesService: EpisodesService, // Inyecta el servicio de episodios
-    public modalService: NgbModal // Inyecta el servicio de modales de Bootstrap
+    public modalService: NgbModal, // Inyecta el servicio de modales de Bootstrap
+    public translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -108,16 +110,10 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre un modal con detalles del personaje seleccionado.
-   * Primero establece el personaje actualmente seleccionado a la propiedad correspondiente.
-   * Luego, extrae los identificadores de los episodios del objeto del personaje, realiza una solicitud
-   * para obtener los detalles de múltiples episodios y se suscribe a la respuesta.
-   * Si la respuesta es exitosa y devuelve un arreglo, mapea los nombres de los episodios a la propiedad 'episodes'.
-   * En caso de errores en la respuesta o fallos en la solicitud, muestra una notificación al usuario.
-   * Finalmente, abre el modal con el contenido especificado.
+   * Abre el modal de detalles de un personaje.
    *
-   * @param character El personaje seleccionado cuyos detalles se van a mostrar.
-   * @param content El contenido que se va a cargar dentro del modal.
+   * @param character El personaje para el cual se abrirá el modal de detalles.
+   * @param content El contenido del modal.
    */
   openModal(character: Character, content: any): void {
     this.selectedCharacter = character;
@@ -132,15 +128,20 @@ export class CharactersComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (episodes) => {
           if (Array.isArray(episodes)) {
-            this.episodes = episodes.map((ep) => ep.name);
-          } else {
-            Swal.fire({
-              title: '¡Error!',
-              text: 'Error en el formato de respuesta al obtener los detalles del episodio. Por favor, inténtelo de nuevo más tarde.',
-              icon: 'error',
-              iconColor: '#FF4565',
-              confirmButtonColor: '#00BCD4',
-            });
+            switch (episodes.length) {
+              case 0:
+                // No episodes available
+                this.episodes = ['No aparece en ningún episodio'];
+                break;
+              case 1:
+                // Single episode returned
+                this.episodes = [episodes[0].name];
+                break;
+              default:
+                // Multiple episodes returned
+                this.episodes = episodes.map((ep) => ep.name);
+                break;
+            }
           }
         },
         error: () => {
@@ -151,6 +152,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
             iconColor: '#FF4565',
             confirmButtonColor: '#00BCD4',
           });
+          this.episodes = ['No se pudo cargar la información del episodio'];
         },
       });
 
@@ -237,6 +239,20 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.selectedSpecies = ''; // Restablece la especie (species)
     this.currentPage = 1; // Resetea la página al valor predeterminado (primera página)
     this.loadCharacters(); // Vuelve a cargar la lista de personajes con los valores de filtro restablecidos
+  }
+
+  /**
+   * Obtiene la traducción correspondiente a una clave y un tipo dados.
+   *
+   * @param key La clave de traducción.
+   * @param type El tipo de traducción.
+   * @returns La traducción correspondiente o 'Desconocido' si no se encuentra.
+   */
+  getTranslation(key: string | undefined, type: string): string {
+    if (key) {
+      return this.translationService.translate(key, type);
+    }
+    return 'Desconocido';
   }
 
   /**

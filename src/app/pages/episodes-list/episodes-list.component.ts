@@ -8,6 +8,7 @@ import { CharactersService } from 'src/app/services/characters.service';
 import { CommentService } from 'src/app/services/comments.service';
 import { UserService } from 'src/app/services/user.service';
 import { RatingService } from 'src/app/services/rating.service';
+import { TranslationService } from 'src/app/services/translation.service';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -47,7 +48,8 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     private characterService: CharactersService,
     private commentService: CommentService,
     private userService: UserService,
-    private ratingService: RatingService
+    private ratingService: RatingService,
+    public translationService: TranslationService
   ) {}
 
   ngOnInit() {
@@ -131,6 +133,58 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       // Si no se proporciona un filtro, muestra todos los episodios
       this.episodes = [...this.allEpisodes];
     }
+  }
+
+  /**
+   * Devuelve una cadena formateada para representar el código del episodio en el formato deseado.
+   *
+   * @param episodeCode El código del episodio en el formato SxxExx.
+   * @returns La cadena formateada que muestra la temporada y el episodio.
+   */
+  getFormattedEpisode(episodeCode: string): string {
+    const season = episodeCode.substring(1, 3);
+    const episode = episodeCode.substring(4);
+
+    return `Temporada ${parseInt(season, 10)}, Episodio ${parseInt(
+      episode,
+      10
+    )}`;
+  }
+
+  /**
+   * Devuelve una cadena formateada para representar la fecha de emisión en el formato deseado.
+   *
+   * @param airDate La fecha de emisión en formato de cadena.
+   * @returns La cadena formateada de la fecha en el formato deseado (día de mes de año).
+   */
+  getFormattedDate(airDate: string): string {
+    const date = new Date(airDate);
+
+    // Definir los nombres de los meses en español
+    const monthNames = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+
+    // Obtener el día, mes y año
+    const day = date.getDate();
+    const month = date.getMonth(); // Los meses en JavaScript se cuentan desde 0
+    const year = date.getFullYear();
+
+    // Construir la fecha en el formato deseado
+    const formattedDate = `${day} de ${monthNames[month]} de ${year}`;
+
+    return formattedDate;
   }
 
   /**
@@ -521,5 +575,19 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       this.currentRating = 0;
       this.averageRating = 0;
     }
+  }
+
+  /**
+   * Obtiene la traducción correspondiente a una clave y un tipo dados.
+   *
+   * @param key La clave de traducción.
+   * @param type El tipo de traducción.
+   * @returns La traducción correspondiente o 'Desconocido' si no se encuentra.
+   */
+  getTranslation(key: string | undefined, category: string): string {
+    if (key) {
+      return this.translationService.translate(key, category);
+    }
+    return 'Desconocido';
   }
 }

@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
    * Implementación de la interfaz OnInit que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    this.charactersService.getRandomFiveCharacters();
     // Se suscribe al observable para recibir notificaciones sobre el estado de inicio de sesión.
     this.userService.isLoggedIn$.subscribe((isLoggedIn) => {
       // Actualiza el valor de la variable 'isUserLoggedIn' con el estado de inicio de sesión.

@@ -12,47 +12,64 @@
   padding-right: 1rem;
 }
 
-/* Estilos generales */
-body,
-select,
-button,
-input {
-  font-family: "Arial", sans-serif;
-  font-size: 14px;
-}
-
 /* -------------------- BARRA DE BÚSQUEDA -------------------- */
 
 /* Contenedor de búsqueda */
 .search-container {
+  display: flex;
+  align-items: center;
   padding: 15px 25px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
 }
 
+/* Estilo del input de búsqueda */
 .search-container input {
-  width: 80%;
+  flex-grow: 1;
   padding: 10px;
-  border: 1px solid #e6e6e6;
+  margin-right: 10px;
+  border: 1px solid #ccc;
   border-radius: 4px;
   color: #333;
   background-color: #ffffff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Estilo del input de búsqueda al enfocar */
+.search-container input:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+  outline: none;
+}
+
+/* Estilo del botón de búsqueda */
 .search-container button {
   padding: 10px 20px;
-  margin-left: 10px;
   border: none;
   border-radius: 4px;
   color: #ffffff;
   background-color: #00bcd4;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Efecto hover del botón de búsqueda */
 .search-container button:hover {
   background-color: #0097a7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejora visual del placeholder */
+.search-container input::placeholder {
+  color: #ccc;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Estilo del placeholder al enfocar el input */
+.search-container input:focus::placeholder {
+  opacity: 0.5;
 }
 
 /* -------------------- DROPDOWN FILTROS -------------------- */
@@ -110,188 +127,188 @@ ngbDropdownMenu {
   color: #ffffff;
 }
 
-/* -------------------- MENSAJE DE ERROR -------------------- */
-
-.alert {
-  background-color: rgba(200, 0, 0, 0.1);
-  border: 1px solid rgba(200, 0, 0, 0.5);
-  color: rgba(200, 0, 0, 1);
-  border-radius: 4px;
-  padding: 10px 15px;
-}
-
 /* -------------------- CONTENEDOR PERSONAJES -------------------- */
 
-/* Contenedor general de personajes */
+/* Contenedor general de personajes con mejoras de diseño responsivo */
 .characters-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
   justify-content: center;
   padding: 40px 0;
 }
 
-/* Estilo para la tarjeta del personaje */
+/* Estilo mejorado para la tarjeta del personaje */
 .character-card {
-  width: 15rem;
   margin: 0.5rem;
   background-color: #ffffff;
   border: none;
   border-radius: 10px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.5s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .character-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
 
+/* Efecto de zoom suave para imágenes */
 .character-image {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  transition: transform 0.5s;
+  transition: transform 0.5s ease-out;
 }
 
 .character-card:hover .character-image {
-  transform: scale(1.1);
+  transform: scale(1.03);
 }
 
-/* Detalles del personaje en la tarjeta */
+/* Diseño centrado para detalles del personaje con mejor escalabilidad de texto */
 .character-details {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-content: center;
-  justify-content: center;
   align-items: center;
-}
-
-.character-name {
-  font-size: 20px;
-  color: #00bcd4;
-  font-weight: 600; /* Bold */
-  margin-bottom: 12px;
-}
-
-/* Color del círculo según el estado */
-.fa-circle.alive {
-  color: #a8ff44;
-}
-
-.fa-circle.dead {
-  color: #ff4565;
-}
-
-.fa-circle.unknown {
-  color: #ffd83d;
-}
-
-div.character-location {
   text-align: center;
 }
 
+.character-name {
+  font-size: 1.25rem; /* Escalable */
+  color: #00bcd4;
+  font-weight: 600; /* Bold */
+  margin-bottom: 0.75rem;
+}
+
+/* Mejora visual para los íconos de estado */
+.fa-circle {
+  font-size: 0.8rem; /* Tamaño consistente para íconos */
+}
+
+.fa-circle.alive {
+  color: #4caf50; /* Tono de verde más suave */
+}
+
+.fa-circle.dead {
+  color: #f44336; /* Tono de rojo más suave */
+}
+
+.fa-circle.unknown {
+  color: #ffc107; /* Tono de amarillo más suave */
+}
+
+/* Estilos mejorados para texto de estado, género y ubicación */
 .character-status,
 .character-gender,
 .character-location {
-  color: #1f1f2e;
-  display: flex;
-  align-items: center;
-  margin-bottom: 6px;
+  color: #333; /* Color más suave para el texto */
+  font-size: 0.9rem; /* Tamaño de texto uniforme */
+  margin-bottom: 0.5rem;
 }
 
-.character-status .icon,
-.character-gender .icon {
-  margin-right: 8px;
-}
-
-/* Botón de detalles */
+/* Botón de detalles con mejoras visuales */
 .details-button {
-  background-color: #00bcd4;
-  border: none;
-  color: #ffffff;
-  font-weight: 600; /* Bold */
-  padding: 10px;
+  padding: 10px 20px; /* Espaciado optimizado */
   border-radius: 5px;
-  transition: background-color 0.3s, transform 0.3s;
-  margin-top: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none; /* Elimina el contorno al hacer foco */
 }
 
-.details-button:hover {
+.details-button:hover,
+.details-button:focus {
   background-color: #0097a7;
-  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  outline: none;
 }
 
-/* Estilo general del modal */
+/* Base para transiciones suaves en todo el modal */
 .modal-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  color: var(--bs-modal-color);
-  pointer-events: auto;
-  background-clip: padding-box;
-  border-radius: var(--bs-modal-border-radius);
-  outline: 0;
-  background: transparent;
+  transition: transform 0.3s ease-out, background-color 0.3s ease;
+  background-color: #ffffff; /* Fondo claro para el contenido */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem; /* Bordes redondeados */
 }
 
+/* Efecto de desenfoque para el fondo del modal */
+.modal-backdrop.show {
+  opacity: 0.75 !important; /* Atenuar el fondo de forma notable */
+  backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
+}
+
+/* Cabecera del modal con mejor contraste y diseño */
 .modal-header {
-  border-bottom: 1px solid #eaeaea;
-  background-color: #00bcd4;
-  color: #ffffff;
+  padding: 1rem;
+  background-color: #005f73; /* Un azul más oscuro para mejor contraste */
+  border-bottom: 2px solid #eaeaea; /* Línea más definida debajo del encabezado */
 }
 
 .modal-title {
-  font-size: 24px;
-  font-weight: 600; /* Bold */
-  color: #ffffff;
+  font-size: 1.75rem; /* Tamaño de fuente más grande */
 }
 
+/* Estilizado del botón de cierre para mejorar la consistencia y estética */
 .btn-close {
-  background-color: rgba(255, 255, 255, 0.3);
-  border: none;
+  filter: invert(1); /* Cambiar color para mayor contraste */
+  transition: filter 0.2s; /* Transición suave para el filtro */
 }
 
+.btn-close:hover {
+  filter: invert(0.5); /* Cambiar la intensidad del filtro al pasar el ratón */
+}
+
+/* Mejoras en el cuerpo del modal para una lectura más cómoda */
 .modal-body {
-  padding: 20px 30px;
+  padding: 1.5rem; /* Más espaciado interior */
+  overflow-y: auto; /* Habilitar desplazamiento si es necesario */
 }
 
-/* Estilo de la imagen del personaje */
 .img-fluid {
-  width: 100%;
-  max-height: 250px;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem; /* Espaciado debajo de la imagen */
 }
 
-/* Estilo para los detalles del personaje */
+/* Detalles de texto más legibles y elegantes */
 .modal-body p {
-  font-size: 18px;
-  margin-bottom: 12px;
+  font-size: 1rem; /* Tamaño de fuente estandarizado */
+  line-height: 1.5; /* Mejorar la altura de línea para la legibilidad */
+  color: #333; /* Color más oscuro para el texto */
 }
 
-.modal-body p strong {
-  color: #00bcd4;
+/* Estilo para los enlaces dentro del modal */
+.modal-body a {
+  color: #0077b6; /* Un azul que contrasta bien y es amigable con el diseño */
+  text-decoration: none; /* Quitar subrayado */
 }
 
-/* Estilo para la lista de episodios */
+.modal-body a:hover {
+  text-decoration: underline; /* Subrayado al pasar el ratón para indicar interactividad */
+}
+
+/* Lista desplazable con estilo más limpio y moderno */
 .scrollable-list {
-  max-height: 150px;
-  overflow-y: auto;
-  border-top: 1px solid #eaeaea;
-  padding-top: 10px;
+  max-height: 200px; /* Altura máxima más generosa */
+  border-top: 2px solid #eaeaea; /* Línea más definida en la parte superior */
 }
 
 .scrollable-list li {
-  padding: 8px 0;
-  font-size: 16px;
-  color: #666;
-  border-bottom: 1px dotted #eaeaea;
+  padding: 0.5rem 0; /* Espaciado uniforme */
+  border-bottom: 1px solid #eaeaea; /* Líneas más sutiles */
 }
 
 .scrollable-list li:last-child {
-  border-bottom: none;
+  border-bottom: none; /* Quitar el borde del último elemento */
+}
+
+/* Añadir una transición para la aparición del modal */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: translateY(-100px);
+}
+
+.modal.show .modal-dialog {
+  transform: translateY(0);
 }

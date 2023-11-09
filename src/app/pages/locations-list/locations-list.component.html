@@ -8,11 +8,16 @@
     >
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">{{ location.name }}</h5>
+          <h5 class="card-title">
+            {{ getTranslation(location.name, "locationName") }}
+          </h5>
           <p class="card-text">
-            <strong>Tipo:</strong> {{ location.type }} <br />
-            <strong>Dimensión:</strong> {{ location.dimension }}
+            <strong>Tipo:</strong>
+            {{ getTranslation(location.type, "locationType") }} <br />
+            <strong>Dimensión:</strong>
+            {{ getTranslation(location.dimension, "dimension") }}
           </p>
+
           <button
             type="button"
             class="btn btn-primary"
@@ -39,7 +44,8 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="locationModalLabel">
-            Residentes en {{ selectedLocation?.name }}
+            Residentes en
+            {{ getTranslation(selectedLocation?.name, "locationName") }}
           </h5>
           <button
             type="button"

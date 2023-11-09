@@ -24,11 +24,14 @@
     >
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">{{ episode.name }}</h5>
-          <p class="card-text">
-            <strong>Episodio:</strong> {{ episode.episode }} <br />
-            <strong>Fecha de emisión:</strong> {{ episode.air_date }}
-          </p>
+          <h5 class="card-title">
+            {{ getTranslation(episode.name, "name") }}
+          </h5>
+          {{ getFormattedEpisode(episode.episode) }}
+          <br />
+          <strong>Fecha de emisión:</strong>
+          {{ getFormattedDate(episode.air_date) }}
+
           <!-- Botón para abrir la modal de personajes -->
           <button
             type="button"
@@ -67,7 +70,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="charactersModalLabel">
-            Personajes en {{ selectedEpisode?.name }}
+            Personajes en {{ getTranslation(selectedEpisode?.name, "name") }}
           </h5>
           <button
             type="button"
@@ -115,7 +118,8 @@
           <!-- Este es el ícono o botón que el usuario puede clickear para marcar como visto/no visto -->
 
           <h5 class="modal-title" id="commentsModalLabel">
-            Comentarios para {{ selectedEpisode?.name }}
+            Comentarios para
+            {{ getTranslation(selectedEpisode?.name, "episode") }}
           </h5>
           <button
             type="button"

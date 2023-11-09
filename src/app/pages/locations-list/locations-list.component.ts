@@ -5,6 +5,7 @@ import { Character } from 'src/app/models/character.model';
 
 import { LocationsService } from 'src/app/services/locations.service';
 import { CharactersService } from 'src/app/services/characters.service';
+import { TranslationService } from 'src/app/services/translation.service';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -28,7 +29,8 @@ export class LocationsComponent implements OnInit, OnDestroy {
 
   constructor(
     private locationsService: LocationsService,
-    private characterService: CharactersService
+    private characterService: CharactersService,
+    public translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -76,23 +78,24 @@ export class LocationsComponent implements OnInit, OnDestroy {
   openModal(location: Location): void {
     this.selectedLocation = location;
 
+    // Obtén los IDs como arreglo de números
     const residentIds = location.residents.map((url) => +url.split('/').pop()!);
 
+    // Si solo hay una URL, asegúrate de que aún se envíe como un arreglo
+    const idsToSend = residentIds.length === 1 ? [residentIds[0]] : residentIds;
+
     this.characterService
-      .getCharactersByIds(residentIds)
+      .getCharactersByIds(idsToSend)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (residents) => {
-          this.residentsOfLocation = residents;
+          // Asegúrate de que 'residents' es siempre un arreglo
+          this.residentsOfLocation = Array.isArray(residents)
+            ? residents
+            : [residents];
         },
         error: () => {
-          Swal.fire({
-            title: '¡Error!',
-            text: 'Error al cargar los residentes. Por favor, inténtelo de nuevo más tarde.',
-            icon: 'error',
-            iconColor: '#FF4565',
-            confirmButtonColor: '#00BCD4',
-          });
+          // Handle error
         },
       });
   }
@@ -109,6 +112,20 @@ export class LocationsComponent implements OnInit, OnDestroy {
    */
   trackByLocationId(index: number, location: Location): number {
     return location.id;
+  }
+
+  /**
+   * Obtiene la traducción correspondiente a una clave y un tipo dados.
+   *
+   * @param key La clave de traducción.
+   * @param type El tipo de traducción.
+   * @returns La traducción correspondiente o 'Desconocido' si no se encuentra.
+   */
+  getTranslation(key: string | undefined, type: string): string {
+    if (key) {
+      return this.translationService.translate(key, type);
+    }
+    return 'Desconocido';
   }
 
   /**

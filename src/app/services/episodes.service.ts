@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { EpisodeResponse, Episode } from '../models/episode.model';
 
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,12 +29,16 @@ export class EpisodesService {
    * @param ids IDs de los episodios a recuperar.
    * @returns Observable de un array de objetos Episode.
    */
-  getMultipleEpisodes(ids: number[]): Observable<Episode[]> {
+  getMultipleEpisodes(ids: number[]): Observable<Episode[] | Episode> {
     if (ids.length === 0) {
       return of([]);
     }
 
     const url = `${this.apiUrl}/${ids.length === 1 ? ids[0] : ids.join(',')}`;
-    return this.http.get<Episode[]>(url);
+    return this.http
+      .get<Episode[] | Episode>(url)
+      .pipe(
+        map((response) => (Array.isArray(response) ? response : [response]))
+      );
   }
 }

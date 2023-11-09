@@ -31,7 +31,7 @@
         <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
           <option value="">Todos los géneros</option>
           <option *ngFor="let gender of allGenders" [value]="gender">
-            {{ gender }}
+            {{ translationService.translate(gender, "gender") }}
           </option>
         </select>
       </div>
@@ -42,7 +42,7 @@
         <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
           <option value="">Todos los estados</option>
           <option *ngFor="let status of allStatuses" [value]="status">
-            {{ status }}
+            {{ translationService.translate(status, "status") }}
           </option>
         </select>
       </div>
@@ -53,7 +53,7 @@
         <select [(ngModel)]="selectedSpecies" (change)="onFilterChange()">
           <option value="">Todas las especies</option>
           <option *ngFor="let species of allSpecies" [value]="species">
-            {{ species }}
+            {{ translationService.translate(species, "species") }}
           </option>
         </select>
       </div>
@@ -96,7 +96,7 @@
               class="fa-solid fa-circle unknown"
             ></i>
           </span>
-          {{ character.status }}
+          {{ translationService.translate(character.status, "status") }}
         </div>
 
         <!-- Género del personaje -->
@@ -120,7 +120,7 @@
               class="fa-solid fa-question"
             ></i>
           </span>
-          {{ character.gender }}
+          {{ translationService.translate(character.gender, "gender") }}
         </div>
 
         <!-- Localización del personaje -->
@@ -128,7 +128,12 @@
           <span class="icon">
             <i class="fa-solid fa-location-pin"></i>
           </span>
-          {{ character.location.name }}
+          {{
+            translationService.translate(
+              character.location.name,
+              "locationName"
+            )
+          }}
         </div>
 
         <!-- Botón para abrir el modal de detalles -->
@@ -142,7 +147,6 @@
     </div>
   </div>
 
-  <!-- Plantilla para el modal de detalles del personaje -->
   <ng-template #characterModal>
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -167,38 +171,63 @@
             class="img-fluid mb-3"
           />
           <!-- Detalles del personaje -->
-          <p><strong>Estado:</strong> {{ selectedCharacter?.status }}</p>
-          <p><strong>Especie:</strong> {{ selectedCharacter?.species }}</p>
-          <p><strong>Género:</strong> {{ selectedCharacter?.gender }}</p>
           <p>
-            <strong>Origen:</strong>
-            {{ selectedCharacter?.origin?.name }}
+            <strong>Estado:</strong>
+            {{ getTranslation(selectedCharacter?.status, "status") }}
           </p>
           <p>
-            <strong>Localización:</strong>
-            {{ selectedCharacter?.location?.name }}
+            <strong>Especie:</strong>
+            {{ getTranslation(selectedCharacter?.species, "species") }}
+          </p>
+          <p>
+            <strong>Género:</strong>
+            {{ getTranslation(selectedCharacter?.gender, "gender") }}
           </p>
 
-          <!-- Plantillas para mostrar los episodios -->
+          <p>
+            <strong>Origen:</strong>
+            {{
+              getTranslation(selectedCharacter?.origin?.name, "locationName")
+            }}
+          </p>
+
+          <p>
+            <strong>Localización:</strong>
+            {{
+              getTranslation(selectedCharacter?.location?.name, "locationName")
+            }}
+          </p>
+
+          <p *ngIf="episodes.length > 0; else noEpisodes">
+            <ng-container
+              *ngIf="
+                episodes.length === 1;
+                then singleEpisode;
+                else multipleEpisodes
+              "
+            ></ng-container>
+          </p>
+
           <ng-template #singleEpisode>
+            <!-- Contenido para un único episodio -->
             <p><strong>Episodio en el que aparece:</strong></p>
+            <ul class="scrollable-list">
+              <li>{{ episodes[0] }}</li>
+            </ul>
           </ng-template>
 
           <ng-template #multipleEpisodes>
+            <!-- Contenido para múltiples episodios -->
             <p><strong>Episodios en los que aparece:</strong></p>
+            <ul class="scrollable-list">
+              <li *ngFor="let episode of episodes">{{ episode }}</li>
+            </ul>
           </ng-template>
 
-          <!-- Lista de episodios -->
-          <p
-            *ngIf="
-              episodes.length === 1;
-              then singleEpisode;
-              else multipleEpisodes
-            "
-          ></p>
-          <ul class="scrollable-list">
-            <li *ngFor="let episode of episodes">{{ episode }}</li>
-          </ul>
+          <ng-template #noEpisodes>
+            <!-- Contenido para mostrar cuando no hay episodios -->
+            <p><strong>No aparece en ningún episodio:</strong></p>
+          </ng-template>
         </div>
       </div>
     </div>
