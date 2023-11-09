@@ -134,24 +134,28 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre un modal con detalles de un episodio específico.
-   * Prepara la información relevante del episodio, incluyendo personajes y comentarios.
-   * @param {Episode} episode El episodio seleccionado para mostrar en el modal.
+   * Abre la modal de personajes y carga la información relacionada con el episodio.
+   *
+   * @param episode El episodio para el cual se abrirá la modal de personajes.
    */
-  openModal(episode: Episode): void {
+  openCharactersModal(episode: Episode): void {
+    // Establece el episodio seleccionado y realiza las inicializaciones necesarias
     this.selectedEpisode = episode;
     this.episodeId = episode.id;
     this.initializeRating();
 
+    // Obtiene los IDs de los personajes a partir de las URL de los personajes en el episodio
     const characterIds = episode.characters.map(
       (url) => +url.split('/').pop()!
     );
 
+    // Llama al servicio para obtener los personajes por sus IDs
     this.characterService
       .getCharactersByIds(characterIds)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (characters) => {
+          // Almacena los personajes del episodio en la propiedad correspondiente del componente
           this.charactersOfEpisode = characters;
         },
         error: () => {
@@ -164,8 +168,20 @@ export class EpisodesComponent implements OnInit, OnDestroy {
           });
         },
       });
+  }
 
-    // Carga los comentarios para el episodio seleccionado.
+  /**
+   * Abre la modal de comentarios y carga los comentarios relacionados con el episodio.
+   *
+   * @param episode El episodio para el cual se abrirá la modal de comentarios.
+   */
+  openCommentsModal(episode: Episode): void {
+    // Establece el episodio seleccionado y realiza las inicializaciones necesarias
+    this.selectedEpisode = episode;
+    this.episodeId = episode.id;
+    this.initializeRating();
+
+    // Carga los comentarios para el episodio seleccionado
     if (this.episodeId) {
       this.loadComments();
     }
