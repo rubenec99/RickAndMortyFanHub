@@ -12,7 +12,7 @@ import {
   LoginResponse,
 } from '../models/user.model';
 
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 
 import { jwtDecode } from 'jwt-decode';
 
@@ -21,6 +21,10 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class UserService {
   private apiUrl = 'http://localhost:3000/user';
+
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -61,8 +65,35 @@ export class UserService {
       .pipe(map((res) => (res.exists ? { emailTaken: true } : null)));
   }
 
+  /**
+   * Realiza una solicitud de inicio de sesión al servidor utilizando las credenciales proporcionadas.
+   *
+   * @param {LoginData} credentials Las credenciales de inicio de sesión del usuario.
+   * @returns {Observable<LoginResponse>} Un observable que emite la respuesta del servidor después del intento de inicio de sesión.
+   */
   loginUser(credentials: LoginData): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, credentials);
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        map((response) => {
+          // Procesa la respuesta del servidor, verifica si el inicio de sesión fue exitoso
+          const token = response.token;
+
+          if (token) {
+            // Si se recibió un token, significa que el inicio de sesión fue exitoso
+            // Almacena el token en el almacenamiento local
+            localStorage.setItem('authToken', token);
+
+            // Emitir true en el BehaviorSubject para indicar que el usuario ha iniciado sesión
+            this.isLoggedInSubject.next(true);
+
+            return response; // Devuelve la respuesta original del servidor
+          } else {
+            // Si no se recibió un token, el inicio de sesión no fue exitoso
+            return response; // Devuelve la respuesta original del servidor
+          }
+        })
+      );
   }
 
   /**
@@ -99,7 +130,8 @@ export class UserService {
 
   /**
    * Cierra la sesión del usuario eliminando los datos de autenticación y la información de la sesión
-   * del almacenamiento local del navegador.
+   * del almacenamiento local del navegador y establece isLoggedInSubject en false para indicar que
+   * el usuario ha cerrado la sesión.
    */
   logoutUser(): void {
     localStorage.removeItem('authToken');
@@ -107,6 +139,9 @@ export class UserService {
     localStorage.removeItem('userType');
     localStorage.removeItem('username');
     localStorage.removeItem('user_id');
+
+    // Establece isLoggedInSubject en false para indicar que el usuario ha cerrado la sesión
+    this.isLoggedInSubject.next(false);
   }
 
   /**

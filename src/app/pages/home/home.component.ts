@@ -29,11 +29,15 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * Se ejecuta al inicializar el componente.
-   * Realiza una llamada al servicio para obtener cinco personajes aleatorios.
-   * Muestra un mensaje de error en caso de que la llamada al servicio falle.
+   * Implementación de la interfaz OnInit que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    // Se suscribe al observable para recibir notificaciones sobre el estado de inicio de sesión.
+    this.userService.isLoggedIn$.subscribe((isLoggedIn) => {
+      // Actualiza el valor de la variable 'isUserLoggedIn' con el estado de inicio de sesión.
+      this.isUserLoggedIn = isLoggedIn;
+    });
+
     // Llama al servicio de personajes para obtener cinco personajes aleatorios.
     this.charactersService.getRandomFiveCharacters().subscribe({
       next: (characters) => {
@@ -44,7 +48,6 @@ export class HomeComponent implements OnInit {
         }
       },
       error: () => {
-        // Si ocurre un error durante la llamada al servicio, muestra un mensaje de error con SweetAlert.
         Swal.fire({
           title: '¡Error!',
           text: 'Ha ocurrido un error al intentar obtener los personajes. Por favor, inténtelo de nuevo más tarde.',
