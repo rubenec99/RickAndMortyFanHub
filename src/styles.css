@@ -4,12 +4,17 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-image: url(assets/img/bg.png);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
+  height: 100%;
 }
 
 /* Webkit (Chrome, Safari) */
@@ -65,4 +70,11 @@ html.swalfire-shown:not(.swalfire-no-backdrop):not(.swalfire-toast-shown) {
 /* Estilo del track en estado hover */
 ::-webkit-scrollbar-track:hover {
   background-color: #eeeeee;
+}
+
+/* Ocultar barras de desplazamiento en dispositivos móviles */
+@media (max-width: 767px) {
+  body {
+    overflow-y: scroll; /* Oculta la barra de desplazamiento vertical */
+  }
 }

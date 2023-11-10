@@ -24,6 +24,7 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
 import { StarComponent } from './components/star/star.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { MinigamesComponent } from './pages/minigames/minigames.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { MinigamesComponent } from './pages/minigames/minigames.component';
     StarComponent,
     RatingComponent,
     MinigamesComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
