@@ -136,10 +136,13 @@
           }}
         </div>
 
-        <!-- Botón para abrir el modal de detalles -->
+        <!-- Botón para abrir el modal de detalles del personaje -->
         <button
-          class="details-button"
-          (click)="openModal(character, characterModal)"
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#characterModal"
+          (click)="openModal(character)"
         >
           Ver detalles
         </button>
@@ -147,24 +150,29 @@
     </div>
   </div>
 
-  <ng-template #characterModal>
+  <!-- Ventana modal para detalles del personaje -->
+  <div
+    class="modal fade"
+    id="characterModal"
+    tabindex="-1"
+    aria-labelledby="characterModalLabel"
+    aria-hidden="true"
+  >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <!-- Título del modal (nombre del personaje) -->
           <h5 class="modal-title" id="characterModalLabel">
             {{ selectedCharacter?.name }}
           </h5>
-          <!-- Botón para cerrar el modal -->
           <button
             type="button"
             class="btn-close"
+            data-bs-dismiss="modal"
             aria-label="Close"
-            (click)="modalService.dismissAll()"
           ></button>
         </div>
         <div class="modal-body">
-          <!-- Imagen del personaje -->
+          <!-- Contenido del modal con detalles del personaje -->
           <img
             [src]="selectedCharacter?.image"
             alt="{{ selectedCharacter?.name }} image"
@@ -229,9 +237,18 @@
             <p><strong>No aparece en ningún episodio:</strong></p>
           </ng-template>
         </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+        </div>
       </div>
     </div>
-  </ng-template>
+  </div>
 
   <!-- Controles de paginación -->
   <div class="d-flex justify-content-between mt-4">

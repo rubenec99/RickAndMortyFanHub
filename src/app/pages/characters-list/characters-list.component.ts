@@ -115,7 +115,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * @param character El personaje para el cual se abrirá el modal de detalles.
    * @param content El contenido del modal.
    */
-  openModal(character: Character, content: any): void {
+  openModal(character: Character): void {
     this.selectedCharacter = character;
 
     const episodeIds = character.episode
@@ -155,8 +155,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
           this.episodes = ['No se pudo cargar la información del episodio'];
         },
       });
-
-    this.modalService.open(content, { centered: true });
   }
 
   /**
