@@ -29,7 +29,6 @@
   color: #00bcd4;
   letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
   line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
-  margin-bottom: 20px; /* Proporciona un poco de espacio debajo para separarlo de otros contenidos */
   text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
 }
 

@@ -1,13 +1,13 @@
 /* -------------------------------------- BOTÓN LOGOUT ------------------------------------------- */
 .box {
-  width: 170px;
+  width: auto;
   height: auto;
   float: left;
   transition: 0.5s linear;
   position: relative;
   display: block;
   overflow: hidden;
-  padding: 15px;
+  padding: 0.7em;
   text-align: center;
   margin: 0 5px;
   background: transparent;

@@ -28,6 +28,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
   searchTerm: string = ''; // Término de búsqueda para filtrar todos los personajes
   selectedCharacter: Character | null = null; // Almacena el personaje seleccionado
 
+  showEpisodesList = false;
+  isEpisodesListExpanded = false;
+
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
    * Estas propiedades se utilizan para mostrar opciones de filtro y realizar búsquedas avanzadas.
@@ -251,6 +254,11 @@ export class CharactersComponent implements OnInit, OnDestroy {
       return this.translationService.translate(key, type);
     }
     return 'Desconocido';
+  }
+
+  toggleEpisodesList() {
+    this.showEpisodesList = !this.showEpisodesList;
+    this.isEpisodesListExpanded = !this.isEpisodesListExpanded;
   }
 
   /**

@@ -1,7 +1,4 @@
 <div class="characters-list-container container mt-4">
-  <!-- Título de la lista de personajes -->
-  <h2 class="mb-4">Lista de personajes</h2>
-
   <!-- Contenedor de búsqueda -->
   <div class="search-container mb-4">
     <!-- Input para ingresar el término de búsqueda -->
@@ -14,138 +11,127 @@
 
     <!-- Botón para realizar la búsqueda -->
     <button (click)="searchCharacters()">Buscar</button>
-  </div>
+    &nbsp;
+    <div ngbDropdown class="d-inline-block" autoClose="outside">
+      <button id="dropdownBasic1" ngbDropdownToggle>Filtros</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <!-- Selector de especie -->
+        <div class="dropdown-item">
+          <label>Especie:&nbsp;</label>
+          <select [(ngModel)]="selectedSpecies" (change)="onFilterChange()">
+            <option value="">Todas las especies</option>
+            <option *ngFor="let species of allSpecies" [value]="species">
+              {{ translationService.translate(species, "species") }}
+            </option>
+          </select>
+        </div>
 
-  <div ngbDropdown class="d-inline-block" autoClose="outside">
-    <button
-      class="btn btn-outline-primary"
-      id="dropdownBasic1"
-      ngbDropdownToggle
-    >
-      Filtros
-    </button>
-    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-      <!-- Selector de género -->
-      <div class="dropdown-item">
-        <label>Género:</label>
-        <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
-          <option value="">Todos los géneros</option>
-          <option *ngFor="let gender of allGenders" [value]="gender">
-            {{ translationService.translate(gender, "gender") }}
-          </option>
-        </select>
-      </div>
+        <!-- Selector de estado (status) -->
+        <div class="dropdown-item">
+          <label>Estado:&nbsp;</label>
+          <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+            <option value="">Todos los estados</option>
+            <option *ngFor="let status of allStatuses" [value]="status">
+              {{ translationService.translate(status, "status") }}
+            </option>
+          </select>
+        </div>
 
-      <!-- Selector de estado (status) -->
-      <div class="dropdown-item">
-        <label>Estado:</label>
-        <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
-          <option value="">Todos los estados</option>
-          <option *ngFor="let status of allStatuses" [value]="status">
-            {{ translationService.translate(status, "status") }}
-          </option>
-        </select>
-      </div>
+        <!-- Selector de género -->
+        <div class="dropdown-item">
+          <label>Género:&nbsp;</label>
+          <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
+            <option value="">Todos los géneros</option>
+            <option *ngFor="let gender of allGenders" [value]="gender">
+              {{ translationService.translate(gender, "gender") }}
+            </option>
+          </select>
+        </div>
 
-      <!-- Selector de especie -->
-      <div class="dropdown-item">
-        <label>Especie:</label>
-        <select [(ngModel)]="selectedSpecies" (change)="onFilterChange()">
-          <option value="">Todas las especies</option>
-          <option *ngFor="let species of allSpecies" [value]="species">
-            {{ translationService.translate(species, "species") }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Botón para restablecer filtros -->
-      <div class="dropdown-item">
-        <button (click)="resetFilters()">Restablecer filtros</button>
+        <!-- Botón para restablecer filtros -->
+        <div class="dropdown-item">
+          <button (click)="resetFilters()">Restablecer filtros</button>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="characters-container">
-    <div *ngFor="let character of characters" class="character-card">
-      <!-- Imagen del personaje -->
-      <img
-        [src]="character.image"
-        alt="{{ character.name }}"
-        class="character-image"
-      />
+    <div *ngFor="let character of characters" class="character-panel">
+      <!-- Parte izquierda: Imagen del personaje -->
+      <div class="character-image-container">
+        <img
+          [src]="character.image"
+          alt="{{ character.name }}"
+          class="character-image"
+        />
+      </div>
 
+      <!-- Parte derecha: Detalles del personaje -->
       <div class="character-details">
-        <!-- Nombre del personaje -->
         <h5 class="character-name">{{ character.name }}</h5>
-
-        <!-- Estado del personaje -->
-        <div class="character-status">
-          <span class="icon">
-            <i
-              *ngIf="character.status === 'Alive'"
-              class="fa-solid fa-circle alive"
-            ></i>
-            <i
-              *ngIf="character.status === 'Dead'"
-              class="fa-solid fa-circle dead"
-            ></i>
-            <i
-              *ngIf="
-                character.status !== 'Alive' && character.status !== 'Dead'
-              "
-              class="fa-solid fa-circle unknown"
-            ></i>
-          </span>
-          {{ translationService.translate(character.status, "status") }}
+        <div class="character-div-btn">
+          <p class="character-species">
+            {{ translationService.translate(character.species, "species") }}
+          </p>
+          <button
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#characterModal"
+            (click)="openModal(character)"
+            class="view-details"
+          >
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
         </div>
 
-        <!-- Género del personaje -->
-        <div class="character-gender">
-          <span class="icon">
-            <i *ngIf="character.gender === 'Male'" class="fa-solid fa-mars"></i>
-            <i
-              *ngIf="character.gender === 'Female'"
-              class="fa-solid fa-venus"
-            ></i>
-            <i
-              *ngIf="character.gender === 'Genderless'"
-              class="fa-solid fa-genderless"
-            ></i>
-            <i
-              *ngIf="
-                character.gender !== 'Male' &&
-                character.gender !== 'Female' &&
-                character.gender !== 'Genderless'
-              "
-              class="fa-solid fa-question"
-            ></i>
-          </span>
-          {{ translationService.translate(character.gender, "gender") }}
+        <div class="char-details-details">
+          <p class="character-status">
+            <span class="icon">
+              <i
+                *ngIf="character.status === 'Alive'"
+                class="fa-solid fa-circle alive"
+              ></i>
+              <i
+                *ngIf="character.status === 'Dead'"
+                class="fa-solid fa-circle dead"
+              ></i>
+              <i
+                *ngIf="
+                  character.status !== 'Alive' && character.status !== 'Dead'
+                "
+                class="fa-solid fa-circle unknown"
+              ></i>
+            </span>
+            {{ translationService.translate(character.status, "status") }}
+          </p>
+          <p class="character-gender">
+            <span class="icon">
+              <!-- Iconos de género -->
+              <i
+                *ngIf="character.gender === 'Male'"
+                class="fa-solid fa-mars"
+              ></i>
+              <i
+                *ngIf="character.gender === 'Female'"
+                class="fa-solid fa-venus"
+              ></i>
+              <i
+                *ngIf="character.gender === 'Genderless'"
+                class="fa-solid fa-genderless"
+              ></i>
+              <i
+                *ngIf="
+                  character.gender !== 'Male' &&
+                  character.gender !== 'Female' &&
+                  character.gender !== 'Genderless'
+                "
+                class="fa-solid fa-question"
+              ></i>
+            </span>
+            {{ translationService.translate(character.gender, "gender") }}
+          </p>
         </div>
-
-        <!-- Localización del personaje -->
-        <div class="character-location">
-          <span class="icon">
-            <i class="fa-solid fa-location-pin"></i>
-          </span>
-          {{
-            translationService.translate(
-              character.location.name,
-              "locationName"
-            )
-          }}
-        </div>
-
-        <!-- Botón para abrir el modal de detalles del personaje -->
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#characterModal"
-          (click)="openModal(character)"
-        >
-          Ver detalles
-        </button>
       </div>
     </div>
   </div>
@@ -158,10 +144,10 @@
     aria-labelledby="characterModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+    <div class="modal-dialog container-form form">
+      <div class="modal-content form modal-container">
         <div class="modal-header">
-          <h5 class="modal-title" id="characterModalLabel">
+          <h5 class="modal-title heading" id="characterModalLabel">
             {{ selectedCharacter?.name }}
           </h5>
           <button
@@ -172,103 +158,224 @@
           ></button>
         </div>
         <div class="modal-body">
-          <!-- Contenido del modal con detalles del personaje -->
-          <img
-            [src]="selectedCharacter?.image"
-            alt="{{ selectedCharacter?.name }} image"
-            class="img-fluid mb-3"
-          />
-          <!-- Detalles del personaje -->
-          <p>
-            <strong>Estado:</strong>
-            {{ getTranslation(selectedCharacter?.status, "status") }}
-          </p>
-          <p>
-            <strong>Especie:</strong>
-            {{ getTranslation(selectedCharacter?.species, "species") }}
-          </p>
-          <p>
-            <strong>Género:</strong>
-            {{ getTranslation(selectedCharacter?.gender, "gender") }}
-          </p>
+          <div class="character-details-form">
+            <!-- Contenido del modal con detalles del personaje -->
+            <div class="character-image-state">
+              <img
+                [src]="selectedCharacter?.image"
+                alt="{{ selectedCharacter?.name }} image"
+                class="character-image-modal"
+                [ngClass]="{
+                  alive: selectedCharacter?.status === 'Alive',
+                  dead: selectedCharacter?.status === 'Dead',
+                  unknown:
+                    selectedCharacter?.status !== 'Alive' &&
+                    selectedCharacter?.status !== 'Dead'
+                }"
+              />
+              <span
+                class="character-state"
+                [ngClass]="{
+                  alive: selectedCharacter?.status === 'Alive',
+                  dead: selectedCharacter?.status === 'Dead',
+                  unknown:
+                    selectedCharacter?.status !== 'Alive' &&
+                    selectedCharacter?.status !== 'Dead'
+                }"
+              >
+                {{ getTranslation(selectedCharacter?.status, "status") }}
+              </span>
+            </div>
+            <!-- Detalles del personaje -->
+            <div class="character-properties">
+              <div class="properties-title">
+                <h6>Detalles</h6>
+              </div>
+              <div class="property-item">
+                <span class="icon">
+                  <!-- Iconos de género -->
+                  <i
+                    *ngIf="selectedCharacter?.gender === 'Male'"
+                    class="fa-solid fa-mars icon-modal"
+                  ></i>
+                  <i
+                    *ngIf="selectedCharacter?.gender === 'Female'"
+                    class="fa-solid fa-venus icon-modal"
+                  ></i>
+                  <i
+                    *ngIf="selectedCharacter?.gender === 'Genderless'"
+                    class="fa-solid fa-genderless icon-modal"
+                  ></i>
+                  <i
+                    *ngIf="
+                      selectedCharacter?.gender !== 'Male' &&
+                      selectedCharacter?.gender !== 'Female' &&
+                      selectedCharacter?.gender !== 'Genderless'
+                    "
+                    class="fa-solid fa-question icon-modal"
+                  ></i>
+                </span>
+                <label class="property-label">Género:</label>
+                <span class="property-value">{{
+                  getTranslation(selectedCharacter?.gender, "gender")
+                }}</span>
+              </div>
+              <div class="property-item">
+                <span><i class="fa-solid fa-virus icon-modal"></i></span>
+                <label class="property-label">Especie:</label>
+                <span class="property-value">{{
+                  getTranslation(selectedCharacter?.species, "species")
+                }}</span>
+              </div>
+              <div class="property-item">
+                <span class="icon">
+                  <i
+                    *ngIf="selectedCharacter?.status === 'Alive'"
+                    class="fa-solid fa-circle alive"
+                  ></i>
+                  <i
+                    *ngIf="selectedCharacter?.status === 'Dead'"
+                    class="fa-solid fa-circle dead"
+                  ></i>
+                  <i
+                    *ngIf="
+                      selectedCharacter?.status !== 'Alive' &&
+                      selectedCharacter?.status !== 'Dead'
+                    "
+                    class="fa-solid fa-circle unknown"
+                  ></i>
+                </span>
+                <label class="property-label">Estado:</label>
+                <span class="property-value">{{
+                  getTranslation(selectedCharacter?.status, "status")
+                }}</span>
+              </div>
+            </div>
 
-          <p>
-            <strong>Origen:</strong>
-            {{
-              getTranslation(selectedCharacter?.origin?.name, "locationName")
-            }}
-          </p>
+            <!-- Localización -->
+            <div class="character-properties">
+              <div class="properties-title">
+                <h6>Localización</h6>
+              </div>
+              <div class="property-item">
+                <i class="fa-solid fa-earth-europe icon-modal"></i>
+                <label class="property-label">Origen:</label>
+                <span class="property-value">{{
+                  getTranslation(
+                    selectedCharacter?.origin?.name,
+                    "locationName"
+                  )
+                }}</span>
+              </div>
+              <div class="property-item">
+                <i class="fa-solid fa-location-dot icon-modal"></i>
+                <label class="property-label">Localización:</label>
+                <span class="property-value">{{
+                  getTranslation(
+                    selectedCharacter?.location?.name,
+                    "locationName"
+                  )
+                }}</span>
+              </div>
+            </div>
 
-          <p>
-            <strong>Localización:</strong>
-            {{
-              getTranslation(selectedCharacter?.location?.name, "locationName")
-            }}
-          </p>
+            <!-- Episodios -->
+            <div class="character-properties">
+              <div class="properties-title">
+                <h6>Apariciones</h6>
+              </div>
+              <div class="property-item-app">
+                <span class="property-value">
+                  <ng-template #singleEpisode>
+                    <!-- Contenido para un único episodio -->
+                    <div>
+                      <label
+                        class="property-label"
+                        (click)="toggleEpisodesList()"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#episodesList"
+                        aria-expanded="false"
+                        aria-controls="episodesList"
+                      >
+                        Episodio en el que aparece&nbsp;<i
+                          [ngClass]="{
+                            'fa-chevron-down': !isEpisodesListExpanded,
+                            'fa-chevron-up': isEpisodesListExpanded
+                          }"
+                          class="fa-solid"
+                        ></i>
+                      </label>
+                      <div class="collapse" id="episodesList">
+                        <ul class="scrollable-list">
+                          <li>{{ episodes[0] }}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-template>
 
-          <p *ngIf="episodes.length > 0; else noEpisodes">
-            <ng-container
-              *ngIf="
-                episodes.length === 1;
-                then singleEpisode;
-                else multipleEpisodes
-              "
-            ></ng-container>
-          </p>
+                  <ng-template #multipleEpisodes>
+                    <!-- Contenido para múltiples episodios -->
+                    <div>
+                      <label
+                        class="property-label"
+                        (click)="toggleEpisodesList()"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#episodesList"
+                        aria-expanded="false"
+                        aria-controls="episodesList"
+                      >
+                        Episodios en los que aparece&nbsp;<i
+                          [ngClass]="{
+                            'fa-chevron-down': !isEpisodesListExpanded,
+                            'fa-chevron-up': isEpisodesListExpanded
+                          }"
+                          class="fa-solid"
+                        ></i>
+                      </label>
+                      <div class="collapse" id="episodesList">
+                        <ul class="scrollable-list">
+                          <li *ngFor="let episode of episodes">
+                            {{ getTranslation(episode, "name") }}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-template>
 
-          <ng-template #singleEpisode>
-            <!-- Contenido para un único episodio -->
-            <p><strong>Episodio en el que aparece:</strong></p>
-            <ul class="scrollable-list">
-              <li>{{ episodes[0] }}</li>
-            </ul>
-          </ng-template>
-
-          <ng-template #multipleEpisodes>
-            <!-- Contenido para múltiples episodios -->
-            <p><strong>Episodios en los que aparece:</strong></p>
-            <ul class="scrollable-list">
-              <li *ngFor="let episode of episodes">{{ episode }}</li>
-            </ul>
-          </ng-template>
-
-          <ng-template #noEpisodes>
-            <!-- Contenido para mostrar cuando no hay episodios -->
-            <p><strong>No aparece en ningún episodio:</strong></p>
-          </ng-template>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
+                  <ng-template #noEpisodes>
+                    <!-- Contenido para mostrar cuando no hay episodios -->
+                    <label class="property-label"
+                      >No aparece en ningún episodio</label
+                    >
+                  </ng-template>
+                  <p *ngIf="episodes.length > 0; else noEpisodes">
+                    <ng-container
+                      *ngIf="
+                        episodes.length === 1;
+                        then singleEpisode;
+                        else multipleEpisodes
+                      "
+                    ></ng-container></p
+                ></span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Controles de paginación -->
-  <div class="d-flex justify-content-between mt-4">
+  <div class="d-flex justify-content-between mt-4 pagination-container">
     <!-- Botón para página anterior -->
-    <button
-      class="btn btn-primary"
-      (click)="prevPage()"
-      [disabled]="currentPage === 1"
-    >
-      Anterior
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      <i class="fa-solid fa-chevron-left"></i>
     </button>
     <!-- Indicador de página actual -->
     <span>Página {{ currentPage }} de {{ totalPages }}</span>
     <!-- Botón para página siguiente -->
-    <button
-      class="btn btn-primary"
-      (click)="nextPage()"
-      [disabled]="currentPage === totalPages"
-    >
-      Siguiente
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
 </div>

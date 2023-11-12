@@ -13,7 +13,7 @@
     rgb(244, 247, 251) 100%
   );
   border-radius: 20px;
-  padding: 25px 35px;
+  padding: 5px 35px;
   border: 5px solid rgb(255, 255, 255);
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
   margin: 20px;
@@ -28,7 +28,6 @@
   color: #00bcd4;
   letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
   line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
-  margin-bottom: 20px; /* Proporciona un poco de espacio debajo para separarlo de otros contenidos */
   text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
 }
 
@@ -79,14 +78,14 @@
 /* -------------------- BOTÓN MODAL -------------------- */
 
 .box {
-  width: 170px;
+  width: auto;
   height: auto;
   float: left;
   transition: 0.5s linear;
   position: relative;
   display: block;
   overflow: hidden;
-  padding: 15px;
+  padding: 0.7em;
   text-align: center;
   margin: 0 5px;
   background: transparent;

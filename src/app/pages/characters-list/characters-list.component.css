@@ -1,17 +1,3 @@
-.scrollable-list {
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  padding-right: 1rem;
-}
-
-.scrollable-list {
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  padding-right: 1rem;
-}
-
 /* -------------------- BARRA DE BÚSQUEDA -------------------- */
 
 /* Contenedor de búsqueda */
@@ -56,7 +42,7 @@
 
 /* Efecto hover del botón de búsqueda */
 .search-container button:hover {
-  background-color: #0097a7;
+  background-color: #009fa8;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -74,241 +60,502 @@
 
 /* -------------------- DROPDOWN FILTROS -------------------- */
 
-/* Dropdown de filtros */
-.btn.btn-outline-primary {
-  border-color: #00bcd4;
-  color: #00bcd4;
-  transition: all 0.3s;
+/* Estilo para el menú desplegable */
+[ngbDropdownMenu] {
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+  border: none; /* Sin bordes */
+  padding: 10px 0; /* Relleno vertical */
+  background-color: #f8f9fa; /* Fondo claro */
 }
 
-.btn.btn-outline-primary:hover {
-  background-color: #00bcd4;
-  color: #ffffff;
+/* Estilo para cada elemento dentro del menú */
+.dropdown-item {
+  padding: 10px 20px; /* Relleno interno */
+  color: #333; /* Color de texto */
 }
 
-ngbDropdownMenu {
-  border: none;
-  border-radius: 4px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+.dropdown-item:hover {
+  background-color: #e2e6ea; /* Fondo al pasar el ratón */
 }
 
-.dropdown-item label {
-  color: #333;
-  margin-right: 10px;
-  font-weight: 500; /* Semi-Bold */
-}
-
+/* Estilo para los selectores (select) */
 .dropdown-item select {
-  color: #333;
-  border: 1px solid #e6e6e6;
-  border-radius: 4px;
-  padding: 8px 10px;
-  background-color: #ffffff;
-  transition: border 0.3s;
+  padding: 8px 10px; /* Relleno */
+  border-radius: 4px; /* Bordes redondeados */
+  border: 1px solid #ced4da; /* Borde sutil */
+  background-color: white; /* Fondo blanco */
+  color: #495057; /* Color de texto */
 }
 
-.dropdown-item select:hover {
-  border: 1px solid #00bcd4;
+.dropdown-item select:focus {
+  border-color: #00bcd4; /* Borde al enfocar */
+  box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25); /* Sombra al enfocar */
 }
 
+/* Estilo para el botón de restablecer filtros */
 .dropdown-item button {
-  padding: 8px 10px;
-  border: 1px solid #00bcd4;
-  border-radius: 4px;
-  color: #00bcd4;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s;
+  background-color: #ff4565; /* Color llamativo */
+  color: white; /* Texto blanco */
+  border: none; /* Sin bordes */
+  padding: 8px 15px; /* Relleno */
+  border-radius: 4px; /* Bordes redondeados */
+  font-weight: bold; /* Texto en negrita */
 }
 
 .dropdown-item button:hover {
-  background-color: #00bcd4;
-  color: #ffffff;
+  background-color: #d53958; /* Color al pasar el ratón */
 }
 
 /* -------------------- CONTENEDOR PERSONAJES -------------------- */
 
-/* Contenedor general de personajes con mejoras de diseño responsivo */
 .characters-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 1rem;
-  justify-content: center;
-  padding: 40px 0;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
-/* Estilo mejorado para la tarjeta del personaje */
-.character-card {
-  margin: 0.5rem;
-  background-color: #ffffff;
-  border: none;
+.character-panel {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  align-items: center;
+  background-color: rgb(249, 250, 251);
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-.character-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+.character-panel:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Efecto de zoom suave para imágenes */
+.character-image-container {
+  padding: 10px;
+}
+
 .character-image {
   width: 100%;
-  height: 220px;
+  height: auto;
   object-fit: cover;
-  transition: transform 0.5s ease-out;
+  border-radius: 8px;
 }
 
-.character-card:hover .character-image {
-  transform: scale(1.03);
-}
-
-/* Diseño centrado para detalles del personaje con mejor escalabilidad de texto */
 .character-details {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  padding: 15px;
+  text-align: left;
 }
 
 .character-name {
-  font-size: 1.25rem; /* Escalable */
+  font-size: 1.35em;
+  font-weight: bold;
+  margin-bottom: 8px;
   color: #00bcd4;
-  font-weight: 600; /* Bold */
-  margin-bottom: 0.75rem;
 }
 
-/* Mejora visual para los íconos de estado */
-.fa-circle {
-  font-size: 0.8rem; /* Tamaño consistente para íconos */
+.character-species {
+  font-size: 1em;
+  margin-bottom: 4px;
+  color: #1f1f2e;
+  font-weight: 450;
 }
 
-.fa-circle.alive {
-  color: #4caf50; /* Tono de verde más suave */
-}
-
-.fa-circle.dead {
-  color: #f44336; /* Tono de rojo más suave */
-}
-
-.fa-circle.unknown {
-  color: #ffc107; /* Tono de amarillo más suave */
-}
-
-/* Estilos mejorados para texto de estado, género y ubicación */
 .character-status,
-.character-gender,
-.character-location {
-  color: #333; /* Color más suave para el texto */
-  font-size: 0.9rem; /* Tamaño de texto uniforme */
-  margin-bottom: 0.5rem;
+.character-gender {
+  font-size: 0.8em;
+  margin-bottom: 4px;
+  margin-top: 12px;
 }
 
-/* Botón de detalles con mejoras visuales */
-.details-button {
-  padding: 10px 20px; /* Espaciado optimizado */
-  border-radius: 5px;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  outline: none; /* Elimina el contorno al hacer foco */
+.char-details-details {
+  display: flex;
+  justify-content: flex-start;
+  gap: 50px;
 }
 
-.details-button:hover,
-.details-button:focus {
-  background-color: #0097a7;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.character-div-btn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.character-status,
+.character-gender {
+  margin-bottom: 5px;
+}
+
+@media (max-width: 430px) {
+  .char-details-details {
+    flex-direction: column;
+    gap: 10px; /* Reducir el espacio en dispositivos más pequeños */
+  }
+}
+
+@media (max-width: 640px) {
+  .character-panel {
+    grid-template-columns: 120px 1fr;
+  }
+}
+
+/* -------------------- BOTÓN VER DETALLES -------------------- */
+
+button.view-details {
+  border-radius: 25px;
+  --color: #00bcd4;
+  display: inline-block;
+  height: 2.6em;
+  width: 2.6em;
+  line-height: 2.5em;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color);
+  transition: color 0.5s;
+  z-index: 1;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--color);
+}
+
+.view-details:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--color);
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+}
+
+.view-details:hover {
+  color: #fff;
+}
+
+.view-details:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.view-details:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.view-details:active:before {
+  background: #009fa8;
+  transition: background 0s;
+}
+
+/* -------------------- ESTADOS CARTAS -------------------- */
+
+.alive {
+  color: #8edd3a;
+}
+
+.dead {
+  color: #d53958;
+}
+
+.unknown {
+  color: #e2ba34;
+}
+
+/* -------------------- MODAL -------------------- */
+
+.container-form {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-container {
+  background: #ffffff;
+  background: linear-gradient(
+    0deg,
+    rgb(255, 255, 255) 0%,
+    rgb(244, 247, 251) 100%
+  );
+  border-radius: 20px;
+  padding: 5px 35px;
+  border: 5px solid rgb(255, 255, 255);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
+  margin: 20px;
+}
+
+/* Header */
+.heading {
+  text-align: center;
+  font-weight: 800; /* Disminuir un poco el peso puede mejorar la legibilidad */
+  font-size: 32px; /* Un ligero incremento para darle más presencia */
+  color: #00bcd4;
+  letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
+  line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
+  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
+}
+
+/* -------------------- BOTÓN MODAL -------------------- */
+
+.box {
+  width: auto;
+  height: auto;
+  float: left;
+  transition: 0.5s linear;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 0.7em;
+  text-align: center;
+  margin: 0 5px;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.box:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(100%);
+}
+
+.box:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-top: 4px solid transparent;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(-100%);
+}
+
+.box:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: rgba(168, 255, 68, 0.55);
+}
+
+.box:hover:before {
+  border-color: rgb(31, 31, 46);
+  height: 100%;
+  transform: translateX(0);
+  transition: 0.3s transform linear, 0.3s height linear 0.3s;
+}
+
+.box:hover:after {
+  border-color: #262626;
+  height: 100%;
+  transform: translateX(0);
+  transition: 0.3s transform linear, 0.3s height linear 0.5s;
+}
+
+.modal-button {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
   outline: none;
+  border: none;
+  background: transparent;
 }
 
-/* Base para transiciones suaves en todo el modal */
-.modal-content {
-  transition: transform 0.3s ease-out, background-color 0.3s ease;
-  background-color: #ffffff; /* Fondo claro para el contenido */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem; /* Bordes redondeados */
+.modal-footer {
+  justify-content: center;
 }
 
-/* Efecto de desenfoque para el fondo del modal */
-.modal-backdrop.show {
-  opacity: 0.75 !important; /* Atenuar el fondo de forma notable */
-  backdrop-filter: blur(10px); /* Efecto de desenfoque en el fondo */
+/* Botón personalizado*/
+.custom-button {
+  display: block; /* para que se alinee con otros elementos si es necesario */
+  width: 10vw; /* puedes ajustar esto según tus necesidades */
+  font-weight: bold;
+  background: linear-gradient(45deg, #1f1f2e 0%, #181820 100%);
+  color: white; /* Color del texto, lo dejé en blanco por legibilidad, pero ajusta según tus necesidades */
+  padding-block: 15px;
+  margin: 20px auto; /* ajusta según tus necesidades */
+  border-radius: 20px;
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 20px 10px -15px; /* he ajustado el color del box-shadow a #1F1F2E con una opacidad del 87.8% */
+  border: none;
+  transition: all 0.2s ease-in-out;
 }
 
-/* Cabecera del modal con mejor contraste y diseño */
-.modal-header {
-  padding: 1rem;
-  background-color: #005f73; /* Un azul más oscuro para mejor contraste */
-  border-bottom: 2px solid #eaeaea; /* Línea más definida debajo del encabezado */
+.custom-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 23px 10px -20px;
 }
 
-.modal-title {
-  font-size: 1.75rem; /* Tamaño de fuente más grande */
+.custom-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
 }
 
-/* Estilizado del botón de cierre para mejorar la consistencia y estética */
-.btn-close {
-  filter: invert(1); /* Cambiar color para mayor contraste */
-  transition: filter 0.2s; /* Transición suave para el filtro */
+/* Imagen modal */
+.character-image-state {
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
-.btn-close:hover {
-  filter: invert(0.5); /* Cambiar la intensidad del filtro al pasar el ratón */
+.character-image-modal {
+  border-radius: 50%; /* Hace la imagen redonda */
+  width: 150px; /* Ajusta el tamaño de la imagen */
+  height: 150px; /* Ajusta el tamaño de la imagen */
+  object-fit: cover;
+  border: 4px solid; /* Borde inicial, el color se cambia con JS o clases CSS */
 }
 
-/* Mejoras en el cuerpo del modal para una lectura más cómoda */
-.modal-body {
-  padding: 1.5rem; /* Más espaciado interior */
-  overflow-y: auto; /* Habilitar desplazamiento si es necesario */
+.character-state {
+  position: absolute;
+  bottom: -10px; /* Ajusta para mover el texto hacia arriba sobre la imagen */
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
 }
 
-.img-fluid {
-  margin-bottom: 1.5rem; /* Espaciado debajo de la imagen */
+.character-state.alive {
+  background-color: #8edd3a;
 }
 
-/* Detalles de texto más legibles y elegantes */
-.modal-body p {
-  font-size: 1rem; /* Tamaño de fuente estandarizado */
-  line-height: 1.5; /* Mejorar la altura de línea para la legibilidad */
-  color: #333; /* Color más oscuro para el texto */
+.character-state.dead {
+  background-color: #d53958; /* Color para personajes muertos */
 }
 
-/* Estilo para los enlaces dentro del modal */
-.modal-body a {
-  color: #0077b6; /* Un azul que contrasta bien y es amigable con el diseño */
-  text-decoration: none; /* Quitar subrayado */
+.character-state.unknown {
+  background-color: #e2ba34; /* Color para estado desconocido */
 }
 
-.modal-body a:hover {
-  text-decoration: underline; /* Subrayado al pasar el ratón para indicar interactividad */
+/* Detalles de personajes dentro del modal */
+.character-properties {
+  margin-top: 20px;
 }
 
-/* Lista desplazable con estilo más limpio y moderno */
+.properties-title h6 {
+  line-height: 2;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-rows: 16px 0;
+  grid-gap: 22px;
+}
+
+.properties-title h6:after,
+.properties-title h6:before {
+  content: " ";
+  display: block;
+  border-bottom: 2px solid #ccc;
+  background-color: #f7f9fc;
+}
+
+.property-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.property-label {
+  font-weight: bold;
+  color: #1f1f2e;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.fa-chevron-down:hover {
+  cursor: pointer;
+}
+.fa-chevron-up:hover {
+  cursor: pointer;
+}
+
+.property-value {
+  color: #1f1f2e;
+}
+
+.property-item-app {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilo para el contenedor de la lista */
 .scrollable-list {
-  max-height: 200px; /* Altura máxima más generosa */
-  border-top: 2px solid #eaeaea; /* Línea más definida en la parte superior */
+  list-style-type: none; /* Elimina los marcadores de lista predeterminados */
+  padding: 0; /* Elimina el relleno predeterminado */
+  margin: 0; /* Elimina el margen predeterminado */
+  max-height: 200px; /* Altura máxima antes de mostrar el desplazamiento */
+  overflow-y: auto; /* Añade desplazamiento vertical si es necesario */
+  background-color: #f8f9fa; /* Color de fondo claro */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
+/* Estilo para cada elemento de la lista */
 .scrollable-list li {
-  padding: 0.5rem 0; /* Espaciado uniforme */
-  border-bottom: 1px solid #eaeaea; /* Líneas más sutiles */
+  padding: 10px 20px; /* Relleno para cada elemento de la lista */
+  border-bottom: 1px solid #e9ecef; /* Borde inferior para separar elementos */
+  color: #1f1f2e; /* Color del texto */
+  font-size: 14px; /* Tamaño del texto */
 }
 
+/* Estilo para el último elemento de la lista */
 .scrollable-list li:last-child {
-  border-bottom: none; /* Quitar el borde del último elemento */
+  border-bottom: none; /* Elimina el borde del último elemento */
 }
 
-/* Añadir una transición para la aparición del modal */
-.modal.fade .modal-dialog {
-  transition: transform 0.3s ease-out;
-  transform: translateY(-100px);
+/* Estilo para el elemento de lista al pasar el mouse */
+.scrollable-list li:hover {
+  background-color: #e2e6ea; /* Cambia el fondo al pasar el mouse */
 }
 
-.modal.show .modal-dialog {
-  transform: translateY(0);
+.icon-modal {
+  color: #1f1f2e;
+}
+
+/* -------------------- PAGINACIÓN -------------------- */
+
+/* Estilo del botón de búsqueda */
+.pagination-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  background-color: #00bcd4;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover del botón de búsqueda */
+.pagination-container button:hover {
+  background-color: #009fa8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-container button:disabled {
+  background-color: #009fa8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: auto;
+}
+
+/* Mejora visual del placeholder */
+.pagination-container input::placeholder {
+  color: #ccc;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Estilo del placeholder al enfocar el input */
+.pagination-container input:focus::placeholder {
+  opacity: 0.5;
+}
+
+.pagination-container span {
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
