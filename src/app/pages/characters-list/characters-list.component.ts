@@ -82,7 +82,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
         this.currentPage,
         this.selectedGender,
         this.selectedStatus,
-        this.selectedSpecies
+        this.selectedSpecies,
+        this.searchTerm.trim()
       )
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
@@ -256,6 +257,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
     return 'Desconocido';
   }
 
+  /**
+   * Método para cambiar el icono de la lista de episodios de un personaje
+   */
   toggleEpisodesList() {
     this.showEpisodesList = !this.showEpisodesList;
     this.isEpisodesListExpanded = !this.isEpisodesListExpanded;
@@ -284,6 +288,31 @@ export class CharactersComponent implements OnInit, OnDestroy {
     if (this.currentPage > 1) {
       this.currentPage--; // Decrementa la página actual
       this.loadCharacters(); // Recarga los personajes de la página anterior
+    }
+  }
+
+  /**
+   * Método para ir a la primera página de personajes.
+   *
+   * Establece la página actual a 1 y recarga los personajes de la primera página.
+   */
+  firstPage(): void {
+    if (this.currentPage !== 1) {
+      this.currentPage = 1; // Establece la página actual en 1
+      this.loadCharacters(); // Recarga los personajes de la primera página
+    }
+  }
+
+  /**
+   * Método para ir a la última página de personajes.
+   *
+   * Establece la página actual al total de páginas disponibles y recarga
+   * los personajes de la última página.
+   */
+  lastPage(): void {
+    if (this.currentPage !== this.totalPages) {
+      this.currentPage = this.totalPages; // Establece la página actual en la última página
+      this.loadCharacters(); // Recarga los personajes de la última página
     }
   }
 }

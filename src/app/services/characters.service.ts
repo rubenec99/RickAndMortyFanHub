@@ -21,6 +21,7 @@ export class CharactersService {
    * @param {string} [gender] El género del personaje para filtrar los resultados (opcional).
    * @param {string} [status] El estado del personaje (por ejemplo, 'vivo' o 'muerto') para filtrar los resultados (opcional).
    * @param {string} [species] La especie del personaje para filtrar los resultados (opcional).
+   * @param {string} [searchTerm] El termino de búsqueda para filtrar por nombre
    *
    * @returns {Observable<CharactersResponse>} Un observable que emite la respuesta de la API con los personajes filtrados y la información de paginación.
    */
@@ -28,7 +29,8 @@ export class CharactersService {
     page: number = 1,
     gender?: string,
     status?: string,
-    species?: string
+    species?: string,
+    searchTerm: string = ''
   ): Observable<CharactersResponse> {
     let url = `${this.baseUrl}?page=${page}`;
     if (gender) {
@@ -39,6 +41,9 @@ export class CharactersService {
     }
     if (species) {
       url += `&species=${species}`;
+    }
+    if (searchTerm) {
+      url += `&name=${encodeURIComponent(searchTerm)}`;
     }
     return this.http.get<CharactersResponse>(url);
   }
