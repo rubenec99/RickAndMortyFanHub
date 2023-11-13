@@ -57,7 +57,13 @@
   </div>
 
   <div class="characters-container">
-    <div *ngFor="let character of characters" class="character-panel">
+    <div
+      *ngFor="let character of characters"
+      class="character-panel"
+      data-bs-toggle="modal"
+      data-bs-target="#characterModal"
+      (click)="openModal(character)"
+    >
       <!-- Parte izquierda: Imagen del personaje -->
       <div class="character-image-container">
         <img
@@ -74,15 +80,6 @@
           <p class="character-species">
             {{ translationService.translate(character.species, "species") }}
           </p>
-          <button
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#characterModal"
-            (click)="openModal(character)"
-            class="view-details"
-          >
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
         </div>
 
         <div class="char-details-details">

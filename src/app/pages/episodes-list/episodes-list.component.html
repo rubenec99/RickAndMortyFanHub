@@ -11,7 +11,7 @@
     >
       <option value="">Todas las temporadas</option>
       <option *ngFor="let season of uniqueSeasons" [value]="season">
-        {{ "Temporada " + season.slice(1) }}
+        {{ "Temporada " + season.slice(2) }}
       </option>
     </select>
   </div>
@@ -22,7 +22,10 @@
       class="col-md-4"
       *ngFor="let episode of episodes; trackBy: trackByEpisodeId"
     >
-      <div class="card mb-4">
+      <div
+        class="card mb-4"
+        [ngStyle]="{ 'background-image': 'url(' + getRandomImage() + ')' }"
+      >
         <div class="card-body">
           <h5 class="card-title">
             {{ getTranslation(episode.name, "name") }}

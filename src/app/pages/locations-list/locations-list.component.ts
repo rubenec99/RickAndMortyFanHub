@@ -27,6 +27,30 @@ export class LocationsComponent implements OnInit, OnDestroy {
   selectedLocation: Location | null = null; // Ubicación seleccionada actualmente para mostrar detalles
   residentsOfLocation: Character[] = []; // Array que almacena a los residentes de la ubicación seleccionada
 
+  locationTypes: string[] = [
+    'Planet',
+    'Cluster',
+    'Space station',
+    'Microverse',
+    'TV',
+    'Resort',
+    'Fantasy town',
+    'Dream',
+  ];
+  dimensions: string[] = [
+    'Dimension C-137',
+    'unknown',
+    'Post-Apocalyptic Dimension',
+    'Replacement Dimension',
+    'Cronenberg Dimension',
+    'Fantasy Dimension',
+    'Dimension 5-126',
+  ];
+
+  selectedType: string = '';
+  selectedDimension: string = '';
+  searchTerm: string = '';
+
   constructor(
     private locationsService: LocationsService,
     private characterService: CharactersService,
@@ -48,9 +72,13 @@ export class LocationsComponent implements OnInit, OnDestroy {
    *
    * @param {number} page El número de página de los resultados que se quiere cargar, por defecto es 1.
    */
-  loadAllLocations(page: number = 1): void {
+  loadAllLocations(): void {
     this.locationsService
-      .getAllLocations(page)
+      .getAllLocations(
+        this.currentPage,
+        this.selectedType,
+        this.selectedDimension
+      )
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (response) => {
@@ -59,10 +87,10 @@ export class LocationsComponent implements OnInit, OnDestroy {
         },
         error: () => {
           Swal.fire({
-            title: '¡Error!',
-            text: 'Error al cargar las ubicaciones. Por favor, inténtelo de nuevo más tarde.',
-            icon: 'error',
-            iconColor: '#FF4565',
+            title: '¡Atención!',
+            text: 'No hay ubicaciones con los filtros establecidos.',
+            icon: 'info',
+            iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
           });
         },
@@ -128,6 +156,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
     return 'Desconocido';
   }
 
+  onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadAllLocations();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadAllLocations();
+  }
+
   /**
    * Método para ir a la página siguiente de ubicaciones.
    *
@@ -139,7 +177,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++; // Incrementa la página actual
-      this.loadAllLocations(this.currentPage); // Carga las ubicaciones de la siguiente página
+      this.loadAllLocations(); // Carga las ubicaciones de la siguiente página
     }
   }
 
@@ -154,7 +192,32 @@ export class LocationsComponent implements OnInit, OnDestroy {
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--; // Decrementa la página actual
-      this.loadAllLocations(this.currentPage); // Carga las ubicaciones de la página anterior
+      this.loadAllLocations(); // Carga las ubicaciones de la página anterior
+    }
+  }
+
+  /**
+   * Método para ir a la primera página de personajes.
+   *
+   * Establece la página actual a 1 y recarga los personajes de la primera página.
+   */
+  firstPage(): void {
+    if (this.currentPage !== 1) {
+      this.currentPage = 1; // Establece la página actual en 1
+      this.loadAllLocations();
+    }
+  }
+
+  /**
+   * Método para ir a la última página de personajes.
+   *
+   * Establece la página actual al total de páginas disponibles y recarga
+   * los personajes de la última página.
+   */
+  lastPage(): void {
+    if (this.currentPage !== this.totalPages) {
+      this.currentPage = this.totalPages; // Establece la página actual en la última página
+      this.loadAllLocations();
     }
   }
 }

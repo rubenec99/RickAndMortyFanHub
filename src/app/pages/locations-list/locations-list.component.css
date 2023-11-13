@@ -1,57 +1,120 @@
-/* Estilo general */
-body {
-  font-family: "Roboto", sans-serif; /* Cambia a tu fuente preferida */
-  background-color: #ffffff;
-}
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
 }
 
-h1 {
-  color: #00bcd4;
-  font-size: 2.5rem;
+/* -------------------- DROPDOWN FILTROS -------------------- */
+
+/* Estilo para el menú desplegable */
+[ngbDropdownMenu] {
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+  border: none; /* Sin bordes */
+  padding: 10px 0; /* Relleno vertical */
+  background-color: #f8f9fa; /* Fondo claro */
 }
 
-/* Tarjetas de lugares */
+/* Estilo para cada elemento dentro del menú */
+.dropdown-item {
+  padding: 10px 20px; /* Relleno interno */
+  color: #333; /* Color de texto */
+}
+
+.dropdown-item:hover {
+  background-color: #e2e6ea; /* Fondo al pasar el ratón */
+}
+
+/* Estilo para los selectores (select) */
+.dropdown-item select {
+  padding: 8px 10px; /* Relleno */
+  border-radius: 4px; /* Bordes redondeados */
+  border: 1px solid #ced4da; /* Borde sutil */
+  background-color: white; /* Fondo blanco */
+  color: #495057; /* Color de texto */
+}
+
+.dropdown-item select:focus {
+  border-color: #00bcd4; /* Borde al enfocar */
+  box-shadow: 0 0 0 0.2rem rgba(0, 188, 212, 0.25); /* Sombra al enfocar */
+}
+
+/* Estilo para el botón de restablecer filtros */
+.dropdown-item button {
+  background-color: #ff4565; /* Color llamativo */
+  color: white; /* Texto blanco */
+  border: none; /* Sin bordes */
+  padding: 8px 15px; /* Relleno */
+  border-radius: 4px; /* Bordes redondeados */
+  font-weight: bold; /* Texto en negrita */
+}
+
+.dropdown-item button:hover {
+  background-color: #d53958; /* Color al pasar el ratón */
+}
+
+/* Estilo del botón de búsqueda */
+.btn-filters {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  background-color: #00bcd4;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+/* Efecto hover del botón de búsqueda */
+.btn-filters:hover {
+  background-color: #009fa8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* -------------------- CARDS -------------------- */
+
 .card {
+  min-height: 90%;
   border-radius: 10px;
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
   border: none;
+  background-color: transparent;
+  background-image: url(../../../assets/img/locations-img/lbg6.png);
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.25);
+  transform: scale(1.03);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }
 
 .card-body {
-  padding: 20px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .card-title {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
   color: #00bcd4;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 160, 168, 0.25);
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .card-text {
-  color: #666; /* Un gris suave para el texto */
-  line-height: 1.6;
-}
-
-.btn-primary {
-  background-color: #00bcd4;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #0097a7; /* Una variante más oscura del Azul Portal */
+  font-size: 1rem;
+  color: #1f1f2e; /* Un gris suave para el texto */
+  margin-bottom: 0.5rem;
 }
 
 /* Ventana modal */
@@ -73,13 +136,6 @@ h1 {
   padding: 20px;
 }
 
-.btn-close {
-  width: 24px;
-  height: 24px;
-  background-size: cover;
-  border: none;
-}
-
 /* Controles de paginación */
 .d-flex {
   align-items: center; /* Alinea verticalmente los elementos en el centro */
@@ -88,4 +144,282 @@ h1 {
 span {
   color: #666;
   margin: 0 10px;
+}
+
+/* -------------------- PAGINACIÓN -------------------- */
+
+/* Estilo del botón de búsqueda */
+.pagination-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  background-color: #00bcd4;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover del botón de búsqueda */
+.pagination-container button:hover {
+  background-color: #009fa8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-container button:disabled {
+  background-color: #009fa8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: auto;
+}
+
+/* Mejora visual del placeholder */
+.pagination-container input::placeholder {
+  color: #ccc;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* Estilo del placeholder al enfocar el input */
+.pagination-container input:focus::placeholder {
+  opacity: 0.5;
+}
+
+.pagination-container span {
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* -------------------- RESPONSIVIDAD -------------------- */
+
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 2rem;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* -------------------- MODAL -------------------- */
+
+.container-form {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-wide {
+  min-width: 600px;
+}
+
+.modal-container {
+  background: #ffffff;
+  background: linear-gradient(
+    0deg,
+    rgb(255, 255, 255) 0%,
+    rgb(244, 247, 251) 100%
+  );
+  border-radius: 20px;
+  padding: 5px 35px;
+  border: 5px solid rgb(255, 255, 255);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
+  margin: 20px;
+}
+
+/* Header */
+.heading {
+  text-align: center;
+  font-weight: 800; /* Disminuir un poco el peso puede mejorar la legibilidad */
+  font-size: 32px; /* Un ligero incremento para darle más presencia */
+  color: #00bcd4;
+  letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
+  line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
+  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
+}
+
+/* Lista de residentes */
+.residents-list {
+  list-style: none;
+  padding: 0;
+  display: grid; /* Usa grid en lugar de flex */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(120px, 1fr)
+  ); /* Define columnas de tamaño uniforme */
+  gap: 15px; /* Espacio entre elementos */
+}
+
+/* Elemento de lista individual */
+.residents-list li {
+  display: flex;
+  flex-direction: column; /* Orienta los elementos en dirección vertical */
+  align-items: center; /* Centra los elementos horizontalmente */
+  text-align: center; /* Alinea el texto al centro */
+}
+
+/* Imagen del personaje */
+.char-img {
+  width: 60px; /* Aumenta el tamaño de la imagen */
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px; /* Espacio entre la imagen y el texto */
+}
+
+/* Texto del residente */
+.resident-name {
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mensaje cuando no hay residentes */
+.no-residents-msg {
+  text-align: center;
+  color: #666;
+}
+
+.modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bs-modal-header-padding);
+  border-bottom: var(--bs-modal-header-border-width) solid
+    var(--bs-modal-header-border-color);
+  border-top-left-radius: var(--bs-modal-inner-border-radius);
+  border-top-right-radius: var(--bs-modal-inner-border-radius);
+}
+
+.residents-list {
+  max-height: 450px; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura máxima */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.residents-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.char-img {
+  width: 50px; /* Ajusta el tamaño de la imagen según tus necesidades */
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.resident-name {
+  font-size: 1rem;
+}
+
+/* -------------------- BOTÓN MODAL -------------------- */
+
+.box {
+  width: auto;
+  height: auto;
+  float: left;
+  transition: 0.5s linear;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  padding: 0.7em;
+  text-align: center;
+  margin: 0 5px;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 900;
+}
+
+.box:before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(100%);
+}
+
+.box:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  border-top: 4px solid transparent;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  transform: translateX(-100%);
+}
+
+.box:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: rgba(168, 255, 68, 0.55);
+}
+
+.box:hover:before {
+  border-color: rgb(31, 31, 46);
+  height: 100%;
+  transform: translateX(0);
+  transition: 0.3s transform linear, 0.3s height linear 0.3s;
+}
+
+.box:hover:after {
+  border-color: #262626;
+  height: 100%;
+  transform: translateX(0);
+  transition: 0.3s transform linear, 0.3s height linear 0.5s;
+}
+
+.modal-button {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: transparent;
+}
+
+.modal-footer {
+  justify-content: center;
+}
+
+/* Botón personalizado*/
+.custom-button {
+  display: block; /* para que se alinee con otros elementos si es necesario */
+  width: 10vw; /* puedes ajustar esto según tus necesidades */
+  font-weight: bold;
+  background: linear-gradient(45deg, #1f1f2e 0%, #181820 100%);
+  color: white; /* Color del texto, lo dejé en blanco por legibilidad, pero ajusta según tus necesidades */
+  padding-block: 15px;
+  margin: 20px auto; /* ajusta según tus necesidades */
+  border-radius: 20px;
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 20px 10px -15px; /* he ajustado el color del box-shadow a #1F1F2E con una opacidad del 87.8% */
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-button:hover {
+  transform: scale(1.03);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 23px 10px -20px;
+}
+
+.custom-button:active {
+  transform: scale(0.95);
+  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
 }

@@ -1,104 +1,152 @@
 <div class="container mt-5">
-  <h1 class="mb-4">Lugares</h1>
+  <div ngbDropdown class="d-inline-block" autoClose="outside">
+    <button class="btn-filters" id="dropdownBasic1" ngbDropdownToggle>
+      Filtros
+    </button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+      <div class="dropdown-item">
+        <label>Tipo de Ubicación:&nbsp;</label>
+        <select [(ngModel)]="selectedType" (change)="onFilterChange()">
+          <option value="">Todos los tipos</option>
+          <option *ngFor="let type of locationTypes" [value]="type">
+            {{ translationService.translate(type, "locationType") }}
+          </option>
+        </select>
+      </div>
 
+      <!-- Selector de dimensión -->
+      <div class="dropdown-item">
+        <label>Dimensión:&nbsp;</label>
+        <select [(ngModel)]="selectedDimension" (change)="onFilterChange()">
+          <option value="">Todas las dimensiones</option>
+          <option *ngFor="let dimension of dimensions" [value]="dimension">
+            {{ translationService.translate(dimension, "dimension") }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div
       class="col-md-4"
       *ngFor="let location of locations; trackBy: trackByLocationId"
     >
-      <div class="card mb-4">
-        <div class="card-body">
-          <h5 class="card-title">
-            {{ getTranslation(location.name, "locationName") }}
-          </h5>
-          <p class="card-text">
-            <strong>Tipo:</strong>
-            {{ getTranslation(location.type, "locationType") }} <br />
-            <strong>Dimensión:</strong>
-            {{ getTranslation(location.dimension, "dimension") }} <br />
-          </p>
+      <div
+        class="card mb-4"
+        data-bs-toggle="modal"
+        data-bs-target="#locationModal"
+        (click)="openModal(location)"
+      >
+        <div class="mb-4">
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ getTranslation(location.name, "locationName") }}
+            </h5>
+            <p class="card-text">
+              <i class="fa-solid fa-meteor"></i>&nbsp;<strong>Tipo:</strong>
+              {{ getTranslation(location.type, "locationType") }}
+            </p>
+            <p class="card-text">
+              <i class="fa-solid fa-satellite"></i>&nbsp;<strong
+                >Dimensión:</strong
+              >
+              {{ getTranslation(location.dimension, "dimension") }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#locationModal"
-            (click)="openModal(location)"
-          >
-            Ver Residentes
-          </button>
+    <!-- Ventana modal para mostrar residentes -->
+    <div
+      class="modal fade"
+      id="locationModal"
+      tabindex="-1"
+      aria-labelledby="locationModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-wide container-form form">
+        <div class="modal-content form modal-container">
+          <div class="modal-header">
+            <h5 class="modal-title heading" id="locationModalLabel">
+              Residentes en
+              {{ getTranslation(selectedLocation?.name, "locationName") }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Si hay residentes -->
+            <!-- Muestra el total de residentes -->
+            <p class="resident-count" *ngIf="residentsOfLocation.length > 0">
+              Hay
+              {{
+                residentsOfLocation.length === 1
+                  ? "un"
+                  : residentsOfLocation.length
+              }}
+              {{
+                residentsOfLocation.length === 1 ? "residente" : "residentes"
+              }}:
+            </p>
+
+            <ul
+              class="residents-list"
+              *ngIf="residentsOfLocation.length > 0; else noResidents"
+            >
+              <li *ngFor="let resident of residentsOfLocation">
+                <img
+                  [src]="resident.image"
+                  alt="{{ resident.name }} image"
+                  class="char-img"
+                />
+                <span class="resident-name">{{ resident.name }}</span>
+              </li>
+            </ul>
+
+            <!-- Template que se muestra cuando no hay residentes -->
+            <ng-template #noResidents>
+              <p>No hay residentes en esta ubicación.</p>
+            </ng-template>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary custom-button"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Ventana modal para mostrar residentes -->
-  <div
-    class="modal fade"
-    id="locationModal"
-    tabindex="-1"
-    aria-labelledby="locationModalLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="locationModalLabel">
-            Residentes en
-            {{ getTranslation(selectedLocation?.name, "locationName") }}
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <!-- Si hay residentes -->
-          <ul *ngIf="residentsOfLocation.length > 0; else noResidents">
-            <li *ngFor="let resident of residentsOfLocation">
-              {{ resident.name }}
-            </li>
-          </ul>
-
-          <!-- Template que se muestra cuando no hay residentes -->
-          <ng-template #noResidents>
-            <p>No hay residentes en esta ubicación.</p>
-          </ng-template>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
+  <!-- Controles de paginación -->
+  <div class="d-flex justify-content-between mt-4 pagination-container">
+    <!-- Botón para primera página -->
+    <button (click)="firstPage()" [disabled]="currentPage === 1">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+    <!-- Botón para página anterior -->
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <!-- Indicador de página actual -->
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <!-- Botón para página siguiente -->
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+    <!-- Botón para última página  -->
+    <button (click)="lastPage()" [disabled]="currentPage === totalPages">
+      <i class="fa-solid fa-angles-right"></i>
+    </button>
   </div>
-</div>
-
-<!-- Controles de paginación -->
-<div class="d-flex justify-content-between mt-4">
-  <!-- Botón para página anterior -->
-  <button
-    class="btn btn-primary"
-    (click)="prevPage()"
-    [disabled]="currentPage === 1"
-  >
-    Anterior
-  </button>
-  <!-- Indicador de página actual -->
-  <span>Página {{ currentPage }} de {{ totalPages }}</span>
-  <!-- Botón para página siguiente -->
-  <button
-    class="btn btn-primary"
-    (click)="nextPage()"
-    [disabled]="currentPage === totalPages"
-  >
-    Siguiente
-  </button>
 </div>

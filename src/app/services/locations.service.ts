@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -14,16 +14,22 @@ export class LocationsService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtiene una lista de ubicaciones desde un punto específico en la paginación.
-   *
-   * @param {number} page El número de página actual que se va a recuperar (por defecto 1).
-   * @returns {Observable<LocationResponse>} Observable que representa la respuesta de la solicitud para obtener ubicaciones.
-   */
-  getAllLocations(page: number = 1): Observable<LocationResponse> {
-    const endpoint = `${this.API_URL}${this.LOCATION_ENDPOINT}`;
-    const params = { page: page.toString() };
+  getAllLocations(
+    page: number = 1,
+    type?: string,
+    dimension?: string
+  ): Observable<LocationResponse> {
+    let params = new HttpParams().set('page', page.toString());
+    if (type) {
+      params = params.set('type', type);
+    }
+    if (dimension) {
+      params = params.set('dimension', dimension);
+    }
 
-    return this.http.get<LocationResponse>(endpoint, { params });
+    return this.http.get<LocationResponse>(
+      `${this.API_URL}${this.LOCATION_ENDPOINT}`,
+      { params }
+    );
   }
 }

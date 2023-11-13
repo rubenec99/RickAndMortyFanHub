@@ -43,6 +43,18 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   userRating: number | null = null;
   averageRating: number = 0;
 
+  // Array de imágenes
+  imageArray: string[] = [
+    '../../../assets/img/episodes-img/epbg1.jpeg',
+    '../../../assets/img/episodes-img/epbg2.jpeg',
+    '../../../assets/img/episodes-img/epbg3.jpeg',
+    '../../../assets/img/episodes-img/epbg4.jpeg',
+    '../../../assets/img/episodes-img/epbg5.jpeg',
+    '../../../assets/img/episodes-img/epbg6.jpeg',
+    '../../../assets/img/episodes-img/epbg7.jpeg',
+    '../../../assets/img/episodes-img/epbg8.jpeg',
+  ];
+
   constructor(
     private episodesService: EpisodesService,
     private characterService: CharactersService,
@@ -575,6 +587,13 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       this.currentRating = 0;
       this.averageRating = 0;
     }
+  }
+
+  /**
+   * Obtiene una imagen random del array para usarla como bg en una carta
+   */
+  getRandomImage() {
+    return this.imageArray[Math.floor(Math.random() * this.imageArray.length)];
   }
 
   /**
