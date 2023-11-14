@@ -4,12 +4,7 @@ Aplicación web desarrollada con Angular, Node.js, Express.js y MySQL que ofrece
 Los usuarios pueden explorar información sobre personajes, episodios y más de la serie de televisión "Rick and Morty". También pueden realizar valoraciones, 
 dejar comentarios y marcar episodios como vistos.
 
-Este proyecto se ha creado con [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
-
-## Funcionalidades principales 🌱
-* Explorar personajes, episodios y locaciones.
-* Valorar y comentar episodios.
-* Marcar episodios como vistos.
+Este proyecto se ha creado con [Angular CLI](https://github.com/angular/angular-cli) version 16.2.2.
 
 ## Comenzando 🚀
 
