@@ -261,6 +261,8 @@ h3.text-center {
   margin: auto;
   padding: 25px;
   margin-bottom: 500px;
+  max-height: 750px;
+  height: 750px;
 }
 
 .game-header h2 {
