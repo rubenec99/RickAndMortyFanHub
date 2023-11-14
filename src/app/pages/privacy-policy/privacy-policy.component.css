@@ -1,0 +1,72 @@
+/* Estilo de los encabezados */
+h1 {
+  text-align: center;
+  font-weight: 800; /* Disminuir un poco el peso puede mejorar la legibilidad */
+  font-size: 32px; /* Un ligero incremento para darle más presencia */
+  color: #00bcd4;
+  letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
+  line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
+  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
+}
+
+h2,
+h3 {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #1f1f2e;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de los párrafos de texto */
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1f1f2e;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo de la lista de características */
+ul {
+  color: #1f1f2e;
+  list-style-type: none;
+  padding-left: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+li::before {
+  content: "\2022"; /* Usamos un punto como viñeta */
+  margin-right: 10px;
+}
+
+/* Estilo de los párrafos dentro de la lista */
+ul li p {
+  color: #ffffff;
+}
+
+/* Estilo para los elementos fuertes (negritas) */
+strong {
+  font-weight: bold;
+}
+
+/* Estilo para los elementos enfatizados (cursivas) */
+em {
+  font-style: italic;
+}
+.container {
+  background: transparent;
+  background-image: url(../../../assets/img/about-us-img/abus.png);
+  border-radius: 40px;
+  padding: 25px 35px;
+  border: 5px solid rgb(255, 255, 255);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
+  margin: 20px;
+  background-attachment: fixed;
+  background-size: contain;
+  width: 100%;
+  text-align: justify;
+}
+
+.big-container {
+  display: flex;
+  justify-content: center;
+}

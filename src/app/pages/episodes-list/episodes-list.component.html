@@ -147,148 +147,65 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div class="rating-section">
-              <div class="properties-title">
-                <h6>Valoraciones</h6>
-              </div>
-              <!-- Sección de valoración del usuario o para valorar -->
-              <ng-container *ngIf="userRating === null; else userHasRated">
-                <h6>Valorar este episodio:</h6>
-                <app-rating
-                  [(rating)]="currentRating"
-                  (ratingChange)="submitRating()"
-                ></app-rating>
-              </ng-container>
-
-              <ng-template #userHasRated>
-                <h6>Tu valoración para este episodio:</h6>
-                <app-rating
-                  [(rating)]="currentRating"
-                  (ratingChange)="submitRating()"
-                ></app-rating> </ng-template
-              ><br />
-              <!-- Tarjeta para la valoración media -->
-              <div class="rating-card">
-                <div class="card-body">
-                  <h6 class="card-title">valoración media</h6>
-                  <p class="card-text">
-                    <strong>{{ averageRating | number : "1.0-1" }}</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Formulario para enviar comentarios -->
-            <div class="properties-title">
-              <h6>Comentarios</h6>
-            </div>
-            <form (ngSubmit)="submitComment()">
-              <div class="mb-3">
-                <label for="commentText" class="form-label">Comentario</label>
-                <textarea
-                  [(ngModel)]="commentText"
-                  name="comment"
-                  required=""
-                  id="commentText"
-                  class="form-control"
-                ></textarea>
-              </div>
-              <button type="submit" class="btn-add-comment btn btn-primary">
-                Enviar comentario
-              </button>
-            </form>
-
-            <!-- Lista de comentarios -->
-            <div
-              *ngIf="comments.length > 0; else noComments"
-              class="comment-list"
-            >
-              <h6>Comentarios:</h6>
-              <div class="comment-container">
-                <div *ngFor="let comment of comments" class="comment-item mb-3">
-                  <div class="d-flex justify-content-between">
-                    <p>
-                      <strong>{{ comment.username }}</strong
-                      >: {{ comment.content }}
-                    </p>
-                    <!-- Opción para eliminar comentario -->
-                    <button
-                      *ngIf="canDeleteComment(comment.userId)"
-                      (click)="deleteComment(comment.id)"
-                      class="btn btn-delete-comment btn-sm btn-danger"
-                    >
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
-                  <p class="small text-muted">
-                    {{ comment.createdAt | date : "d 'de' MMM 'de' y" }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Mensaje si no hay comentarios -->
-            <ng-template #noComments>
-              <p>No hay comentarios para este episodio aún.</p>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Ventana modal para ver y añadir comentarios -->
-    <div
-      class="modal fade"
-      id="commentsModal"
-      tabindex="-1"
-      aria-labelledby="commentsModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title heading" id="commentsModalLabel">
-              {{ getTranslation(selectedEpisode?.name, "name") }}
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-lg-7">
+            <div>
+              <div>
                 <div class="rating-section">
-                  <!-- Sección de valoración -->
+                  <div class="properties-title">
+                    <h6>Valoraciones</h6>
+                  </div>
+                  <!-- Sección de valoración del usuario o para valorar -->
                   <ng-container *ngIf="userRating === null; else userHasRated">
-                    <h6 class="mb-3">Valorar este episodio:</h6>
+                    <h6>Valorar este episodio:</h6>
                     <app-rating
                       [(rating)]="currentRating"
                       (ratingChange)="submitRating()"
                     ></app-rating>
                   </ng-container>
 
-                  <!-- Sección de valoración del usuario -->
                   <ng-template #userHasRated>
-                    <h6 class="mb-3">Tu valoración para este episodio:</h6>
-                    <app-rating
-                      [(rating)]="currentRating"
-                      (ratingChange)="submitRating()"
-                    ></app-rating>
+                    <h6>Tu valoración para este episodio:</h6>
+                    <div class="rating-rating">
+                      <app-rating
+                        [(rating)]="currentRating"
+                        (ratingChange)="submitRating()"
+                      ></app-rating>
+                      <button class="noselect" (click)="deleteRating()">
+                        <span class="text">Eliminar valoración</span
+                        ><span class="icon"
+                          ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
+                            ></path></svg
+                        ></span>
+                      </button>
+                    </div>
                   </ng-template>
 
-                  <p class="mb-4">
-                    Calificación promedio:
-                    {{ averageRating | number : "1.0-1" }}
-                  </p>
+                  <br />
+                  <!-- Tarjeta para la valoración media -->
+                  <div class="rating-card">
+                    <div class="card-body">
+                      <h6 class="card-title">valoración media</h6>
+                      <p class="card-text">
+                        <strong>{{ averageRating | number : "1.0-1" }}</strong>
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Formulario para enviar comentarios -->
+                <div class="properties-title">
+                  <h6>Comentarios</h6>
+                </div>
                 <form (ngSubmit)="submitComment()">
                   <div class="mb-3">
                     <label for="commentText" class="form-label"
-                      >Tu Comentario</label
+                      >Comentario</label
                     >
                     <textarea
                       [(ngModel)]="commentText"
@@ -298,45 +215,157 @@
                       class="form-control"
                     ></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary">
-                    Enviar Comentario
+                  <button type="submit" class="btn-add-comment btn btn-primary">
+                    Enviar comentario
                   </button>
                 </form>
-              </div>
-              <div class="col-lg-5">
+
                 <!-- Lista de comentarios -->
-                <div *ngIf="comments.length > 0; else noComments">
-                  <h6 class="mb-3">Comentarios:</h6>
-                  <div
-                    *ngFor="let comment of comments"
-                    class="comment-item mb-3"
-                  >
-                    <div class="d-flex justify-content-between">
-                      <p>
-                        <strong>{{ comment.username }}</strong
-                        >: {{ comment.content }}
+                <div
+                  *ngIf="comments.length > 0; else noComments"
+                  class="comment-list"
+                >
+                  <h6>Comentarios:</h6>
+                  <div class="comment-container">
+                    <div
+                      *ngFor="let comment of comments"
+                      class="comment-item mb-3"
+                    >
+                      <div class="d-flex justify-content-between">
+                        <p>
+                          <strong>{{ comment.username }}</strong
+                          >: {{ comment.content }}
+                        </p>
+                        <!-- Opción para eliminar comentario -->
+                        <button
+                          *ngIf="canDeleteComment(comment.userId)"
+                          (click)="deleteComment(comment.id)"
+                          class="btn btn-delete-comment btn-sm btn-danger"
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                      <p class="small text-muted">
+                        {{ comment.createdAt | date : "d 'de' MMM 'de' y" }}
                       </p>
-                      <!-- Opción para eliminar comentario -->
-                      <button
-                        *ngIf="canDeleteComment(comment.userId)"
-                        (click)="deleteComment(comment.id)"
-                        class="btn btn-sm btn-danger"
-                      >
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
                     </div>
-                    <p class="small text-muted">
-                      {{ comment.createdAt | date }}
-                    </p>
                   </div>
                 </div>
 
                 <!-- Mensaje si no hay comentarios -->
                 <ng-template #noComments>
-                  <p class="text-muted">
-                    No hay comentarios para este episodio aún.
-                  </p>
+                  <p>No hay comentarios para este episodio aún.</p>
                 </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Ventana modal para ver y añadir comentarios -->
+        <div
+          class="modal fade"
+          id="commentsModal"
+          tabindex="-1"
+          aria-labelledby="commentsModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title heading" id="commentsModalLabel">
+                  {{ getTranslation(selectedEpisode?.name, "name") }}
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-lg-7">
+                    <div class="rating-section">
+                      <!-- Sección de valoración -->
+                      <ng-container
+                        *ngIf="userRating === null; else userHasRated"
+                      >
+                        <h6 class="mb-3">Valorar este episodio:</h6>
+                        <app-rating
+                          [(rating)]="currentRating"
+                          (ratingChange)="submitRating()"
+                        ></app-rating>
+                      </ng-container>
+
+                      <!-- Sección de valoración del usuario -->
+                      <ng-template #userHasRated>
+                        <h6 class="mb-3">Tu valoración para este episodio:</h6>
+                        <app-rating
+                          [(rating)]="currentRating"
+                          (ratingChange)="submitRating()"
+                        ></app-rating>
+                      </ng-template>
+
+                      <p class="mb-4">
+                        Calificación promedio:
+                        {{ averageRating | number : "1.0-1" }}
+                      </p>
+                    </div>
+
+                    <!-- Formulario para enviar comentarios -->
+                    <form (ngSubmit)="submitComment()">
+                      <div class="mb-3">
+                        <label for="commentText" class="form-label"
+                          >Tu Comentario</label
+                        >
+                        <textarea
+                          [(ngModel)]="commentText"
+                          name="comment"
+                          required=""
+                          id="commentText"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-primary">
+                        Enviar Comentario
+                      </button>
+                    </form>
+                  </div>
+                  <div class="col-lg-5">
+                    <!-- Lista de comentarios -->
+                    <div *ngIf="comments.length > 0; else noComments">
+                      <h6 class="mb-3">Comentarios:</h6>
+                      <div
+                        *ngFor="let comment of comments"
+                        class="comment-item mb-3"
+                      >
+                        <div class="d-flex justify-content-between">
+                          <p>
+                            <strong>{{ comment.username }}</strong
+                            >: {{ comment.content }}
+                          </p>
+                          <!-- Opción para eliminar comentario -->
+                          <button
+                            *ngIf="canDeleteComment(comment.userId)"
+                            (click)="deleteComment(comment.id)"
+                            class="btn btn-sm btn-danger"
+                          >
+                            <i class="fa-solid fa-trash"></i>
+                          </button>
+                        </div>
+                        <p class="small text-muted">
+                          {{ comment.createdAt | date }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Mensaje si no hay comentarios -->
+                    <ng-template #noComments>
+                      <p class="text-muted">
+                        No hay comentarios para este episodio aún.
+                      </p>
+                    </ng-template>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

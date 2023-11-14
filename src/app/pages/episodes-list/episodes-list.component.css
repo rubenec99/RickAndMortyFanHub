@@ -539,3 +539,69 @@ p.text {
   font-size: 1.2rem;
   color: #333;
 }
+
+.noselect {
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: #ff4565;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  background: #ff4565;
+}
+
+.noselect,
+.noselect span {
+  transition: 200ms;
+}
+
+.noselect .text {
+  transform: translateX(10px);
+  color: white;
+  font-size: 12px;
+}
+
+.noselect .icon {
+  position: absolute;
+  transform: translateX(95px);
+  height: 15px;
+  width: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noselect svg {
+  width: 15px;
+  fill: #eee;
+}
+
+.noselect:hover {
+  background: #d53958;
+}
+
+.noselect:hover .text {
+  color: transparent;
+}
+
+.noselect:hover .icon {
+  width: 120px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.noselect:focus {
+  outline: none;
+}
+
+.noselect:active .icon svg {
+  transform: scale(0.8);
+}
+
+.rating-rating {
+  display: flex;
+  justify-content: space-between;
+}

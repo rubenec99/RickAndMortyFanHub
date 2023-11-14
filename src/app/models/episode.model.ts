@@ -6,6 +6,7 @@ export interface Episode {
   characters: string[];
   url: string;
   created: string;
+  is_watched?: boolean;
 }
 
 export interface EpisodeResponse {

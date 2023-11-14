@@ -589,6 +589,43 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     }
   }
 
+  deleteRating(): void {
+    // Verificar si hay un episodio seleccionado antes de intentar eliminar la valoración.
+    if (!this.selectedEpisode) {
+      console.error(
+        'No se ha seleccionado un episodio para eliminar la valoración.'
+      );
+      return;
+    }
+
+    // Llama al servicio para eliminar la valoración y suscríbete al Observable.
+    this.ratingService.deleteRating(this.selectedEpisode.id).subscribe({
+      next: () => {
+        // Eliminación exitosa, establece userRating en null y currentRating en 0.
+        this.userRating = null;
+        this.currentRating = 0;
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Has eliminado tu valoración.',
+          icon: 'success',
+          confirmButtonColor: '#00BCD4',
+          iconColor: '#A8FF44',
+        });
+        this.initializeRating();
+      },
+      error: (error) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al eliminar la valoración. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+        console.error('Error al eliminar la valoración:', error);
+      },
+    });
+  }
+
   /**
    * Obtiene una imagen random del array para usarla como bg en una carta
    */

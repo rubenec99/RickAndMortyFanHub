@@ -633,4 +633,29 @@ router.get("/episodes/:episodeId/user-rating", verifyToken, (req, res) => {
   });
 });
 
+// Endpoint para eliminar la valoración de un episodio
+router.delete("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
+  const { episodeId } = req.params;
+  const userId = req.userId;
+
+  // Realiza la lógica para eliminar la valoración del usuario para el episodio específico.
+  const deleteRatingQuery =
+    "DELETE FROM rating WHERE user_id = ? AND episode_id = ?";
+  db.query(
+    deleteRatingQuery,
+    [userId, episodeId],
+    (deleteErr, deleteResults) => {
+      if (deleteErr) {
+        return res
+          .status(500)
+          .send({ error: "Error al eliminar la valoración" });
+      }
+      res.status(200).send({
+        success: "Valoración eliminada con éxito",
+        affectedRows: deleteResults.affectedRows, // Número de filas afectadas por la eliminación
+      });
+    }
+  );
+});
+
 module.exports = router;

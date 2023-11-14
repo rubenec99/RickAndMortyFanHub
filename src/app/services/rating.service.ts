@@ -53,4 +53,21 @@ export class RatingService {
   getAverageRating(episodeId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/episodes/${episodeId}/details`);
   }
+
+  /**
+   * Elimina la calificación del usuario para un episodio específico.
+   *
+   * @param {number} episodeId El ID del episodio del que se eliminará la calificación del usuario.
+   * @returns {Observable<any>} Observable que representa la respuesta de la solicitud de eliminación de calificación.
+   */
+  deleteRating(episodeId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const url = `${this.apiUrl}/episodes/${episodeId}/ratings`;
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+
+    return this.http.delete(url, { headers });
+  }
 }

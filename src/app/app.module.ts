@@ -25,6 +25,9 @@ import { StarComponent } from './components/star/star.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { MinigamesComponent } from './pages/minigames/minigames.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { AboutUsComponent } from './pages/about-us/about-us.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { LegalWarningComponent } from './pages/legal-warning/legal-warning.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +46,9 @@ import { FooterComponent } from './components/footer/footer.component';
     RatingComponent,
     MinigamesComponent,
     FooterComponent,
+    AboutUsComponent,
+    PrivacyPolicyComponent,
+    LegalWarningComponent,
   ],
   imports: [
     BrowserModule,
