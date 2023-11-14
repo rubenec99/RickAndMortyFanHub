@@ -117,24 +117,7 @@
   margin-bottom: 0.5rem;
 }
 
-/* Ventana modal */
-.modal-content {
-  border-radius: 10px;
-  border: none;
-}
-
-.modal-header {
-  border-bottom: none;
-  padding: 15px 20px;
-}
-
-.modal-title {
-  color: #00bcd4;
-}
-
-.modal-body {
-  padding: 20px;
-}
+/* -------------------- PAGINACIÓN -------------------- */
 
 /* Controles de paginación */
 .d-flex {
@@ -145,8 +128,6 @@ span {
   color: #666;
   margin: 0 10px;
 }
-
-/* -------------------- PAGINACIÓN -------------------- */
 
 /* Estilo del botón de búsqueda */
 .pagination-container button {
@@ -209,6 +190,25 @@ span {
 }
 
 /* -------------------- MODAL -------------------- */
+
+/* Ventana modal */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding: 15px 20px;
+}
+
+.modal-title {
+  color: #00bcd4;
+}
+
+.modal-body {
+  padding: 20px;
+}
 
 .container-form {
   display: flex;
