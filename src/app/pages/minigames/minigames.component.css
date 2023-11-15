@@ -387,3 +387,20 @@ h3.text-center {
 .shadow-incorrect {
   box-shadow: rgba(255, 71, 102, 0.4) 0px 5px 15px;
 }
+
+@keyframes brillo {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.all-correct-animation {
+  animation: brillo 1s infinite;
+  animation-delay: 0.5s; /* Puede ajustar el retraso según sea necesario */
+}

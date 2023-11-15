@@ -17,7 +17,6 @@ import { HeaderComponent } from './components/header/header.component';
 import { LocationsComponent } from './pages/locations-list/locations-list.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { LogoutComponent } from './components/logout/logout.component';
 import { AdminPanelComponent } from './pages/admin-panel/admin-panel.component';
 import { HomeComponent } from './pages/home/home.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
@@ -28,6 +27,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { LegalWarningComponent } from './pages/legal-warning/legal-warning.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,6 @@ import { LegalWarningComponent } from './pages/legal-warning/legal-warning.compo
     LocationsComponent,
     LoginComponent,
     RegisterComponent,
-    LogoutComponent,
     AdminPanelComponent,
     HomeComponent,
     EditProfileComponent,
@@ -49,6 +48,7 @@ import { LegalWarningComponent } from './pages/legal-warning/legal-warning.compo
     AboutUsComponent,
     PrivacyPolicyComponent,
     LegalWarningComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

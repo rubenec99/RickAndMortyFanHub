@@ -136,7 +136,9 @@
       *ngIf="feedbackMessage"
       [ngClass]="{ 'show-feedback': feedbackMessage }"
     >
-      {{ feedbackMessage }}
+      <div *ngIf="allCorrect" class="all-correct-animation">
+        {{ feedbackMessage }}
+      </div>
     </div>
     <br />
     <div>
