@@ -423,3 +423,28 @@ span {
   transform: scale(0.95);
   box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
 }
+
+/* -------------------- RESPONSIVE -------------------- */
+@media (max-width: 768px) {
+  .modal-wide {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+
+  .card {
+    margin: 10px;
+  }
+
+  .btn-filters,
+  .btn-add-comment {
+    padding: 8px 15px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+}

@@ -605,3 +605,28 @@ p.text {
   display: flex;
   justify-content: space-between;
 }
+
+/* -------------------- RESPONSIVE -------------------- */
+@media (max-width: 768px) {
+  .modal-wide {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+
+  .card {
+    margin: 10px;
+  }
+
+  .btn-filters,
+  .btn-add-comment {
+    padding: 8px 15px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+}

@@ -2,23 +2,39 @@
   <!-- Contenedor de búsqueda -->
   <div class="search-container mb-4">
     <!-- Input para ingresar el término de búsqueda -->
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      placeholder="Buscar personaje..."
-      (keydown)="onSearchKeyDown($event)"
-    />
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Buscar personaje..."
+        class="form-control"
+        (keydown)="onSearchKeyDown($event)"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" (click)="searchCharacters()">
+          Buscar
+        </button>
+      </div>
+    </div>
 
-    <!-- Botón para realizar la búsqueda -->
-    <button (click)="searchCharacters()">Buscar</button>
-    &nbsp;
+    <!-- Filtros (dropdown) -->
     <div ngbDropdown class="d-inline-block" autoClose="outside">
-      <button id="dropdownBasic1" ngbDropdownToggle>Filtros</button>
+      <button
+        id="dropdownBasic1"
+        ngbDropdownToggle
+        class="btn btn-outline-secondary"
+      >
+        Filtros
+      </button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
         <!-- Selector de especie -->
         <div class="dropdown-item">
           <label>Especie:&nbsp;</label>
-          <select [(ngModel)]="selectedSpecies" (change)="onFilterChange()">
+          <select
+            [(ngModel)]="selectedSpecies"
+            (change)="onFilterChange()"
+            class="form-control"
+          >
             <option value="">Todas las especies</option>
             <option *ngFor="let species of allSpecies" [value]="species">
               {{ translationService.translate(species, "species") }}
@@ -29,7 +45,11 @@
         <!-- Selector de estado (status) -->
         <div class="dropdown-item">
           <label>Estado:&nbsp;</label>
-          <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+          <select
+            [(ngModel)]="selectedStatus"
+            (change)="onFilterChange()"
+            class="form-control"
+          >
             <option value="">Todos los estados</option>
             <option *ngFor="let status of allStatuses" [value]="status">
               {{ translationService.translate(status, "status") }}
@@ -40,7 +60,11 @@
         <!-- Selector de género -->
         <div class="dropdown-item">
           <label>Género:&nbsp;</label>
-          <select [(ngModel)]="selectedGender" (change)="onFilterChange()">
+          <select
+            [(ngModel)]="selectedGender"
+            (change)="onFilterChange()"
+            class="form-control"
+          >
             <option value="">Todos los géneros</option>
             <option *ngFor="let gender of allGenders" [value]="gender">
               {{ translationService.translate(gender, "gender") }}
@@ -50,7 +74,9 @@
 
         <!-- Botón para restablecer filtros -->
         <div class="dropdown-item">
-          <button (click)="resetFilters()">Restablecer filtros</button>
+          <button (click)="resetFilters()" class="btn btn-outline-secondary">
+            Restablecer filtros
+          </button>
         </div>
       </div>
     </div>

@@ -1,90 +1,96 @@
 <nav
   class="navbar navbar-expand-xl navbar-light bg-light navbar-custom container-fluid"
 >
-  <div class="container-fluid">
-    <!-- Navegación -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Menú alineado a la izquierda -->
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <button class="btn nav-link" routerLink="/home">
-            <span class="box"
-              ><i class="fa-solid fa-house"></i>&nbsp;Inicio</span
-            >
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="btn nav-link" routerLink="/characters">
-            <span class="box">
-              <i class="fa-solid fa-rocket"></i>&nbsp;Personajes</span
-            >
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="btn nav-link" routerLink="/episodes">
-            <span class="box"
-              ><i class="fa-solid fa-list"></i>&nbsp;Episodios</span
-            >
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="btn nav-link" routerLink="/locations">
-            <span class="box"
-              ><i class="fa-solid fa-map-location-dot"></i
-              >&nbsp;Ubicaciones</span
-            >
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="btn nav-link" routerLink="/minigames">
-            <span class="box">
-              <i class="fa-solid fa-gamepad"></i>&nbsp;Minijuegos</span
-            >
-          </button>
-        </li>
-      </ul>
+  <!-- Navegación -->
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- Menú alineado a la izquierda -->
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <button class="btn nav-link" routerLink="/home">
+          <span class="box"><i class="fa-solid fa-house"></i>&nbsp;Inicio</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="btn nav-link" routerLink="/characters">
+          <span class="box">
+            <i class="fa-solid fa-rocket"></i>&nbsp;Personajes</span
+          >
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="btn nav-link" routerLink="/episodes">
+          <span class="box"
+            ><i class="fa-solid fa-list"></i>&nbsp;Episodios</span
+          >
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="btn nav-link" routerLink="/locations">
+          <span class="box"
+            ><i class="fa-solid fa-map-location-dot"></i>&nbsp;Ubicaciones</span
+          >
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="btn nav-link" routerLink="/minigames">
+          <span class="box">
+            <i class="fa-solid fa-gamepad"></i>&nbsp;Minijuegos</span
+          >
+        </button>
+      </li>
+    </ul>
 
-      <!-- Menú alineado a la derecha -->
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <button class="btn nav-link" *ngIf="isLogged()" routerLink="/profile">
-            <span class="box"
-              ><i class="fa-solid fa-user-pen"></i>&nbsp;Mi perfil</span
-            >
-          </button>
-        </li>
-        <li class="nav-item" *ngIf="isLogged() && isAdmin()">
-          <button class="btn nav-link" routerLink="/admin">
-            <span class="box"
-              ><i class="fa-solid fa-screwdriver-wrench"></i>&nbsp;Panel
-              admin</span
-            >
-          </button>
-        </li>
+    <!-- Menú alineado a la derecha -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <button class="btn nav-link" *ngIf="isLogged()" routerLink="/profile">
+          <span class="box"
+            ><i class="fa-solid fa-user-pen"></i>&nbsp;Mi perfil</span
+          >
+        </button>
+      </li>
+      <li class="nav-item" *ngIf="isLogged() && isAdmin()">
+        <button class="btn nav-link" routerLink="/admin">
+          <span class="box"
+            ><i class="fa-solid fa-screwdriver-wrench"></i>&nbsp;Panel
+            admin</span
+          >
+        </button>
+      </li>
 
-        <!-- Si el usuario NO está logueado -->
-        <li class="nav-item" *ngIf="!isLogged()">
-          <app-login></app-login>
-        </li>
-        <li class="nav-item" *ngIf="!isLogged()">
-          <app-register></app-register>
-        </li>
-        <!-- Si el usuario está logueado -->
-        <li class="nav-item" *ngIf="isLogged()">
-          <app-logout></app-logout>
-        </li>
-      </ul>
-    </div>
+      <!-- Si el usuario NO está logueado -->
+      <li class="nav-item" *ngIf="!isLogged()">
+        <!-- Botón que activará la modal -->
+        <button type="button" routerLink="/login">
+          <span class="box"
+            ><i class="fa-solid fa-right-to-bracket"></i>&nbsp;Iniciar
+            sesión</span
+          >
+        </button>
+      </li>
+      <li class="nav-item" *ngIf="!isLogged()">
+        <!-- Botón que activará la modal -->
+        <button type="button" routerLink="/register">
+          <span class="box"
+            ><i class="fa-solid fa-user-plus"></i>&nbsp;Registrarse</span
+          >
+        </button>
+      </li>
+      <!-- Si el usuario está logueado -->
+      <li class="nav-item" *ngIf="isLogged()">
+        <app-logout></app-logout>
+      </li>
+    </ul>
   </div>
 </nav>

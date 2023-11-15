@@ -1,239 +1,206 @@
-<!-- Botón que activará la modal -->
-<button
-  type="button"
-  class="modal-button"
-  data-bs-toggle="modal"
-  data-bs-target="#registerModal"
->
-  <span class="box"
-    ><i class="fa-solid fa-user-plus"></i>&nbsp;Registrarse</span
-  >
-</button>
-
-<!-- Ventana modal de Registro -->
-<div
-  class="modal fade"
-  id="registerModal"
-  tabindex="-1"
-  aria-labelledby="registerModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog container-form form">
-    <div class="modal-content form container">
-      <div class="modal-header">
-        <h5 class="modal-title heading" id="registerModalLabel">
-          Registro de Usuario
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <!-- Formulario Reactivo -->
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-          <!-- Nombre -->
-          <div class="mb-3">
-            <label for="first_name" class="form-label">Nombre</label>
-            <input
-              type="text"
-              class="form-control input"
-              id="first_name"
-              formControlName="first_name"
-              placeholder="Ingrese su nombre"
-              required
-            />
-            <div
-              *ngIf="
-                registerForm?.get('first_name')?.hasError('hasNumber') &&
-                registerForm?.get('first_name')?.touched
-              "
-              class="text-danger"
-            >
-              El nombre no debe contener números
-            </div>
+<!-- Contenedor Principal de Registro -->
+<div class="container-form form" id="registerSection">
+  <div class="form container">
+    <div class="modal-header">
+      <h5 class="modal-title heading" id="registerModalLabel">
+        Registro de Usuario
+      </h5>
+    </div>
+    <div class="modal-body">
+      <!-- Formulario Reactivo -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Nombre -->
+        <div class="mb-3">
+          <label for="first_name" class="form-label">Nombre</label>
+          <input
+            type="text"
+            class="form-control input"
+            id="first_name"
+            formControlName="first_name"
+            placeholder="Ingrese su nombre"
+            required
+          />
+          <div
+            *ngIf="
+              registerForm?.get('first_name')?.hasError('hasNumber') &&
+              registerForm?.get('first_name')?.touched
+            "
+            class="text-danger"
+          >
+            El nombre no debe contener números
           </div>
+        </div>
 
-          <!-- Apellidos -->
-          <div class="mb-3">
-            <label for="last_name" class="form-label">Apellidos</label>
-            <input
-              type="text"
-              class="form-control input"
-              id="last_name"
-              formControlName="last_name"
-              placeholder="Ingrese sus apellidos"
-              required
-            />
-            <div
-              *ngIf="
-                registerForm?.get('last_name')?.hasError('hasNumber') &&
-                registerForm?.get('last_name')?.touched
-              "
-              class="text-danger"
-            >
-              Los apellidos no deben contener números
-            </div>
+        <!-- Apellidos -->
+        <div class="mb-3">
+          <label for="last_name" class="form-label">Apellidos</label>
+          <input
+            type="text"
+            class="form-control input"
+            id="last_name"
+            formControlName="last_name"
+            placeholder="Ingrese sus apellidos"
+            required
+          />
+          <div
+            *ngIf="
+              registerForm?.get('last_name')?.hasError('hasNumber') &&
+              registerForm?.get('last_name')?.touched
+            "
+            class="text-danger"
+          >
+            Los apellidos no deben contener números
           </div>
+        </div>
 
-          <!-- Email -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control input"
-              id="email"
-              formControlName="email"
-              placeholder="Ingrese su email"
-              required
-            />
-            <div
-              *ngIf="
-                registerForm.get('email')?.hasError('email') &&
-                registerForm.get('email')?.touched
-              "
-              class="text-danger"
-            >
-              El formato del correo electrónico no es válido.
-            </div>
-            <div
-              *ngIf="registerForm.get('email')?.hasError('emailTaken')"
-              class="text-danger"
-            >
-              El email ya está registrado.
-            </div>
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control input"
+            id="email"
+            formControlName="email"
+            placeholder="Ingrese su email"
+            required
+          />
+          <div
+            *ngIf="
+              registerForm.get('email')?.hasError('email') &&
+              registerForm.get('email')?.touched
+            "
+            class="text-danger"
+          >
+            El formato del correo electrónico no es válido.
           </div>
+          <div
+            *ngIf="registerForm.get('email')?.hasError('emailTaken')"
+            class="text-danger"
+          >
+            El email ya está registrado.
+          </div>
+        </div>
 
-          <!-- Username -->
-          <div class="mb-3">
-            <label for="username" class="form-label">Nombre de usuario</label>
-            <input
-              type="text"
-              class="form-control input"
-              id="username"
-              formControlName="username"
-              placeholder="Elija un nombre de usuario"
-              required
-            />
-            <div
-              *ngIf="registerForm.get('username')?.hasError('usernameTaken')"
-              class="text-danger"
-            >
-              El nombre de usuario ya está en uso.
-            </div>
+        <!-- Username -->
+        <div class="mb-3">
+          <label for="username" class="form-label">Nombre de usuario</label>
+          <input
+            type="text"
+            class="form-control input"
+            id="username"
+            formControlName="username"
+            placeholder="Elija un nombre de usuario"
+            required
+          />
+          <div
+            *ngIf="registerForm.get('username')?.hasError('usernameTaken')"
+            class="text-danger"
+          >
+            El nombre de usuario ya está en uso.
           </div>
+        </div>
 
-          <!-- Password -->
-          <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input
-              type="password"
-              class="form-control input"
-              id="password"
-              formControlName="password"
-              placeholder="Introduzca su contraseña"
-              required
-            />
-            <div
-              *ngIf="
-                registerForm.get('password')?.hasError('pattern') &&
-                registerForm.get('password')?.touched
-              "
-              class="text-danger"
-            >
-              La contraseña debe tener al entre 8 y 16 caracteres, al menos un
-              dígito, al menos una minúscula y al menos una mayúscula.
-            </div>
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input
+            type="password"
+            class="form-control input"
+            id="password"
+            formControlName="password"
+            placeholder="Introduzca su contraseña"
+            required
+          />
+          <div
+            *ngIf="
+              registerForm.get('password')?.hasError('pattern') &&
+              registerForm.get('password')?.touched
+            "
+            class="text-danger"
+          >
+            La contraseña debe tener al entre 8 y 16 caracteres, al menos un
+            dígito, al menos una minúscula y al menos una mayúscula.
           </div>
+        </div>
 
-          <!-- Confirm Password -->
-          <div class="mb-3">
-            <label for="confirmPassword" class="form-label"
-              >Repita la contraseña</label
-            >
-            <input
-              type="password"
-              class="form-control input"
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              placeholder="Repita su contraseña"
-              required
-            />
-            <div
-              *ngIf="registerForm.errors?.['passwordsDontMatch'] && registerForm.get('confirmPassword')?.touched"
-              class="text-danger"
-            >
-              Las contraseñas no coinciden.
-            </div>
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label"
+            >Repita la contraseña</label
+          >
+          <input
+            type="password"
+            class="form-control input"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Repita su contraseña"
+            required
+          />
+          <div
+            *ngIf="registerForm.errors?.['passwordsDontMatch'] && registerForm.get('confirmPassword')?.touched"
+            class="text-danger"
+          >
+            Las contraseñas no coinciden.
           </div>
+        </div>
 
-          <!-- Fecha de nacimiento -->
-          <div class="mb-3">
-            <label for="birth_date" class="form-label"
-              >Fecha de nacimiento</label
-            >
-            <input
-              type="date"
-              class="form-control input"
-              id="birth_date"
-              formControlName="birth_date"
-              required
-            />
+        <!-- Fecha de nacimiento -->
+        <div class="mb-3">
+          <label for="birth_date" class="form-label">Fecha de nacimiento</label>
+          <input
+            type="date"
+            class="form-control input"
+            id="birth_date"
+            formControlName="birth_date"
+            required
+          />
 
-            <!-- Mensaje de error de Bootstrap para fecha futura -->
-            <div
-              *ngIf="
-                registerForm?.get('birth_date')?.hasError('futureDate') &&
-                registerForm?.get('birth_date')?.touched
-              "
-              class="text-danger"
-            >
-              La fecha de nacimiento no puede ser futura.
-            </div>
+          <!-- Mensaje de error de Bootstrap para fecha futura -->
+          <div
+            *ngIf="
+              registerForm?.get('birth_date')?.hasError('futureDate') &&
+              registerForm?.get('birth_date')?.touched
+            "
+            class="text-danger"
+          >
+            La fecha de nacimiento no puede ser futura.
           </div>
+        </div>
 
-          <!-- Politica de privacidad Checkbox -->
-          <div class="mb-3 form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="termsCheckbox"
-              formControlName="terms"
-            />
-            <label class="acp-term" for="termsCheckbox">
-              Acepto la
-              <a href="/privacy-policy">política de privacidad.</a>
-            </label>
-            <div
-              *ngIf="
-                registerForm.get('termsCheckbox')?.hasError('required') &&
-                registerForm.get('required')?.touched
-              "
-              class="text-danger"
-            >
-              Debe aceptar la política de privacidad para continuar.
-            </div>
+        <!-- Politica de privacidad Checkbox -->
+        <div class="mb-3 form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="termsCheckbox"
+            formControlName="terms"
+          />
+          <label class="acp-term" for="termsCheckbox" style="color: #1f1f2e">
+            Acepto la
+            <a href="/privacy-policy">política de privacidad.</a>
+          </label>
+          <div
+            *ngIf="
+              registerForm.get('termsCheckbox')?.hasError('required') &&
+              registerForm.get('required')?.touched
+            "
+            class="text-danger"
+          >
+            Debe aceptar la política de privacidad para continuar.
           </div>
-          <!-- Botón para registrarse -->
-          <div class="mb-3">
-            <button type="submit" class="btn btn-primary register-button">
-              Registrarse
-            </button>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <!-- Botón para volver/cerrar la modal -->
-        <button
-          type="button"
-          class="btn btn-secondary custom-button"
-          data-bs-dismiss="modal"
-        >
-          Volver
-        </button>
-      </div>
+        </div>
+        <!-- Botón para registrarse -->
+        <div class="mb-3">
+          <button type="submit" class="btn btn-primary register-button">
+            Registrarse
+          </button>
+        </div>
+        <p class="acc-msg">
+          <strong>¿Ya tienes cuenta?</strong>
+          Inicia sesión
+          <a class="btn-link" routerLink="/login"> aquí </a>
+        </p>
+      </form>
     </div>
   </div>
 </div>

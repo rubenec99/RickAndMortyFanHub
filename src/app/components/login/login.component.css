@@ -1,42 +1,37 @@
 /* -------------------- CONTAINER -------------------- */
-
 .container-form {
   display: flex;
   justify-content: center;
+  max-width: 100%; /* Asegura que no se salga de los límites en pantallas pequeñas */
+  margin-bottom: 360px;
 }
 
 .container {
-  background: #ffffff;
   background: linear-gradient(
     0deg,
     rgb(255, 255, 255) 0%,
     rgb(244, 247, 251) 100%
   );
   border-radius: 20px;
-  padding: 5px 35px;
+  padding: 25px 55px;
   border: 5px solid rgb(255, 255, 255);
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
   margin: 20px;
+  max-width: 600px; /* Controla el ancho máximo */
 }
 
 /* -------------------- HEADER -------------------- */
-
 .heading {
   text-align: center;
-  font-weight: 800; /* Disminuir un poco el peso puede mejorar la legibilidad */
-  font-size: 32px; /* Un ligero incremento para darle más presencia */
+  font-weight: 800;
+  font-size: 32px;
   color: #00bcd4;
-  letter-spacing: -0.5px; /* Controla el espacio entre letras para un look más ajustado */
-  line-height: 1.2; /* Asegura un espacio adecuado entre líneas si el título tiene más de una línea */
-  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2); /* Añade una sombra sutil para darle profundidad */
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 188, 212, 0.2);
 }
 
 /* -------------------- FORMULARIO -------------------- */
-
-.form {
-  margin-top: 20px;
-}
-
 .form .input {
   width: 100%;
   background: white;
@@ -48,118 +43,32 @@
   border-inline: 2px solid transparent;
 }
 
-.form .input::-moz-placeholder {
-  color: rgb(170, 170, 170);
-}
-
-.form .input::placeholder {
-  color: rgb(170, 170, 170);
-}
-
 .form .input:focus {
   outline: none;
   border-inline: 2px solid #00bcd4;
-}
-
-/* -------------------- LABELS -------------------- */
-
-.form label {
-  display: block; /* asegura que la etiqueta esté en su propia línea */
-  margin-top: 20px; /* proporciona espacio antes de la etiqueta */
-  margin-bottom: 5px; /* espacio entre la etiqueta y el input */
-  color: #00bcd4; /* usando el mismo color que otros elementos destacados de tu diseño */
-  font-weight: 600; /* texto en negrita para darle más énfasis */
-}
-
-.form .input:first-of-type + label {
-  margin-top: 0; /* elimina el margen superior para la primera etiqueta después de un input */
-}
-
-/* -------------------- BOTÓN MODAL -------------------- */
-
-.box {
-  width: auto;
-  height: auto;
-  float: left;
-  transition: 0.5s linear;
-  position: relative;
-  display: block;
-  overflow: hidden;
-  padding: 0.7em;
-  text-align: center;
-  margin: 0 5px;
-  background: transparent;
-  text-transform: uppercase;
-  font-weight: 900;
-}
-
-.box:before {
-  position: absolute;
-  content: "";
-  left: 0;
-  bottom: 0;
-  height: 4px;
-  width: 100%;
-  border-bottom: 4px solid transparent;
-  border-left: 4px solid transparent;
-  box-sizing: border-box;
-  transform: translateX(100%);
-}
-
-.box:after {
-  position: absolute;
-  content: "";
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  border-top: 4px solid transparent;
-  border-right: 4px solid transparent;
-  box-sizing: border-box;
-  transform: translateX(-100%);
-}
-
-.box:hover {
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  background-color: rgba(168, 255, 68, 0.55);
-}
-
-.box:hover:before {
-  border-color: rgb(31, 31, 46);
-  height: 100%;
-  transform: translateX(0);
-  transition: 0.3s transform linear, 0.3s height linear 0.3s;
-}
-
-.box:hover:after {
-  border-color: #262626;
-  height: 100%;
-  transform: translateX(0);
-  transition: 0.3s transform linear, 0.3s height linear 0.5s;
-}
-
-.modal-button {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  background: transparent;
 }
 
 .modal-footer {
   justify-content: center;
 }
 
-/* -------------------- BOTÓN LOGIN -------------------- */
+/* -------------------- LABELS -------------------- */
+.form label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  color: #00bcd4;
+  font-weight: 600;
+}
 
+/* -------------------- BOTÓN LOGIN -------------------- */
 .form .login-button {
   display: block;
-  width: 15vw;
+  width: 100%; /* Hace que el botón se ajuste al contenedor */
   font-weight: bold;
   background: linear-gradient(45deg, #00bbd4c0 0%, #00bcd4 100%);
   color: white;
-  padding-block: 15px;
+  padding: 15px;
   margin: 20px auto;
   border-radius: 20px;
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
@@ -177,52 +86,41 @@
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
 }
 
-/* -------------------- BOTÓN PERSONALIZADO -------------------- */
-
-.custom-button {
-  display: block; /* para que se alinee con otros elementos si es necesario */
-  width: 10vw; /* puedes ajustar esto según tus necesidades */
-  font-weight: bold;
-  background: linear-gradient(45deg, #1f1f2e 0%, #181820 100%);
-  color: white; /* Color del texto, lo dejé en blanco por legibilidad, pero ajusta según tus necesidades */
-  padding-block: 15px;
-  margin: 20px auto; /* ajusta según tus necesidades */
-  border-radius: 20px;
-  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 20px 10px -15px; /* he ajustado el color del box-shadow a #1F1F2E con una opacidad del 87.8% */
-  border: none;
-  transition: all 0.2s ease-in-out;
-}
-
-.custom-button:hover {
-  transform: scale(1.03);
-  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 23px 10px -20px;
-}
-
-.custom-button:active {
-  transform: scale(0.95);
-  box-shadow: rgba(31, 31, 46, 0.8784313725) 0px 15px 10px -10px;
-}
-
 /* -------------------- BOTÓN PARA CREAR CUENTA NUEVA -------------------- */
-
 .btn-link {
-  color: #00bcd4; /* Color que ya utilizamos en otros elementos para mantener la coherencia */
-  text-decoration: underline; /* Subrayado para enfatizar que es un enlace */
-  border: none; /* No border to maintain it as a text link appearance */
-  background: transparent; /* Sin fondo para que parezca un enlace en lugar de un botón */
-  transition: color 0.2s ease-in-out; /* Transición suave al cambiar de color */
-  display: inline-block; /* Hace que el botón se comporte como un enlace y permite el margin-top */
+  color: #00bcd4;
+  text-decoration: underline;
+  background: transparent;
+  transition: color 0.2s ease-in-out;
   cursor: pointer;
 }
 
 .btn-link:hover,
 .btn-link:focus {
-  color: #009fa8; /* Un tono más oscuro al pasar el ratón por encima para interactividad */
-  text-decoration: none; /* Quitamos el subrayado al pasar el ratón para indicar que es clickeable */
-  outline: none; /* Quitamos el outline al enfocar para una estética limpia */
-  background-color: transparent; /* Mantenemos el fondo transparente al pasar el ratón y enfocar */
+  color: #009fa8;
+  text-decoration: none;
+  outline: none;
 }
+
+/* -------------------- MENSAJE DE ACCIÓN -------------------- */
 
 .acc-msg {
   color: #1f1f2e;
+  text-align: center; /* Alinear mensaje al centro */
+}
+
+/* -------------------- MEDIA QUERIES -------------------- */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px; /* Reduce el padding en pantallas más pequeñas */
+  }
+
+  .heading {
+    font-size: 24px; /* Reduce el tamaño de la fuente para encabezados en pantallas más pequeñas */
+  }
+
+  .form .login-button {
+    padding: 10px; /* Reduce el padding del botón en pantallas más pequeñas */
+  }
 }
