@@ -69,18 +69,14 @@
             </button>
             <button
               *ngIf="!episodeViewStatus[episode.id]"
-              (click)="
-                markEpisodeAsViewed(episode.id); $event.stopPropagation()
-              "
+              (click)="markEpisodeAsViewed(episode.id)"
               class="btn-episode-status-no"
             >
-              <i class="fa-solid fa-eye"></i>
+              <i class="fa-regular fa-eye"></i>
             </button>
             <button
               *ngIf="episodeViewStatus[episode.id]"
-              (click)="
-                unmarkEpisodeAsViewed(episode.id); $event.stopPropagation()
-              "
+              (click)="unmarkEpisodeAsViewed(episode.id)"
               class="btn-episode-status-yes"
             >
               <i class="fa-solid fa-eye"></i>

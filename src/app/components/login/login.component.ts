@@ -54,7 +54,7 @@ export class LoginComponent {
           localStorage.setItem('tokenExpiry', response.expiresAt.toString());
 
           Swal.fire({
-            title: '¡Bienvenido!',
+            title: '¡Bienvenid@!',
             text: 'Has iniciado sesión correctamente.',
             icon: 'success',
             iconColor: '#A8FF44',

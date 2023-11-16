@@ -5,6 +5,7 @@ import { Character } from 'src/app/models/character.model';
 import { CharactersService } from 'src/app/services/characters.service';
 import { EpisodesService } from 'src/app/services/episodes.service';
 import { TranslationService } from 'src/app/services/translation.service';
+import { UserService } from 'src/app/services/user.service';
 
 import { EMPTY, Subject } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -30,6 +31,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
 
   showEpisodesList = false;
   isEpisodesListExpanded = false;
+
+  favoriteCharactersStatus: { [characterId: number]: boolean } = {};
+  showOnlyFavorites: boolean = false;
 
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
@@ -57,11 +61,13 @@ export class CharactersComponent implements OnInit, OnDestroy {
     private charactersService: CharactersService, // Inyecta el servicio de personajes
     private episodesService: EpisodesService, // Inyecta el servicio de episodios
     public modalService: NgbModal, // Inyecta el servicio de modales de Bootstrap
-    public translationService: TranslationService
+    public translationService: TranslationService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.loadCharacters(); // Carga los personajes al inicializar el componente
+    this.initializeFavoriteCharactersStatus();
   }
 
   ngOnDestroy(): void {
@@ -109,6 +115,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
             iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
           });
+          this.resetFilters();
         },
       });
   }
@@ -227,8 +234,50 @@ export class CharactersComponent implements OnInit, OnDestroy {
   onFilterChange(): void {
     this.currentPage = 1;
     this.loadCharacters();
+    if (this.showOnlyFavorites) {
+      // Filtra y muestra solo los personajes favoritos
+      this.displayFavoriteCharactersOnly();
+    } else {
+      // Vuelve a cargar todos los personajes o aplica otros filtros
+      this.loadCharacters();
+    }
   }
 
+  displayFavoriteCharactersOnly(): void {
+    if (!this.userService.isLoggedIn()) {
+      Swal.fire({
+        title: 'Autenticación requerida',
+        text: 'Debes iniciar sesión para ver tus personajes favoritos.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        background: '#FFFFFF',
+        confirmButtonColor: '#00BCD4',
+        iconColor: '#FFD83D',
+      });
+      return;
+    }
+    this.charactersService
+      .getFavoriteCharacters()
+      .subscribe((favoriteCharacterIds) => {
+        if (favoriteCharacterIds.length === 0) {
+          // Mostrar alerta si no hay personajes favoritos
+          Swal.fire({
+            title: 'Sin favoritos',
+            text: 'No tienes personajes agregados a favoritos.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            background: '#FFFFFF',
+            confirmButtonColor: '#00BCD4',
+            iconColor: '#FFD83D',
+          });
+        } else {
+          // Filtrar y mostrar solo los personajes favoritos
+          this.characters = this.characters.filter((character) =>
+            favoriteCharacterIds.includes(character.id)
+          );
+        }
+      });
+  }
   /**
    * Método para restablecer todos los filtros y valores de búsqueda a sus valores predeterminados.
    * Esto incluye restablecer el término de búsqueda, género, estado (status) y especie (species).
@@ -239,6 +288,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.selectedGender = ''; // Restablece el género
     this.selectedStatus = ''; // Restablece el estado (status)
     this.selectedSpecies = ''; // Restablece la especie (species)
+    this.showOnlyFavorites = false;
     this.currentPage = 1; // Resetea la página al valor predeterminado (primera página)
     this.loadCharacters(); // Vuelve a cargar la lista de personajes con los valores de filtro restablecidos
   }
@@ -263,6 +313,91 @@ export class CharactersComponent implements OnInit, OnDestroy {
   toggleEpisodesList() {
     this.showEpisodesList = !this.showEpisodesList;
     this.isEpisodesListExpanded = !this.isEpisodesListExpanded;
+  }
+
+  /**
+   * Marca un personaje como favorito.
+   * Verifica si el usuario está autenticado antes de añadir a favoritos.
+   * Si no está autenticado, muestra una notificación.
+   * En caso contrario, realiza la petición para marcar como favorito.
+   */
+  markCharacterAsFavorite(characterId: number): void {
+    if (!this.userService.isLoggedIn()) {
+      Swal.fire({
+        title: 'Autenticación requerida',
+        text: 'Debes iniciar sesión para añadir personajes a favoritos.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        background: '#FFFFFF',
+        confirmButtonColor: '#00BCD4',
+        iconColor: '#FFD83D',
+      });
+      return;
+    }
+
+    this.charactersService.addFavoriteCharacter(characterId).subscribe({
+      next: () => {
+        this.favoriteCharactersStatus[characterId] = true;
+        Swal.fire({
+          title: 'Añadido a Favoritos',
+          text: 'El personaje ha sido añadido a tus favoritos.',
+          icon: 'success',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al añadir el personaje a favoritos. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Desmarca un personaje como favorito.
+   * Realiza una petición para eliminar el personaje de la lista de favoritos.
+   * Actualiza el estado y muestra una notificación según el resultado de la petición.
+   */
+  unmarkCharacterAsFavorite(characterId: number): void {
+    this.charactersService.removeFavoriteCharacter(characterId).subscribe({
+      next: () => {
+        this.favoriteCharactersStatus[characterId] = false;
+        Swal.fire({
+          title: 'Removido de favoritos',
+          text: 'El personaje ha sido removido de tus favoritos.',
+          icon: 'info',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al quitar el personaje de favoritos. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Inicializa el estado de personajes favoritos.
+   * Obtiene la lista de personajes favoritos del usuario y actualiza el estado local.
+   */
+  initializeFavoriteCharactersStatus(): void {
+    this.charactersService.getFavoriteCharacters().subscribe({
+      next: (favoriteCharacterIds) => {
+        favoriteCharacterIds.forEach((id) => {
+          this.favoriteCharactersStatus[id] = true;
+        });
+      },
+      error: () => {},
+    });
   }
 
   /**

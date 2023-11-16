@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
@@ -11,6 +11,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class CharactersService {
   private baseUrl = 'https://rickandmortyapi.com/api/character';
+  private serverUrl = 'http://localhost:3000/user';
 
   constructor(private http: HttpClient) {}
 
@@ -137,5 +138,69 @@ export class CharactersService {
       randomNumbers.add(randomNumber);
     }
     return [...randomNumbers];
+  }
+
+  /**
+   * Añade un personaje favorito.
+   *
+   * @param characterId El ID del personaje a añadir como favorito.
+   * @returns Un Observable que representa la respuesta del servidor.
+   */
+  addFavoriteCharacter(characterId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.post(
+      `${this.serverUrl}/characters/${characterId}/favorite`,
+      {},
+      { headers }
+    );
+  }
+
+  /**
+   * Elimina un personaje de favoritos.
+   *
+   * @param characterId El ID del personaje a añadir como favorito.
+   * @returns Un Observable que representa la respuesta del servidor.
+   */
+  removeFavoriteCharacter(characterId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.delete(
+      `${this.serverUrl}/characters/${characterId}/favorite`,
+      { headers }
+    );
+  }
+
+  /**
+   * Obtiene una lista de los IDs de los personajes que el usuario ha marcado como favoritos si este tiene iniciada la sesión.
+   *
+   * Este método realiza una solicitud GET al servidor para obtener los personajes favoritos.
+   * Utiliza el token de autenticación almacenado en localStorage para autorizar la solicitud.
+   * El token se incluye en las cabeceras de la solicitud HTTP.
+   *
+   * @returns {Observable<number[]>} Un Observable que, al suscribirse, devuelve un array de números (IDs de los personajes favoritos).
+   */
+  getFavoriteCharacters(): Observable<number[]> {
+    const retrievedToken = localStorage.getItem('authToken');
+
+    // Verificar si existe un token de autenticación
+    if (!retrievedToken) {
+      return of([]);
+    }
+
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+
+    return this.http.get<number[]>(`${this.serverUrl}/favoriteCharacters`, {
+      headers,
+    });
   }
 }

@@ -693,7 +693,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       error: () => {
         Swal.fire({
           title: '¡Error!',
-          text: 'Error al desmarcar el episodio como visto. Por favor, inténtelo de nuevo más tarde.',
+          text: 'Error al marcar el episodio como no visto. Por favor, inténtelo de nuevo más tarde.',
           icon: 'error',
           iconColor: '#FF4565',
           confirmButtonColor: '#00BCD4',
@@ -718,44 +718,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
       },
       error: () => {},
     });
-  }
-
-  /**
-   * Muestra solo los episodios que han sido marcados como vistos.
-   */
-  filterViewedEpisodes(): void {
-    this.episodes = this.allEpisodes.filter(
-      (episode) => this.episodeViewStatus[episode.id]
-    );
-  }
-
-  /**
-   * Muestra solo los episodios que no han sido marcados como vistos.
-   */
-  filterNotViewedEpisodes(): void {
-    this.episodes = this.allEpisodes.filter(
-      (episode) => !this.episodeViewStatus[episode.id]
-    );
-  }
-
-  /**
-   * Restablece el filtro para mostrar todos los episodios.
-   */
-  resetFilter(): void {
-    this.episodes = [...this.allEpisodes];
-  }
-
-  /**
-   * Aplica el filtro de visualización basado en `viewStatusFilter`.
-   */
-  applyViewStatusFilter(): void {
-    if (this.viewStatusFilter === 'viewed') {
-      this.filterViewedEpisodes();
-    } else if (this.viewStatusFilter === 'notViewed') {
-      this.filterNotViewedEpisodes();
-    } else {
-      this.resetFilter();
-    }
   }
 
   /**

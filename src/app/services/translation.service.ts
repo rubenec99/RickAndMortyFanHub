@@ -191,7 +191,7 @@ export class TranslationService {
       'Rick Potion #9': 'Poción Rick número 9',
       'Meeseeks and Destroy': 'La misión de los Meeseeks',
       'M. Night Shaym-Aliens!': 'Los alienígenas de los giros inesperados',
-      'Anatomy Park': 'Parque natómico',
+      'Anatomy Park': 'Parque anatómico',
       'Lawnmower Dog': 'El cortador de césped perruno',
       Pilot: 'Piloto',
       'The Wedding Squanchers': 'Los Squanch en Squanch',

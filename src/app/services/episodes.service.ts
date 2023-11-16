@@ -80,7 +80,7 @@ export class EpisodesService {
   }
 
   /**
-   * Obtiene una lista de los IDs de los episodios que el usuario ha marcado como vistos.
+   * Obtiene una lista de los IDs de los episodios que el usuario ha marcado como vistos si este tiene iniciada la sesión.
    *
    * Este método realiza una solicitud GET al servidor para obtener los episodios vistos.
    * Utiliza el token de autenticación almacenado en localStorage para autorizar la solicitud.
@@ -90,10 +90,18 @@ export class EpisodesService {
    */
   getWatchedEpisodes(): Observable<number[]> {
     const retrievedToken = localStorage.getItem('authToken');
+
+    // Verificar si existe un token de autenticación
+    if (!retrievedToken) {
+      // Si no hay token, devolver un Observable vacío
+      return of([]);
+    }
+
     const headers = new HttpHeaders().set(
       'Authorization',
       `Bearer ${retrievedToken}`
     );
+
     return this.http.get<number[]>(`${this.serverUrl}/watchedEpisodes`, {
       headers,
     });

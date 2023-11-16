@@ -516,3 +516,137 @@
   color: #ffffff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+/* -------------------- BOTÓN AGREGAR A FAVS -------------------- */
+
+.btn-char-status-yes {
+  margin-left: 10px;
+  background-color: #ff4565; /* Color principal */
+  border-radius: 100px;
+  box-shadow: rgba(255, 69, 101, 0.2) 0 -25px 18px -14px inset,
+    rgba(255, 69, 101, 0.15) 0 1px 2px, rgba(255, 69, 101, 0.15) 0 2px 4px,
+    rgba(255, 69, 101, 0.15) 0 4px 8px, rgba(255, 69, 101, 0.15) 0 8px 16px,
+    rgba(255, 69, 101, 0.15) 0 16px 32px;
+  color: #ffffff; /* Color de texto blanco para contraste */
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 15px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-char-status-yes:hover {
+  box-shadow: rgba(255, 69, 101, 0.35) 0 -25px 18px -14px inset,
+    rgba(255, 69, 101, 0.25) 0 1px 2px, rgba(255, 69, 101, 0.25) 0 2px 4px,
+    rgba(255, 69, 101, 0.25) 0 4px 8px, rgba(255, 69, 101, 0.25) 0 8px 16px,
+    rgba(255, 69, 101, 0.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+.btn-char-status-no {
+  margin-left: 10px;
+  background-color: #e0e0e0; /* Fondo gris claro */
+  border-radius: 100px;
+  box-shadow: rgba(128, 128, 128, 0.2) 0 -25px 18px -14px inset,
+    rgba(128, 128, 128, 0.15) 0 1px 2px, rgba(128, 128, 128, 0.15) 0 2px 4px,
+    rgba(128, 128, 128, 0.15) 0 4px 8px, rgba(128, 128, 128, 0.15) 0 8px 16px,
+    rgba(128, 128, 128, 0.15) 0 16px 32px; /* Sombra en tonos grises */
+  color: #606060; /* Texto en gris oscuro */
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 15px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-char-status-no:hover {
+  box-shadow: rgba(128, 128, 128, 0.35) 0 -25px 18px -14px inset,
+    rgba(128, 128, 128, 0.25) 0 1px 2px, rgba(128, 128, 128, 0.25) 0 2px 4px,
+    rgba(128, 128, 128, 0.25) 0 4px 8px, rgba(128, 128, 128, 0.25) 0 8px 16px,
+    rgba(128, 128, 128, 0.25) 0 16px 32px; /* Sombra más intensa en hover */
+  transform: scale(1.05) rotate(-1deg);
+}
+
+/* -------------------- CHECKBOX -------------------- */
+
+.check {
+  cursor: pointer;
+  position: relative;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  -webkit-tap-highlight-color: transparent;
+  transform: translate3d(0, 0, 0);
+}
+
+.check:before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(34, 50, 84, 0.03);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.check svg {
+  position: relative;
+  z-index: 1;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: #c8ccd4;
+  stroke-width: 1.5;
+  transform: translate3d(0, 0, 0);
+  transition: all 0.2s ease;
+}
+
+.check svg path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 0;
+}
+
+.check svg polyline {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 66;
+}
+
+.check:hover:before {
+  opacity: 1;
+}
+
+.check:hover svg {
+  stroke: #00bcd4;
+}
+
+#cbx:checked + .check svg {
+  stroke: #00bcd4;
+}
+
+#cbx:checked + .check svg path {
+  stroke-dashoffset: 60;
+  transition: all 0.3s linear;
+}
+
+#cbx:checked + .check svg polyline {
+  stroke-dashoffset: 42;
+  transition: all 0.2s linear;
+  transition-delay: 0.15s;
+}

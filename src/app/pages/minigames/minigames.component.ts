@@ -88,7 +88,12 @@ export class MinigamesComponent {
     {
       question:
         '¿Cómo se llama el parque de atracciones dentro de un cuerpo humano?',
-      options: ['Microverse', 'Anatomy Park', 'Innerspace', 'Micro Park'],
+      options: [
+        'Microverso',
+        'Parque Anatómico',
+        'Espacio Interno',
+        'Microparque',
+      ],
       answer: 1,
     },
     {
@@ -111,10 +116,10 @@ export class MinigamesComponent {
       question:
         '¿Cuál es el nombre del episodio donde Morty se convierte en un auto?',
       options: [
-        'The Rickturian Mortydate',
+        'La Cita Rickturiana de Morty',
         'Mortynight Run',
         'MortyCar',
-        'The Ricks Must Be Crazy',
+        'Los Ricks deben estar locos',
       ],
       answer: 1,
     },

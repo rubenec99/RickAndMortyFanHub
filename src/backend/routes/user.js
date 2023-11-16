@@ -723,4 +723,65 @@ router.get("/watchedEpisodes", verifyToken, (req, res) => {
   });
 });
 
+/**
+ *
+ ** AÑADIR/QUITAR PERSONAJES DE FAVORITOS
+ *
+ */
+
+// Endpoint para añadir un personaje a favoritos
+router.post("/characters/:characterId/favorite", verifyToken, (req, res) => {
+  const { characterId } = req.params;
+  const userId = req.userId;
+
+  const query =
+    "INSERT INTO favorite_characters (user_id, character_id) VALUES (?, ?)";
+
+  db.query(query, [userId, characterId], (err, results) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al añadir a favoritos" });
+    }
+    res
+      .status(200)
+      .send({ success: "Personaje añadido a favoritos con éxito" });
+  });
+});
+
+// Endpoint para quitar un personaje de favoritos
+router.delete("/characters/:characterId/favorite", verifyToken, (req, res) => {
+  const { characterId } = req.params;
+  const userId = req.userId;
+
+  const query =
+    "DELETE FROM favorite_characters WHERE user_id = ? AND character_id = ?";
+
+  db.query(query, [userId, characterId], (err, results) => {
+    if (err) {
+      return res.status(500).send({ error: "Error al quitar de favoritos" });
+    }
+    res
+      .status(200)
+      .send({ success: "Personaje quitado de favoritos con éxito" });
+  });
+});
+
+// Endpoint para obtener los personajes favoritos de un usuario
+router.get("/favoriteCharacters", verifyToken, (req, res) => {
+  const userId = req.userId;
+
+  const query =
+    "SELECT character_id FROM favorite_characters WHERE user_id = ?";
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al recuperar los personajes favoritos" });
+    }
+
+    const favoriteCharacterIds = results.map((row) => row.character_id);
+    res.status(200).send(favoriteCharacterIds);
+  });
+});
+
 module.exports = router;
