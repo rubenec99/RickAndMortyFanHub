@@ -22,8 +22,6 @@ import {
   first,
 } from 'rxjs/operators';
 
-import { jwtDecode } from 'jwt-decode';
-
 import Swal from 'sweetalert2';
 
 @Component({
@@ -205,10 +203,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Intenta iniciar sesión automáticamente usando los datos proporcionados del formulario de registro.
-   * Esta función se usa después de que un usuario se haya registrado con éxito, para iniciar sesión automáticamente.
+   * Realiza un inicio de sesión automático utilizando los datos de registro del usuario.
    *
-   * @param formData Los datos del formulario de registro, que contienen el nombre de usuario y la contraseña.
+   * Este método toma los datos de registro del usuario, crea un objeto de datos de inicio de sesión
+   * y luego utiliza el servicio de usuario para intentar iniciar sesión automáticamente.
+   * Si el inicio de sesión es exitoso y se recibe un token, almacena la información relevante del usuario
+   * en localStorage y redirige a la página de inicio. Si hay un error (como la falta de un token o un fallo en la respuesta),
+   * muestra un mensaje de error correspondiente.
+   *
+   * @param {RegistrationData} formData - Los datos del formulario de registro del usuario.
    */
   autoLogin(formData: RegistrationData) {
     const LoginData = {
@@ -220,11 +223,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response && response.success) {
           if (response.token) {
-            localStorage.setItem('authToken', response.token);
+            localStorage.setItem('userType', response.user_type);
+            localStorage.setItem('username', response.username);
+            localStorage.setItem('user_id', response.user_id);
             localStorage.setItem('tokenExpiry', response.expiresAt.toString());
-            const decodedToken: any = jwtDecode(response.token!);
-            localStorage.setItem('userType', decodedToken.user_type);
-            localStorage.setItem('username', decodedToken.username);
 
             this.router.navigate(['/home']);
           } else {

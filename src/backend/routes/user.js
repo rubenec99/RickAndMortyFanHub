@@ -127,6 +127,9 @@ router.post("/login", (req, res) => {
         success: "Inicio de sesión exitoso",
         token: token,
         expiresAt: expiresAt,
+        username: user.username,
+        user_type: user.user_type,
+        user_id: user.id,
       });
     });
   });

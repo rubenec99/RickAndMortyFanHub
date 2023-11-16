@@ -14,8 +14,6 @@ import {
 
 import { BehaviorSubject, Observable, map } from 'rxjs';
 
-import { jwtDecode } from 'jwt-decode';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -80,8 +78,6 @@ export class UserService {
           const token = response.token;
 
           if (token) {
-            // Si se recibió un token, significa que el inicio de sesión fue exitoso
-            // Almacena el token en el almacenamiento local
             localStorage.setItem('authToken', token);
 
             // Emitir true en el BehaviorSubject para indicar que el usuario ha iniciado sesión
@@ -89,8 +85,7 @@ export class UserService {
 
             return response; // Devuelve la respuesta original del servidor
           } else {
-            // Si no se recibió un token, el inicio de sesión no fue exitoso
-            return response; // Devuelve la respuesta original del servidor
+            return response;
           }
         })
       );
@@ -299,16 +294,24 @@ export class UserService {
   }
 
   /**
-   * Obtiene el ID del usuario actual a partir del token de autenticación.
+   * Obtiene el ID del usuario actual almacenado en localStorage.
    *
-   * @returns {number | null} El ID del usuario actual o null si no se encuentra un token de autenticación.
+   * Este método busca en localStorage el valor asociado a la clave 'user_id'.
+   * Si encuentra un valor, lo convierte de string a number y lo devuelve.
+   * Si no encuentra un valor (es decir, el resultado es null), devuelve null.
+   *
+   * @returns {number | null} El ID del usuario como número si existe, de lo contrario null.
    */
   getCurrentUserId(): number | null {
-    const token = this.getToken();
-    if (token) {
-      const decodedToken: any = jwtDecode(token);
-      return decodedToken.user_id;
+    // Obtener el ID del usuario como string de localStorage
+    const userIdString = localStorage.getItem('user_id');
+
+    // Si userIdString no es null, convertirlo a número y devolverlo
+    if (userIdString) {
+      return Number(userIdString);
     }
+
+    // Si userIdString es null, devolver null
     return null;
   }
 

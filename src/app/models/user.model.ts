@@ -18,6 +18,9 @@ export interface LoginData {
 }
 
 export interface LoginResponse {
+  user_id: string;
+  user_type: string;
+  username: string;
   success?: string;
   error?: string;
   token?: string;

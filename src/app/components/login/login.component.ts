@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import { LoginData } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
-import { jwtDecode } from 'jwt-decode';
-
 import Swal from 'sweetalert2';
 
 @Component({
@@ -35,13 +33,13 @@ export class LoginComponent {
 
   /**
    * Maneja el proceso de inicio de sesión del usuario.
-   * Previene la acción por defecto del evento de envío para controlar manualmente el flujo.
-   * Utiliza `userService` para enviar los datos de inicio de sesión al servidor y suscribirse a la respuesta.
-   * En caso de éxito, almacena el token y los datos relevantes del usuario en `localStorage` y redirige a la página de inicio.
-   * Si las credenciales son incorrectas, muestra una alerta con el error.
-   * En caso de cualquier otro error en la petición, también se muestra una alerta.
    *
-   * @param {Event} event El evento de envío del formulario de inicio de sesión.
+   * Este método evita el comportamiento predeterminado del evento (para prevenir la recarga de la página),
+   * y luego intenta iniciar sesión con los datos proporcionados por el usuario.
+   * Si el inicio de sesión es exitoso, almacena varios datos del usuario en localStorage y muestra un mensaje de bienvenida.
+   * Si el inicio de sesión falla debido a credenciales incorrectas o un error del servidor, muestra un mensaje de error.
+   *
+   * @param {Event} event - El evento de formulario que desencadena el inicio de sesión.
    */
   onLogin(event: Event) {
     event.preventDefault();
@@ -50,14 +48,10 @@ export class LoginComponent {
         if (response.success) {
           this.userService.setToken(response.token!);
 
-          // Decodificar el token para obtener el user_type
-          const decodedToken: any = jwtDecode(response.token!);
-          localStorage.setItem('userType', decodedToken.user_type);
-          localStorage.setItem('username', decodedToken.username);
-          localStorage.setItem('user_id', decodedToken.user_id);
-
-          const expiryTime = new Date().getTime() + 3600 * 1000; // Tiempo actual + 1 hora (en milisegundos)
-          localStorage.setItem('tokenExpiry', expiryTime.toString());
+          localStorage.setItem('userType', response.user_type);
+          localStorage.setItem('username', response.username);
+          localStorage.setItem('user_id', response.user_id);
+          localStorage.setItem('tokenExpiry', response.expiresAt.toString());
 
           Swal.fire({
             title: '¡Bienvenido!',
