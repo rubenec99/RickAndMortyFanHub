@@ -121,54 +121,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal de detalles de un personaje.
-   *
-   * @param character El personaje para el cual se abrirá el modal de detalles.
-   * @param content El contenido del modal.
-   */
-  openModal(character: Character): void {
-    this.selectedCharacter = character;
-
-    const episodeIds = character.episode
-      .map((url) => parseInt(url.split('/').pop() || '0'))
-      .filter((id) => !isNaN(id));
-
-    this.episodesService
-      .getMultipleEpisodes(episodeIds)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (episodes) => {
-          if (Array.isArray(episodes)) {
-            switch (episodes.length) {
-              case 0:
-                // No episodes available
-                this.episodes = ['No aparece en ningún episodio'];
-                break;
-              case 1:
-                // Single episode returned
-                this.episodes = [episodes[0].name];
-                break;
-              default:
-                // Multiple episodes returned
-                this.episodes = episodes.map((ep) => ep.name);
-                break;
-            }
-          }
-        },
-        error: () => {
-          Swal.fire({
-            title: '¡Error!',
-            text: 'Error al cargar los detalles del episodio. Por favor, inténtelo de nuevo más tarde.',
-            icon: 'error',
-            iconColor: '#FF4565',
-            confirmButtonColor: '#00BCD4',
-          });
-          this.episodes = ['No se pudo cargar la información del episodio'];
-        },
-      });
-  }
-
-  /**
    * Realiza la búsqueda de personajes por nombre basada en el término introducido.
    * Si no hay término de búsqueda o este es solo espacios en blanco, se recargan todos los personajes.
    * Si hay un término de búsqueda, se realiza una petición para buscar los personajes por ese nombre.
@@ -278,6 +230,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   /**
    * Método para restablecer todos los filtros y valores de búsqueda a sus valores predeterminados.
    * Esto incluye restablecer el término de búsqueda, género, estado (status) y especie (species).
@@ -294,17 +247,51 @@ export class CharactersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la traducción correspondiente a una clave y un tipo dados.
+   * Abre el modal de detalles de un personaje.
    *
-   * @param key La clave de traducción.
-   * @param type El tipo de traducción.
-   * @returns La traducción correspondiente o 'Desconocido' si no se encuentra.
+   * @param character El personaje para el cual se abrirá el modal de detalles.
+   * @param content El contenido del modal.
    */
-  getTranslation(key: string | undefined, type: string): string {
-    if (key) {
-      return this.translationService.translate(key, type);
-    }
-    return 'Desconocido';
+  openModal(character: Character): void {
+    this.selectedCharacter = character;
+
+    const episodeIds = character.episode
+      .map((url) => parseInt(url.split('/').pop() || '0'))
+      .filter((id) => !isNaN(id));
+
+    this.episodesService
+      .getMultipleEpisodes(episodeIds)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (episodes) => {
+          if (Array.isArray(episodes)) {
+            switch (episodes.length) {
+              case 0:
+                // No episodes available
+                this.episodes = ['No aparece en ningún episodio'];
+                break;
+              case 1:
+                // Single episode returned
+                this.episodes = [episodes[0].name];
+                break;
+              default:
+                // Multiple episodes returned
+                this.episodes = episodes.map((ep) => ep.name);
+                break;
+            }
+          }
+        },
+        error: () => {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error al cargar los detalles del episodio. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
+            confirmButtonColor: '#00BCD4',
+          });
+          this.episodes = ['No se pudo cargar la información del episodio'];
+        },
+      });
   }
 
   /**
@@ -398,6 +385,20 @@ export class CharactersComponent implements OnInit, OnDestroy {
       },
       error: () => {},
     });
+  }
+
+  /**
+   * Obtiene la traducción correspondiente a una clave y un tipo dados.
+   *
+   * @param key La clave de traducción.
+   * @param type El tipo de traducción.
+   * @returns La traducción correspondiente o 'Desconocido' si no se encuentra.
+   */
+  getTranslation(key: string | undefined, type: string): string {
+    if (key) {
+      return this.translationService.translate(key, type);
+    }
+    return 'Desconocido';
   }
 
   /**

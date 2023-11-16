@@ -62,16 +62,6 @@ export class EditProfileComponent implements OnInit {
   }
 
   /**
-   * Alterna la visibilidad de los campos de contraseña en la UI.
-   *
-   * Si los campos de contraseña están actualmente visibles, los ocultará,
-   * y viceversa.
-   */
-  togglePasswordFields(): void {
-    this.showPasswordFields = !this.showPasswordFields;
-  }
-
-  /**
    * Recupera el perfil del usuario actual del servidor y lo almacena
    * en la variable de instancia `this.user`.
    *
@@ -139,6 +129,16 @@ export class EditProfileComponent implements OnInit {
       return { futureDate: true };
     }
     return null;
+  }
+
+  /**
+   * Alterna la visibilidad de los campos de contraseña en la UI.
+   *
+   * Si los campos de contraseña están actualmente visibles, los ocultará,
+   * y viceversa.
+   */
+  togglePasswordFields(): void {
+    this.showPasswordFields = !this.showPasswordFields;
   }
 
   /**

@@ -266,6 +266,63 @@ export class MinigamesComponent {
   }
 
   /**
+   * Carga personajes aleatorios para el juego.
+   */
+  loadRandomCharacters(): void {
+    // Resetear el estado del mensaje y el personaje seleccionado.
+    this.isCorrect = null;
+    this.selectedCharacterId = null;
+
+    this.loading = true;
+    this.charactersService.getRandomCharacters(3).subscribe((characters) => {
+      this.charactersOptions = characters;
+      this.correctCharacter =
+        characters[Math.floor(Math.random() * characters.length)];
+      this.loading = false;
+    });
+  }
+
+  /**
+   * Verifica si la respuesta seleccionada es correcta.
+   * @param character - El personaje seleccionado por el usuario.
+   */
+  checkAnswer(character: Character): void {
+    this.isCorrect = character.id === this.correctCharacter!.id;
+
+    if (this.isCorrect) {
+      // Esperar 3 segundos antes de cargar nuevos personajes.
+      setTimeout(() => {
+        this.loadRandomCharacters();
+      }, 1000);
+    }
+  }
+
+  /**
+   * Establece el ID del personaje seleccionado por el usuario.
+   * @param id - El ID del personaje seleccionado.
+   */
+  selectCharacter(id: number): void {
+    this.selectedCharacterId = id;
+  }
+
+  /**
+   * @returns El porcentaje de respuestas correctas.
+   */
+  getProgressPercentage(): number {
+    return (this.correctAnswersCount / this.displayedQuestions.length) * 100;
+  }
+
+  /**
+   * Obtiene un conjunto aleatorio de preguntas de la lista completa de preguntas de trivia.
+   */
+  getRandomQuestions(): void {
+    const shuffledQuestions = this.triviaQuestions.sort(
+      () => 0.5 - Math.random()
+    );
+    this.displayedQuestions = shuffledQuestions.slice(0, 5);
+  }
+
+  /**
    * Verifica todas las respuestas seleccionadas y muestra una barra de progreso con la cantidad de respuestas correctas.
    */
   checkAllAnswers(): void {
@@ -306,63 +363,6 @@ export class MinigamesComponent {
         this.feedbackMessage = '¡Enhorabuena has acertado todas las preguntas!';
       }
     }
-  }
-
-  /**
-   * Obtiene un conjunto aleatorio de preguntas de la lista completa de preguntas de trivia.
-   */
-  getRandomQuestions(): void {
-    const shuffledQuestions = this.triviaQuestions.sort(
-      () => 0.5 - Math.random()
-    );
-    this.displayedQuestions = shuffledQuestions.slice(0, 5);
-  }
-
-  /**
-   * @returns El porcentaje de respuestas correctas.
-   */
-  getProgressPercentage(): number {
-    return (this.correctAnswersCount / this.displayedQuestions.length) * 100;
-  }
-
-  /**
-   * Carga personajes aleatorios para el juego.
-   */
-  loadRandomCharacters(): void {
-    // Resetear el estado del mensaje y el personaje seleccionado.
-    this.isCorrect = null;
-    this.selectedCharacterId = null;
-
-    this.loading = true;
-    this.charactersService.getRandomCharacters(3).subscribe((characters) => {
-      this.charactersOptions = characters;
-      this.correctCharacter =
-        characters[Math.floor(Math.random() * characters.length)];
-      this.loading = false;
-    });
-  }
-
-  /**
-   * Verifica si la respuesta seleccionada es correcta.
-   * @param character - El personaje seleccionado por el usuario.
-   */
-  checkAnswer(character: Character): void {
-    this.isCorrect = character.id === this.correctCharacter!.id;
-
-    if (this.isCorrect) {
-      // Esperar 3 segundos antes de cargar nuevos personajes.
-      setTimeout(() => {
-        this.loadRandomCharacters();
-      }, 1000);
-    }
-  }
-
-  /**
-   * Establece el ID del personaje seleccionado por el usuario.
-   * @param id - El ID del personaje seleccionado.
-   */
-  selectCharacter(id: number): void {
-    this.selectedCharacterId = id;
   }
 
   /**

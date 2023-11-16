@@ -140,6 +140,101 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Marca un episodio como visto.
+   *
+   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como visto.
+   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `true` si la llamada es exitosa.
+   * Muestra mensajes de éxito o error utilizando SweetAlert.
+   *
+   * @param {number} episodeId - ID del episodio a marcar como visto.
+   */
+  markEpisodeAsViewed(episodeId: number): void {
+    if (!this.userService.isLoggedIn()) {
+      Swal.fire({
+        title: 'Autenticación requerida',
+        text: 'Debes iniciar sesión para marcar un episodio como visto.',
+        icon: 'warning',
+        iconColor: '#FFD83D',
+        confirmButtonColor: '#00BCD4',
+      });
+      return;
+    }
+
+    this.episodesService.markEpisodeAsViewed(episodeId).subscribe({
+      next: () => {
+        this.episodeViewStatus[episodeId] = true;
+        Swal.fire({
+          title: '¡Visto!',
+          text: '¡Has marcado el episodio como visto!',
+          icon: 'success',
+          confirmButtonColor: '#00BCD4',
+          iconColor: '#A8FF44',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al marcar el episodio como visto. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Desmarca un episodio como visto.
+   *
+   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como no visto.
+   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `false` si la llamada es exitosa.
+   * Muestra mensajes de éxito o error utilizando SweetAlert.
+   *
+   * @param {number} episodeId - ID del episodio a desmarcar como visto.
+   */
+  unmarkEpisodeAsViewed(episodeId: number): void {
+    this.episodesService.unmarkEpisodeAsViewed(episodeId).subscribe({
+      next: () => {
+        this.episodeViewStatus[episodeId] = false;
+        Swal.fire({
+          title: 'No visto',
+          text: 'Has marcado el episodio como no visto.',
+          icon: 'info',
+          iconColor: '#FFD83D',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al marcar el episodio como no visto. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Inicializa el estado de visualización de los episodios.
+   *
+   * Realiza una llamada al servicio `episodesService` para obtener los IDs de los episodios que han sido vistos.
+   * Actualiza el estado de visualización de estos episodios en `episodeViewStatus` a `true`.
+   * Gestiona las respuestas de éxito y error de la solicitud.
+   */
+  initializeEpisodeViewStatus(): void {
+    this.episodesService.getWatchedEpisodes().subscribe({
+      next: (watchedEpisodeIds) => {
+        watchedEpisodeIds.forEach((id) => {
+          this.episodeViewStatus[id] = true;
+        });
+      },
+      error: () => {},
+    });
+  }
+
+  /**
    * Devuelve una cadena formateada para representar el código del episodio en el formato deseado.
    *
    * @param episodeCode El código del episodio en el formato SxxExx.
@@ -622,101 +717,6 @@ export class EpisodesComponent implements OnInit, OnDestroy {
         });
         console.error('Error al eliminar la valoración:', error);
       },
-    });
-  }
-
-  /**
-   * Marca un episodio como visto.
-   *
-   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como visto.
-   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `true` si la llamada es exitosa.
-   * Muestra mensajes de éxito o error utilizando SweetAlert.
-   *
-   * @param {number} episodeId - ID del episodio a marcar como visto.
-   */
-  markEpisodeAsViewed(episodeId: number): void {
-    if (!this.userService.isLoggedIn()) {
-      Swal.fire({
-        title: 'Autenticación requerida',
-        text: 'Debes iniciar sesión para marcar un episodio como visto.',
-        icon: 'warning',
-        iconColor: '#FFD83D',
-        confirmButtonColor: '#00BCD4',
-      });
-      return;
-    }
-
-    this.episodesService.markEpisodeAsViewed(episodeId).subscribe({
-      next: () => {
-        this.episodeViewStatus[episodeId] = true;
-        Swal.fire({
-          title: '¡Visto!',
-          text: '¡Has marcado el episodio como visto!',
-          icon: 'success',
-          confirmButtonColor: '#00BCD4',
-          iconColor: '#A8FF44',
-        });
-      },
-      error: () => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'Error al marcar el episodio como visto. Por favor, inténtelo de nuevo más tarde.',
-          icon: 'error',
-          iconColor: '#FF4565',
-          confirmButtonColor: '#00BCD4',
-        });
-      },
-    });
-  }
-
-  /**
-   * Desmarca un episodio como visto.
-   *
-   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como no visto.
-   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `false` si la llamada es exitosa.
-   * Muestra mensajes de éxito o error utilizando SweetAlert.
-   *
-   * @param {number} episodeId - ID del episodio a desmarcar como visto.
-   */
-  unmarkEpisodeAsViewed(episodeId: number): void {
-    this.episodesService.unmarkEpisodeAsViewed(episodeId).subscribe({
-      next: () => {
-        this.episodeViewStatus[episodeId] = false;
-        Swal.fire({
-          title: 'No visto',
-          text: 'Has marcado el episodio como no visto.',
-          icon: 'info',
-          iconColor: '#FFD83D',
-          confirmButtonColor: '#00BCD4',
-        });
-      },
-      error: () => {
-        Swal.fire({
-          title: '¡Error!',
-          text: 'Error al marcar el episodio como no visto. Por favor, inténtelo de nuevo más tarde.',
-          icon: 'error',
-          iconColor: '#FF4565',
-          confirmButtonColor: '#00BCD4',
-        });
-      },
-    });
-  }
-
-  /**
-   * Inicializa el estado de visualización de los episodios.
-   *
-   * Realiza una llamada al servicio `episodesService` para obtener los IDs de los episodios que han sido vistos.
-   * Actualiza el estado de visualización de estos episodios en `episodeViewStatus` a `true`.
-   * Gestiona las respuestas de éxito y error de la solicitud.
-   */
-  initializeEpisodeViewStatus(): void {
-    this.episodesService.getWatchedEpisodes().subscribe({
-      next: (watchedEpisodeIds) => {
-        watchedEpisodeIds.forEach((id) => {
-          this.episodeViewStatus[id] = true;
-        });
-      },
-      error: () => {},
     });
   }
 

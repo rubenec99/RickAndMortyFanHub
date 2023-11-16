@@ -97,6 +97,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
       });
   }
 
+  onFilterChange(): void {
+    this.currentPage = 1;
+    this.loadAllLocations();
+  }
+
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadAllLocations();
+  }
+
   /**
    * Abre una ventana modal con los detalles de la ubicación seleccionada.
    * Carga los residentes de la ubicación utilizando el servicio 'characterService'.
@@ -154,16 +164,6 @@ export class LocationsComponent implements OnInit, OnDestroy {
       return this.translationService.translate(key, type);
     }
     return 'Desconocido';
-  }
-
-  onFilterChange(): void {
-    this.currentPage = 1;
-    this.loadAllLocations();
-  }
-
-  onSearch(): void {
-    this.currentPage = 1;
-    this.loadAllLocations();
   }
 
   /**
