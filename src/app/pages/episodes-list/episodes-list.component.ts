@@ -43,17 +43,8 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   userRating: number | null = null;
   averageRating: number = 0;
 
-  // Array de imágenes
-  imageArray: string[] = [
-    '../../../assets/img/episodes-img/epbg1.jpeg',
-    '../../../assets/img/episodes-img/epbg2.jpeg',
-    '../../../assets/img/episodes-img/epbg3.jpeg',
-    '../../../assets/img/episodes-img/epbg4.jpeg',
-    '../../../assets/img/episodes-img/epbg5.jpeg',
-    '../../../assets/img/episodes-img/epbg6.jpeg',
-    '../../../assets/img/episodes-img/epbg7.jpeg',
-    '../../../assets/img/episodes-img/epbg8.jpeg',
-  ];
+  episodeViewStatus: { [episodeId: number]: boolean } = {};
+  viewStatusFilter: string = '';
 
   constructor(
     private episodesService: EpisodesService,
@@ -67,6 +58,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadAllEpisodes();
     this.setCurrentUserId();
+    this.initializeEpisodeViewStatus();
   }
 
   ngOnDestroy(): void {
@@ -589,6 +581,13 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina la calificación de un episodio seleccionado.
+   *
+   * Verifica primero si hay un episodio seleccionado. Si no hay ninguno, muestra un mensaje de error en la consola y termina la ejecución del método.
+   * Si hay un episodio seleccionado, realiza una llamada al servicio `ratingService` para eliminar la calificación de dicho episodio.
+   * Gestiona las respuestas de éxito y error de la solicitud.
+   */
   deleteRating(): void {
     // Verificar si hay un episodio seleccionado antes de intentar eliminar la valoración.
     if (!this.selectedEpisode) {
@@ -627,10 +626,136 @@ export class EpisodesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene una imagen random del array para usarla como bg en una carta
+   * Marca un episodio como visto.
+   *
+   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como visto.
+   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `true` si la llamada es exitosa.
+   * Muestra mensajes de éxito o error utilizando SweetAlert.
+   *
+   * @param {number} episodeId - ID del episodio a marcar como visto.
    */
-  getRandomImage() {
-    return this.imageArray[Math.floor(Math.random() * this.imageArray.length)];
+  markEpisodeAsViewed(episodeId: number): void {
+    if (!this.userService.isLoggedIn()) {
+      Swal.fire({
+        title: 'Autenticación requerida',
+        text: 'Debes iniciar sesión para marcar un episodio como visto.',
+        icon: 'warning',
+        iconColor: '#FFD83D',
+        confirmButtonColor: '#00BCD4',
+      });
+      return;
+    }
+
+    this.episodesService.markEpisodeAsViewed(episodeId).subscribe({
+      next: () => {
+        this.episodeViewStatus[episodeId] = true;
+        Swal.fire({
+          title: '¡Visto!',
+          text: '¡Has marcado el episodio como visto!',
+          icon: 'success',
+          confirmButtonColor: '#00BCD4',
+          iconColor: '#A8FF44',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al marcar el episodio como visto. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Desmarca un episodio como visto.
+   *
+   * Realiza una llamada al servicio `episodesService` para marcar un episodio específico como no visto.
+   * Actualiza el estado de visualización del episodio en `episodeViewStatus` a `false` si la llamada es exitosa.
+   * Muestra mensajes de éxito o error utilizando SweetAlert.
+   *
+   * @param {number} episodeId - ID del episodio a desmarcar como visto.
+   */
+  unmarkEpisodeAsViewed(episodeId: number): void {
+    this.episodesService.unmarkEpisodeAsViewed(episodeId).subscribe({
+      next: () => {
+        this.episodeViewStatus[episodeId] = false;
+        Swal.fire({
+          title: 'No visto',
+          text: 'Has marcado el episodio como no visto.',
+          icon: 'info',
+          iconColor: '#FFD83D',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al desmarcar el episodio como visto. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      },
+    });
+  }
+
+  /**
+   * Inicializa el estado de visualización de los episodios.
+   *
+   * Realiza una llamada al servicio `episodesService` para obtener los IDs de los episodios que han sido vistos.
+   * Actualiza el estado de visualización de estos episodios en `episodeViewStatus` a `true`.
+   * Gestiona las respuestas de éxito y error de la solicitud.
+   */
+  initializeEpisodeViewStatus(): void {
+    this.episodesService.getWatchedEpisodes().subscribe({
+      next: (watchedEpisodeIds) => {
+        watchedEpisodeIds.forEach((id) => {
+          this.episodeViewStatus[id] = true;
+        });
+      },
+      error: () => {},
+    });
+  }
+
+  /**
+   * Muestra solo los episodios que han sido marcados como vistos.
+   */
+  filterViewedEpisodes(): void {
+    this.episodes = this.allEpisodes.filter(
+      (episode) => this.episodeViewStatus[episode.id]
+    );
+  }
+
+  /**
+   * Muestra solo los episodios que no han sido marcados como vistos.
+   */
+  filterNotViewedEpisodes(): void {
+    this.episodes = this.allEpisodes.filter(
+      (episode) => !this.episodeViewStatus[episode.id]
+    );
+  }
+
+  /**
+   * Restablece el filtro para mostrar todos los episodios.
+   */
+  resetFilter(): void {
+    this.episodes = [...this.allEpisodes];
+  }
+
+  /**
+   * Aplica el filtro de visualización basado en `viewStatusFilter`.
+   */
+  applyViewStatusFilter(): void {
+    if (this.viewStatusFilter === 'viewed') {
+      this.filterViewedEpisodes();
+    } else if (this.viewStatusFilter === 'notViewed') {
+      this.filterNotViewedEpisodes();
+    } else {
+      this.resetFilter();
+    }
   }
 
   /**

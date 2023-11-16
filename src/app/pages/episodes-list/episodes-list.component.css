@@ -309,7 +309,6 @@
 /* -------------------- CARDS -------------------- */
 
 .card {
-  min-height: 90%;
   border-radius: 10px;
   overflow: hidden;
   border: none;
@@ -317,13 +316,12 @@
   background-image: url(../../../assets/img/episodes-img/ep.png);
   background-size: cover;
   background-position: center;
-  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
   transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Asegura que el contenido y los botones se separen */
+  height: 90%; /* Asegura que todas las tarjetas tengan la misma altura */
 }
 
 .card-content {
@@ -337,7 +335,6 @@
 }
 
 .card-body {
-  padding: 15px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -447,7 +444,7 @@ p.text {
   box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
   transition: all 250ms;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
 }
 
 .btn-add-comment::before {
@@ -606,7 +603,79 @@ p.text {
   justify-content: space-between;
 }
 
+/* -------------------- BOTÓN VISTO/NO VISTO -------------------- */
+
+.btn-episode-status-yes {
+  margin-left: 10px;
+  background-color: #c2fbd7;
+  border-radius: 100px;
+  box-shadow: rgba(44, 187, 99, 0.2) 0 -25px 18px -14px inset,
+    rgba(44, 187, 99, 0.15) 0 1px 2px, rgba(44, 187, 99, 0.15) 0 2px 4px,
+    rgba(44, 187, 99, 0.15) 0 4px 8px, rgba(44, 187, 99, 0.15) 0 8px 16px,
+    rgba(44, 187, 99, 0.15) 0 16px 32px;
+  color: green;
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-episode-status-yes:hover {
+  box-shadow: rgba(44, 187, 99, 0.35) 0 -25px 18px -14px inset,
+    rgba(44, 187, 99, 0.25) 0 1px 2px, rgba(44, 187, 99, 0.25) 0 2px 4px,
+    rgba(44, 187, 99, 0.25) 0 4px 8px, rgba(44, 187, 99, 0.25) 0 8px 16px,
+    rgba(44, 187, 99, 0.25) 0 16px 32px;
+  transform: scale(1.05) rotate(-1deg);
+}
+
+.btn-episode-status-no {
+  margin-left: 10px;
+  background-color: #e0e0e0; /* Fondo gris claro */
+  border-radius: 100px;
+  box-shadow: rgba(128, 128, 128, 0.2) 0 -25px 18px -14px inset,
+    rgba(128, 128, 128, 0.15) 0 1px 2px, rgba(128, 128, 128, 0.15) 0 2px 4px,
+    rgba(128, 128, 128, 0.15) 0 4px 8px, rgba(128, 128, 128, 0.15) 0 8px 16px,
+    rgba(128, 128, 128, 0.15) 0 16px 32px; /* Sombra en tonos grises */
+  color: #606060; /* Texto en gris oscuro */
+  cursor: pointer;
+  display: inline-block;
+  font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+  padding: 7px 20px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 250ms;
+  border: 0;
+  font-size: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn-episode-status-no:hover {
+  box-shadow: rgba(128, 128, 128, 0.35) 0 -25px 18px -14px inset,
+    rgba(128, 128, 128, 0.25) 0 1px 2px, rgba(128, 128, 128, 0.25) 0 2px 4px,
+    rgba(128, 128, 128, 0.25) 0 4px 8px, rgba(128, 128, 128, 0.25) 0 8px 16px,
+    rgba(128, 128, 128, 0.25) 0 16px 32px; /* Sombra más intensa en hover */
+  transform: scale(1.05) rotate(-1deg);
+}
+
+div.card-action-buttons {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 2vh;
+}
+
 /* -------------------- RESPONSIVE -------------------- */
+
 @media (max-width: 768px) {
   .modal-wide {
     width: 100%;

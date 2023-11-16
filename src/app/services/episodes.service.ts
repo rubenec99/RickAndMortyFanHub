@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { EpisodeResponse, Episode } from '../models/episode.model';
 
@@ -41,5 +41,61 @@ export class EpisodesService {
       .pipe(
         map((response) => (Array.isArray(response) ? response : [response]))
       );
+  }
+
+  /**
+   * Marca un episodio como visto, incluyendo el token de autenticación en la cabecera.
+   *
+   * @param episodeId ID del episodio a marcar como visto.
+   * @returns Observable de la respuesta de la API.
+   */
+  markEpisodeAsViewed(episodeId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.post(
+      `${this.serverUrl}/episodes/${episodeId}/view`,
+      {},
+      { headers }
+    );
+  }
+
+  /**
+   * Marca un episodio como no visto, incluyendo el token de autenticación en la cabecera.
+   *
+   * @param episodeId ID del episodio a marcar como no visto.
+   * @returns Observable de la respuesta de la API.
+   */
+  unmarkEpisodeAsViewed(episodeId: number): Observable<any> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.delete(`${this.serverUrl}/episodes/${episodeId}/view`, {
+      headers,
+    });
+  }
+
+  /**
+   * Obtiene una lista de los IDs de los episodios que el usuario ha marcado como vistos.
+   *
+   * Este método realiza una solicitud GET al servidor para obtener los episodios vistos.
+   * Utiliza el token de autenticación almacenado en localStorage para autorizar la solicitud.
+   * El token se incluye en las cabeceras de la solicitud HTTP.
+   *
+   * @returns {Observable<number[]>} Un Observable que, al suscribirse, devuelve un array de números (IDs de los episodios vistos).
+   */
+  getWatchedEpisodes(): Observable<number[]> {
+    const retrievedToken = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${retrievedToken}`
+    );
+    return this.http.get<number[]>(`${this.serverUrl}/watchedEpisodes`, {
+      headers,
+    });
   }
 }

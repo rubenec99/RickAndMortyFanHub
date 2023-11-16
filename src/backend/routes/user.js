@@ -661,4 +661,66 @@ router.delete("/episodes/:episodeId/ratings", verifyToken, (req, res) => {
   );
 });
 
+/**
+ *
+ ** MARCAR EPISODIOS COMO VISTOS/NO VISTOS
+ *
+ */
+
+// Endpoint para marcar un episodio como visto
+router.post("/episodes/:episodeId/view", verifyToken, (req, res) => {
+  const { episodeId } = req.params;
+  const userId = req.userId; // Asumiendo que `req.userId` se obtiene del token
+
+  const query = `INSERT INTO episode_views (user_id, episode_id, viewed) VALUES (?, ?, true)
+                 ON DUPLICATE KEY UPDATE viewed = true`;
+
+  db.query(query, [userId, episodeId], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al marcar el episodio como visto" });
+    }
+    res.status(200).send({ success: "Episodio marcado como visto con éxito" });
+  });
+});
+
+// Endpoint para marcar un episodio como no visto
+router.delete("/episodes/:episodeId/view", verifyToken, (req, res) => {
+  const { episodeId } = req.params;
+  const userId = req.userId; // Asumiendo que `req.userId` se obtiene del token
+
+  const query = `UPDATE episode_views SET viewed = false WHERE user_id = ? AND episode_id = ?`;
+
+  db.query(query, [userId, episodeId], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al marcar el episodio como no visto" });
+    }
+    res
+      .status(200)
+      .send({ success: "Episodio marcado como no visto con éxito" });
+  });
+});
+
+// Endpoint para obtener los episodios vistos por un usuario
+router.get("/watchedEpisodes", verifyToken, (req, res) => {
+  const userId = req.userId;
+
+  const query =
+    "SELECT episode_id FROM episode_views WHERE user_id = ? AND viewed = true";
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .send({ error: "Error al recuperar los episodios vistos" });
+    }
+
+    const watchedEpisodeIds = results.map((row) => row.episode_id);
+    res.status(200).send(watchedEpisodeIds);
+  });
+});
+
 module.exports = router;
