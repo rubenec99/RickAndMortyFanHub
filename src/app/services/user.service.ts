@@ -4,7 +4,7 @@ import { HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { ValidationErrors } from '@angular/forms';
 
-import { User } from 'src/backend/models/user.model';
+import { User } from '../models/user.model';
 import {
   RegistrationData,
   RegistrationResponse,
