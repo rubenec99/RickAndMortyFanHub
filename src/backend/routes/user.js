@@ -29,9 +29,19 @@ function capitalize(str) {
 
 // Endpoint para registrar un nuevo usuario.
 router.post("/register", (req, res) => {
+  console.log("Solicitud de registro recibida"); // Log cuando se recibe una solicitud
+
   // Desestructura el cuerpo del request para obtener la información del usuario.
   const { email, username, password, birth_date } = req.body;
   let { first_name, last_name } = req.body;
+
+  console.log("Datos del usuario:", {
+    email,
+    username,
+    birth_date,
+    first_name,
+    last_name,
+  }); // Log de los datos recibidos
 
   // Capitaliza el nombre y los apellidos.
   first_name = capitalize(first_name);
@@ -42,6 +52,7 @@ router.post("/register", (req, res) => {
   const today = new Date();
 
   if (selectedDate > today) {
+    console.log("Fecha de nacimiento en el futuro:", birth_date); // Log si la fecha de nacimiento es futura
     return res
       .status(400)
       .send({ error: "La fecha de nacimiento no puede ser futura." });
@@ -50,6 +61,7 @@ router.post("/register", (req, res) => {
   // Hashing de la contraseña del usuario.
   bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
     if (err) {
+      console.error("Error al hashear la contraseña:", err); // Log si hay un error al hashear
       return res.status(500).send({ error: "Error al hashear la contraseña" });
     }
 
@@ -61,10 +73,12 @@ router.post("/register", (req, res) => {
       [first_name, last_name, email, username, hashedPassword, birth_date],
       (err, result) => {
         if (err) {
+          console.error("Error al registrar el usuario:", err); // Log si hay un error al registrar el usuario
           return res
             .status(500)
             .send({ error: "Error al registrar el usuario" });
         }
+        console.log("Usuario registrado exitosamente:", result); // Log cuando el usuario se registra exitosamente
         res.status(200).send({ success: "Usuario registrado exitosamente" });
       }
     );

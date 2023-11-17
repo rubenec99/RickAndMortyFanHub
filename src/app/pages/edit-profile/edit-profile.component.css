@@ -115,6 +115,13 @@
   }
 }
 
+/* -------------------- ESTILOS PARA INPUTS DESHABILITADOS -------------------- */
+.form .input:disabled {
+  background: #f0f0f0; /* Un fondo más claro para indicar que el campo está deshabilitado */
+  color: #a8a8a8; /* Color de texto gris claro para una mejor legibilidad */
+  cursor: not-allowed; /* Cambia el cursor para indicar que el input está deshabilitado */
+}
+
 /* -------------------- RESPONSIVE -------------------- */
 @media (max-width: 768px) {
   .container {

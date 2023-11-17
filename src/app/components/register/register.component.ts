@@ -84,7 +84,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         ],
 
         confirmPassword: ['', Validators.required],
-        terms: [false, Validators.requiredTrue],
+        termsCheckbox: [false, Validators.requiredTrue],
       },
       {
         validator: this.passwordsMatchValidator,
@@ -289,10 +289,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
               });
             }
           },
-          error: () => {
+          error: (err) => {
             Swal.fire({
               title: '¡Error!',
-              text: 'Ocurrió un error inesperado. Por faovr, inténtelo de nuevo más tarde.',
+              text: 'Ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.',
               icon: 'error',
               iconColor: '#FF4565',
               confirmButtonColor: '#00BCD4',
@@ -301,9 +301,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
         });
     } else {
       Swal.fire({
-        title: 'Advertencia',
-        text: 'Por favor, verifique todos los campos del formulario.',
+        title: 'Atención',
+        text: 'Revisa todos los campos del formulario.',
         icon: 'warning',
+        confirmButtonText: 'OK',
+        background: '#FFFFFF',
         confirmButtonColor: '#00BCD4',
         iconColor: '#FFD83D',
       });

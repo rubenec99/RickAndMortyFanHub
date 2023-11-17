@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c> 
+  RewriteEngine  activado
+  
+  # Redirección de solicitudes a index.html 
+  RewriteCond  %{DOCUMENT_ROOT} %{REQUEST_URI} -f [OR] 
+  RewriteCond  %{DOCUMENT_ROOT} %{REQUEST_URI} -d
+   RewriteRule ^.*$ - [NC,L] 
+  # Redirigir todo lo que no sea archivo rutas a index.html 
+  RewriteRule ^(?!.*\.).*$ index.html [NC,L] 
+</IfModule>

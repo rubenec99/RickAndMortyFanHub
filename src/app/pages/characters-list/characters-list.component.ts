@@ -88,8 +88,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
         this.currentPage,
         this.selectedGender,
         this.selectedStatus,
-        this.selectedSpecies,
-        this.searchTerm.trim()
+        this.selectedSpecies
       )
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
@@ -129,7 +128,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
    */
   searchCharacters(): void {
     if (!this.searchTerm.trim()) {
-      // Si el término de búsqueda está vacío, recargamos todos los personajes
       this.loadCharacters();
       return;
     }
@@ -137,20 +135,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
     // Realiza una búsqueda de personajes por nombre utilizando el término de búsqueda
     this.charactersService
       .searchCharactersByName(this.searchTerm)
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        catchError(() => {
-          Swal.fire({
-            title: '¡Error!',
-            text: 'No hay personajes con el nombre introducido.',
-            icon: 'error',
-            iconColor: '#FF4565',
-            confirmButtonColor: '#00BCD4',
-          });
-          this.loadCharacters();
-          return EMPTY;
-        })
-      )
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (response) => {
           this.characters = response.results;
@@ -164,7 +149,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
             iconColor: '#FF4565',
             confirmButtonColor: '#00BCD4',
           });
-          this.loadCharacters();
         },
       });
   }
