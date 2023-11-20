@@ -46,6 +46,15 @@
   border-inline: 2px solid #00bcd4;
 }
 
+/* -------------------- LABELS -------------------- */
+.form label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  color: #00bcd4;
+  font-weight: 600;
+}
+
 /* -------------------- BOTONES -------------------- */
 .form .login-button,
 .delete-profile-button,
