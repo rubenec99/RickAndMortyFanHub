@@ -42,18 +42,28 @@
   </div>
 
   <div class="mb-4" *ngIf="showProgressBar">
-    <div class="progress">
-      <div
-        class="progress-bar"
-        role="progressbar"
-        [style.width]="getProgressPercentage() + '%'"
-        [attr.aria-valuenow]="getProgressPercentage()"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      >
-        {{ correctAnswersCount }}/{{ displayedQuestions.length }}
+    <!-- Estructura condicional para mostrar el mensaje o el contador -->
+    <ng-container *ngIf="correctAnswersCount === 0; else progressContent">
+      <h4 class="no-correct-error">
+        ¡No has acertado ninguna pregunta! Vuelve a intentarlo
+      </h4>
+    </ng-container>
+
+    <!-- Contenido a mostrar cuando hay respuestas correctas -->
+    <ng-template #progressContent>
+      <div class="progress">
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [style.width]="getProgressPercentage() + '%'"
+          [attr.aria-valuenow]="getProgressPercentage()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{ correctAnswersCount }}/{{ displayedQuestions.length }}
+        </div>
       </div>
-    </div>
+    </ng-template>
   </div>
 
   <!-- Primera fila con 3 preguntas -->

@@ -6,6 +6,21 @@ h3.text-center {
   font-weight: 600;
 }
 
+.no-correct-error {
+  text-align: center;
+  font-size: 1.6em;
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #d53958;
+  text-shadow: rgba(255, 71, 102, 0.5);
+  font-weight: 600; /* Peso medio para destacar el error */
+  transform: translateY(
+    0.5rem
+  ); /* Pequeño desplazamiento inicial hacia abajo */
+  transition: opacity 0.4s ease, transform 0.4s ease; /* Transición suave para el efecto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
 .progress {
   height: 25px;
   border-radius: 1rem;
