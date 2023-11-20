@@ -332,6 +332,7 @@ export class EpisodesComponent implements OnInit, OnDestroy {
     // Establece el episodio seleccionado y realiza las inicializaciones necesarias
     this.selectedEpisode = episode;
     this.episodeId = episode.id;
+    this.initializeRating();
 
     // Carga los comentarios para el episodio seleccionado
     if (this.episodeId) {
