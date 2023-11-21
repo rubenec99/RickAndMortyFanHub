@@ -31,21 +31,13 @@ export class CharactersService {
     gender?: string,
     status?: string,
     species?: string,
-    searchTerm: string = ''
+    searchTerm?: string
   ): Observable<CharactersResponse> {
     let url = `${this.baseUrl}?page=${page}`;
-    if (gender) {
-      url += `&gender=${gender}`;
-    }
-    if (status) {
-      url += `&status=${status}`;
-    }
-    if (species) {
-      url += `&species=${species}`;
-    }
-    if (searchTerm) {
-      url += `&name=${encodeURIComponent(searchTerm)}`;
-    }
+    if (gender) url += `&gender=${gender}`;
+    if (status) url += `&status=${status}`;
+    if (species) url += `&species=${species}`;
+    if (searchTerm) url += `&name=${encodeURIComponent(searchTerm)}`;
     return this.http.get<CharactersResponse>(url);
   }
 

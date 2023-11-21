@@ -88,7 +88,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
         this.currentPage,
         this.selectedGender,
         this.selectedStatus,
-        this.selectedSpecies
+        this.selectedSpecies,
+        this.searchTerm.trim()
       )
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
