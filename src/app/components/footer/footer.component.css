@@ -1,28 +1,26 @@
-footer {
+.footer {
   background-color: #1f1f2e;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* Sombra para dar sensación de elevación */
   color: #ffffff;
   border-top: 3px solid #00bcd4;
-  position: relative;
-  left: 0;
-  right: 0;
+  position: absolute;
   bottom: 0;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* Sombra para dar sensación de elevación */
-  margin-top: 65px;
+  width: 100%;
 }
 
-footer a {
+.footer a {
   color: #00bcd4;
   text-decoration: none;
   transition: color 0.3s, padding 0.3s;
 }
 
-footer a:hover {
+.footer a:hover {
   color: #029dbb; /* Un tono ligeramente más oscuro para el hover */
   text-decoration: none;
   padding-left: 0.5rem; /* Un pequeño empujón a la izquierda en hover */
 }
 
-footer h6 {
+.footer h6 {
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -30,11 +28,11 @@ footer h6 {
   letter-spacing: 0.05rem; /* Espaciado entre letras para mejor legibilidad */
 }
 
-footer .row {
+.footer .row {
   padding-top: 1.5rem;
 }
 
-footer hr {
+.footer hr {
   border-color: rgba(
     255,
     255,
@@ -43,16 +41,16 @@ footer hr {
   ); /* Borde más sutil para la línea horizontal */
 }
 
-footer .fab {
+.footer .fab {
   font-size: 1.5rem; /* Iconos más grandes para una mejor visibilidad */
   transition: transform 0.3s; /* Suave transformación al pasar el cursor */
 }
 
-footer .fab:hover {
+.footer .fab:hover {
   transform: scale(1.15); /* Aumento ligeramente más pronunciado */
 }
 
-footer .text-center .p-3 {
+.footer .text-center .p-3 {
   background-color: rgba(
     0,
     0,
@@ -62,30 +60,30 @@ footer .text-center .p-3 {
   padding: 1rem 0;
 }
 
-footer .text-center .p-3 a {
+.footer .text-center .p-3 a {
   color: #00bcd4;
 }
 
-footer .btn-outline-light {
+.footer .btn-outline-light {
   transition: all 0.3s;
 }
 
-footer .btn-outline-light:hover {
+.footer .btn-outline-light:hover {
   background-color: #00bcd4;
   color: #1f1f2e;
 }
 
 @media (max-width: 768px) {
-  footer .text-center {
+  .footer .text-center {
     text-align: center;
   }
-  footer .row {
+  .footer .row {
     justify-content: center;
   }
-  footer .fab {
+  .footer .fab {
     font-size: 1.2rem; /* Ajuste para dispositivos móviles */
   }
-  footer .btn-outline-light {
+  .footer .btn-outline-light {
     padding: 0.375rem 0.75rem; /* Botones más pequeños en dispositivos móviles */
   }
 }
