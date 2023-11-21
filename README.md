@@ -1,8 +1,6 @@
-# RickAndMortyFanHub
+# 🌌 RickAndMortyFanHub
 
-Aplicación web desarrollada con Angular, Node.js, Express.js y MySQL que ofrece una plataforma para que los usuarios puedan interactuar con la API de Rick and Morty. 
-Los usuarios pueden explorar información sobre personajes, episodios y más de la serie de televisión "Rick and Morty". También pueden realizar valoraciones, 
-dejar comentarios y marcar episodios como vistos.
+Aplicación web desarrollada con Angular, Node.js, Express.js y MySQL que ofrece una plataforma para interactuar con la API de Rick and Morty. Explora información sobre personajes, episodios y más.
 
 Este proyecto se ha creado con [Angular CLI](https://github.com/angular/angular-cli) version 16.2.2.
 
@@ -48,4 +46,4 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
 * Se utiliza git para el control de versiones del proyecto.
 
 ## Autor ✒️
-* Rubén Escudero - rubenec99
+* Rubén Escudero - [rubenec99](https://github.com/rubenec99)
