@@ -18,7 +18,7 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://rick-and-morty-fan-hub-back.vercel.app/user';
+  private apiUrl = 'https://rick-and-morty-fan-hub-api.vercel.app/user';
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
@@ -202,7 +202,7 @@ export class UserService {
    */
   changeUserType(userId: number, newUserType: string): Observable<any> {
     const url =
-      'https://rick-and-morty-fan-hub-back.vercel.app/user/update-type';
+      'https://rick-and-morty-fan-hub-api.vercel.app/user/update-type';
 
     const body = {
       userId: userId,
@@ -269,7 +269,7 @@ export class UserService {
    * @returns {Observable<User>} Observable que representa la respuesta de la solicitud, que incluye los datos del usuario.
    */
   getUserById(userId: number): Observable<User> {
-    const url = `https://rick-and-morty-fan-hub-back.vercel.app/user/${userId}`;
+    const url = `https://rick-and-morty-fan-hub-api.vercel.app/user/${userId}`;
 
     return this.http.get<User>(url);
   }

@@ -10,7 +10,7 @@ import { Observable, map, of } from 'rxjs';
 })
 export class EpisodesService {
   private apiUrl = 'https://rickandmortyapi.com/api/episode';
-  private serverUrl = 'https://rick-and-morty-fan-hub-back.vercel.app/user';
+  private serverUrl = 'https://rick-and-morty-fan-hub-api.vercel.app/user';
 
   constructor(private http: HttpClient) {}
   /**

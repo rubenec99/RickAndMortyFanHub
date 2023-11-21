@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CommentService {
-  private apiUrl = 'https://rick-and-morty-fan-hub-back.vercel.app/user';
+  private apiUrl = 'https://rick-and-morty-fan-hub-api.vercel.app/user';
 
   constructor(private http: HttpClient) {}
 

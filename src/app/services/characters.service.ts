@@ -11,7 +11,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class CharactersService {
   private baseUrl = 'https://rickandmortyapi.com/api/character';
-  private serverUrl = 'https://rick-and-morty-fan-hub-back.vercel.app/user';
+  private serverUrl = 'https://rick-and-morty-fan-hub-api.vercel.app/user';
 
   constructor(private http: HttpClient) {}
 
