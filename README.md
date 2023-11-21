@@ -46,4 +46,4 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
 * Se utiliza git para el control de versiones del proyecto.
 
 ## Autor ✒️
-* Rubén Escudero - rubenec99
+* Rubén Escudero - [rubenec99](https://github.com/rubenec99)
