@@ -28,28 +28,28 @@ export class LocationsComponent implements OnInit, OnDestroy {
   residentsOfLocation: Character[] = []; // Array que almacena a los residentes de la ubicación seleccionada
 
   locationTypes: string[] = [
-    'Planet',
     'Cluster',
-    'Space station',
-    'Microverse',
-    'TV',
-    'Resort',
-    'Fantasy town',
     'Dream',
+    'Fantasy town',
+    'Microverse',
+    'Planet',
+    'Resort',
+    'Space station',
+    'TV',
+    'unknown',
   ];
   dimensions: string[] = [
+    'Cronenberg Dimension',
+    'Dimension 5-126',
     'Dimension C-137',
-    'unknown',
+    'Fantasy Dimension',
     'Post-Apocalyptic Dimension',
     'Replacement Dimension',
-    'Cronenberg Dimension',
-    'Fantasy Dimension',
-    'Dimension 5-126',
+    'unknown',
   ];
 
   selectedType: string = '';
   selectedDimension: string = '';
-  searchTerm: string = '';
 
   constructor(
     private locationsService: LocationsService,
@@ -93,8 +93,16 @@ export class LocationsComponent implements OnInit, OnDestroy {
             iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
           });
+          this.resetFilters();
         },
       });
+  }
+
+  resetFilters(): void {
+    this.selectedType = '';
+    this.selectedDimension = '';
+    this.currentPage = 1; // Resetea la página al valor predeterminado (primera página)
+    this.loadAllLocations();
   }
 
   onFilterChange(): void {
@@ -132,9 +140,7 @@ export class LocationsComponent implements OnInit, OnDestroy {
             ? residents
             : [residents];
         },
-        error: () => {
-          // Handle error
-        },
+        error: () => {},
       });
   }
 

@@ -6,10 +6,10 @@ import { Injectable } from '@angular/core';
 export class TranslationService {
   private translations: { [category: string]: { [key: string]: string } } = {
     gender: {
-      Male: 'Hombre',
       Female: 'Mujer',
-      Unknown: 'Desconocido',
       Genderless: 'Sin género',
+      Male: 'Hombre',
+      Unknown: 'Desconocido',
     },
     status: {
       Alive: 'Vivo',
@@ -17,16 +17,16 @@ export class TranslationService {
       Unknown: 'Desconocido',
     },
     species: {
-      Human: 'Humano',
-      Alien: 'Alienígena',
-      Humanoid: 'Humanoide',
-      Unknown: 'Desconocido',
-      Poopybutthole: 'Poopybutthole', // Nombre propio o término específico, sin traducción.
       'Mythological Creature': 'Criatura mitológica',
+      Alien: 'Alienígena',
       Animal: 'Animal',
-      Robot: 'Robot',
       Cronenberg: 'Cronenberg', // Otro nombre propio o término específico.
       Disease: 'Enfermedad',
+      Human: 'Humano',
+      Humanoid: 'Humanoide',
+      Poopybutthole: 'Poopybutthole', // Nombre propio o término específico, sin traducción.
+      Robot: 'Robot',
+      Unknown: 'Desconocido',
     },
     locationName: {
       'Venzenulon 7': 'Venzenulon 7',
@@ -163,23 +163,24 @@ export class TranslationService {
       "Rick's Memories": 'Recuerdos de Rick',
     },
     locationType: {
-      Planet: 'Planeta',
-      Cluster: 'Cluster',
-      'Space station': 'Estación espacial',
-      Microverse: 'Microverso',
-      TV: 'TV',
-      Resort: 'Resort',
       'Fantasy town': 'Ciudad fantástica',
+      'Space station': 'Estación espacial',
+      Cluster: 'Cluster',
       Dream: 'Sueño',
+      Microverse: 'Microverso',
+      Planet: 'Planeta',
+      Resort: 'Resort',
+      TV: 'TV',
+      unknown: 'Desconocida',
     },
     dimension: {
+      'Cronenberg Dimension': 'Dimensión Cronenberg',
+      'Dimension 5-126': 'Dimensión 5-126',
       'Dimension C-137': 'Dimensión C-137',
-      unknown: 'Desconocida',
+      'Fantasy Dimension': 'Dimensión fantástica',
       'Post-Apocalyptic Dimension': 'Dimensión post-apocalíptica',
       'Replacement Dimension': 'Dimensión de reemplazo',
-      'Cronenberg Dimension': 'Dimensión Cronenberg',
-      'Fantasy Dimension': 'Dimensión fantástica',
-      'Dimension 5-126': 'Dimensión 5-126',
+      unknown: 'Desconocida',
     },
     name: {
       'Ricksy Business': 'Negocio Ricksy',

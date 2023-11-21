@@ -42,16 +42,16 @@ export class CharactersComponent implements OnInit, OnDestroy {
   allGenders: string[] = ['Male', 'Female', 'Unknow', 'Genderless'];
   allStatuses: string[] = ['Alive', 'Unknow', 'Dead'];
   allSpecies: string[] = [
-    'Human',
     'Alien',
-    'Humanoid',
-    'Unknow',
-    'Poopybutthole',
-    'Mythological Creature',
     'Animal',
-    'Robot',
     'Cronenberg',
     'Disease',
+    'Human',
+    'Humanoid',
+    'Mythological Creature',
+    'Poopybutthole',
+    'Robot',
+    'Unknow',
   ];
   selectedGender: string = ''; // Almacena el género seleccionado
   selectedStatus: string = ''; // Almacena el estatus seleccionado
