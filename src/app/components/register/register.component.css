@@ -56,7 +56,6 @@
   right: 10px;
   top: 4.5em;
   transform: translateY(-50%);
-  color: #a5a5b0;
 }
 
 #confirm-password-toggle {
@@ -64,7 +63,6 @@
   right: 10px;
   top: 4.5em;
   transform: translateY(-50%);
-  color: #a5a5b0;
 }
 
 #password {
@@ -111,6 +109,22 @@
   font-size: 14px;
   font-weight: 600;
   margin-top: 5px;
+  padding-left: 5px;
+  border-left: 3px solid #d53958;
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* -------------------- ENLACES -------------------- */
