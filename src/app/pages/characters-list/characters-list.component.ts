@@ -7,8 +7,8 @@ import { EpisodesService } from 'src/app/services/episodes.service';
 import { TranslationService } from 'src/app/services/translation.service';
 import { UserService } from 'src/app/services/user.service';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -180,6 +180,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Muestra los personajes favoritos del usuario
+   */
   displayFavoriteCharactersOnly(): void {
     if (!this.userService.isLoggedIn()) {
       Swal.fire({
@@ -193,27 +196,37 @@ export class CharactersComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    this.charactersService
-      .getFavoriteCharacters()
-      .subscribe((favoriteCharacterIds) => {
-        if (favoriteCharacterIds.length === 0) {
-          // Mostrar alerta si no hay personajes favoritos
+
+    this.charactersService.getFavoriteCharacters().subscribe(
+      (favoriteCharacterIds) => {
+        const filteredFavorites = this.characters.filter((character) =>
+          favoriteCharacterIds.includes(character.id)
+        );
+
+        if (filteredFavorites.length === 0) {
+          // No hay favoritos que coincidan con los filtros actuales
           Swal.fire({
-            title: 'Sin favoritos',
-            text: 'No tienes personajes agregados a favoritos.',
-            icon: 'warning',
-            confirmButtonText: 'OK',
-            background: '#FFFFFF',
-            confirmButtonColor: '#00BCD4',
+            title: 'Sin coincidencias',
+            text: 'No hay personajes favoritos que coincidan con los filtros actuales.',
+            icon: 'info',
             iconColor: '#FFD83D',
+            confirmButtonColor: '#00BCD4',
           });
+          this.resetFilters();
         } else {
-          // Filtrar y mostrar solo los personajes favoritos
-          this.characters = this.characters.filter((character) =>
-            favoriteCharacterIds.includes(character.id)
-          );
+          this.characters = filteredFavorites;
         }
-      });
+      },
+      (error) => {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Error al cargar tus personajes favoritos. Por favor, inténtelo de nuevo más tarde.',
+          icon: 'error',
+          iconColor: '#FF4565',
+          confirmButtonColor: '#00BCD4',
+        });
+      }
+    );
   }
 
   /**
