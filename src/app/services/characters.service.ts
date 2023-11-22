@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Character, CharactersResponse } from 'src/app/models/character.model';
 
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +39,37 @@ export class CharactersService {
     if (species) url += `&species=${species}`;
     if (searchTerm) url += `&name=${encodeURIComponent(searchTerm)}`;
     return this.http.get<CharactersResponse>(url);
+  }
+
+  /**
+   * Filtra los personajes favoritos según los criterios de búsqueda y filtros adicionales.
+   *
+   * @param favoriteCharacterIds IDs de personajes favoritos.
+   * @param gender Género para filtrar.
+   * @param status Estado para filtrar.
+   * @param species Especie para filtrar.
+   * @param searchTerm Término de búsqueda.
+   * @returns Observable de un arreglo de personajes filtrados.
+   */
+  filterFavoriteCharacters(
+    favoriteCharacterIds: number[],
+    gender?: string,
+    status?: string,
+    species?: string,
+    searchTerm?: string
+  ): Observable<Character[]> {
+    return this.getCharactersByIds(favoriteCharacterIds).pipe(
+      map((characters) =>
+        characters.filter(
+          (character) =>
+            (!gender || character.gender === gender) &&
+            (!status || character.status === status) &&
+            (!species || character.species === species) &&
+            (!searchTerm ||
+              character.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        )
+      )
+    );
   }
 
   /**

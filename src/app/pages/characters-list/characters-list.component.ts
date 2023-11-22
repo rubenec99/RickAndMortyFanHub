@@ -7,8 +7,8 @@ import { EpisodesService } from 'src/app/services/episodes.service';
 import { TranslationService } from 'src/app/services/translation.service';
 import { UserService } from 'src/app/services/user.service';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -83,41 +83,123 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * una notificación al usuario con la información correspondiente.
    */
   loadCharacters(): void {
-    this.charactersService
-      .getAllCharacters(
-        this.currentPage,
-        this.selectedGender,
-        this.selectedStatus,
-        this.selectedSpecies,
-        this.searchTerm.trim()
-      )
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (response) => {
-          if ('results' in response) {
-            this.characters = response.results;
-            this.totalPages = response.info.pages;
-          } else {
+    // Si se selecciona el filtro de favoritos, realiza una búsqueda específica
+    if (this.showOnlyFavorites) {
+      this.loadFavoriteCharacters();
+    } else {
+      // En otros casos, realiza una búsqueda general
+      this.charactersService
+        .getAllCharacters(
+          this.currentPage,
+          this.selectedGender,
+          this.selectedStatus,
+          this.selectedSpecies,
+          this.searchTerm.trim()
+        )
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (response) => {
+            if ('results' in response) {
+              this.characters = response.results;
+              this.totalPages = response.info.pages;
+            } else {
+              Swal.fire({
+                title: '¡Error!',
+                text: 'Error al cargar los personajes. Por favor, inténtelo de nuevo más tarde.',
+                icon: 'error',
+                iconColor: '#FF4565',
+                confirmButtonColor: '#00BCD4',
+              });
+            }
+          },
+          error: () => {
             Swal.fire({
-              title: '¡Error!',
-              text: 'Error al cargar los personajes. Por favor, inténtelo de nuevo más tarde.',
-              icon: 'error',
-              iconColor: '#FF4565',
+              title: 'Sin coincidencias',
+              text: 'No se encontraron personajes que coincidan con los filtros actuales.',
+              icon: 'info',
+              iconColor: '#00BCD4',
               confirmButtonColor: '#00BCD4',
             });
+            this.resetFilters();
+          },
+        });
+    }
+  }
+
+  /**
+   * Carga solo los personajes favoritos aplicando los filtros seleccionados y el término de búsqueda.
+   */
+  loadFavoriteCharacters(): void {
+    this.charactersService
+      .getFavoriteCharacters()
+      .pipe(
+        switchMap((favoriteCharacterIds) => {
+          if (favoriteCharacterIds.length === 0) {
+            // Mostrar mensaje si no hay favoritos
+            Swal.fire({
+              title: 'Sin favoritos',
+              text: 'No tienes personajes agregados a favoritos.',
+              icon: 'info',
+              iconColor: '#00BCD4',
+              confirmButtonColor: '#00BCD4',
+            });
+            return of([]);
+          }
+          return this.charactersService.filterFavoriteCharacters(
+            favoriteCharacterIds,
+            this.selectedGender,
+            this.selectedStatus,
+            this.selectedSpecies,
+            this.searchTerm
+          );
+        })
+      )
+      .subscribe(
+        (filteredCharacters) => {
+          if (filteredCharacters.length === 0) {
+            // Mostrar mensaje si no hay coincidencias después de aplicar los filtros
+            Swal.fire({
+              title: 'Sin coincidencias',
+              text: 'No se encontraron personajes agregados a favoritos que coincidan con los filtros actuales.',
+              icon: 'info',
+              iconColor: '#00BCD4',
+              confirmButtonColor: '#00BCD4',
+            });
+            this.resetFiltersFavorites();
+          } else {
+            this.characters = filteredCharacters;
+            this.updatePagination(filteredCharacters.length);
           }
         },
-        error: () => {
+        (error) => {
           Swal.fire({
-            title: 'Sin coincidencias',
-            text: 'No se encontraron personajes que coincidan con los filtros actuales.',
-            icon: 'info',
-            iconColor: '#FFD83D',
+            title: '¡Error!',
+            text: 'Error al cargar tus personajes favoritos. Por favor, inténtelo de nuevo más tarde.',
+            icon: 'error',
+            iconColor: '#FF4565',
             confirmButtonColor: '#00BCD4',
           });
-          this.resetFilters();
-        },
-      });
+        }
+      );
+  }
+
+  /**
+   * Aplica filtros adicionales de género, estado, especie y término de búsqueda a una lista de personajes.
+   */
+  applyAdditionalFilters(characters: Character[]): Character[] {
+    return characters.filter(
+      (character) =>
+        (this.selectedGender
+          ? character.gender === this.selectedGender
+          : true) &&
+        (this.selectedStatus
+          ? character.status === this.selectedStatus
+          : true) &&
+        (this.selectedSpecies
+          ? character.species === this.selectedSpecies
+          : true) &&
+        (this.searchTerm ? character.name.includes(this.searchTerm) : true)
+    );
   }
 
   /**
@@ -128,48 +210,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * y se procede a cargar todos los personajes nuevamente.
    */
   searchCharacters(): void {
-    if (!this.searchTerm.trim()) {
-      this.loadCharacters();
-      return;
-    }
-
-    this.charactersService
-      .searchCharactersByName(this.searchTerm)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (response) => {
-          let searchResults = response.results;
-
-          // Filtrar por favoritos si la opción está activa
-          if (this.showOnlyFavorites) {
-            searchResults = searchResults.filter(
-              (character) => this.favoriteCharactersStatus[character.id]
-            );
-          }
-
-          // Verifica si hay resultados después de filtrar
-          if (searchResults.length === 0) {
-            Swal.fire({
-              title: 'Sin coincidencias',
-              text: 'No se encontraron personajes favoritos que coincidan con la búsqueda.',
-              icon: 'info',
-              iconColor: '#FFD83D',
-              confirmButtonColor: '#00BCD4',
-            });
-          } else {
-            this.characters = searchResults;
-          }
-        },
-        error: () => {
-          Swal.fire({
-            title: 'Sin coincidencias',
-            text: 'No se encontraron personajes favoritos que coincidan con la búsqueda.',
-            icon: 'info',
-            iconColor: '#FFD83D',
-            confirmButtonColor: '#00BCD4',
-          });
-        },
-      });
+    this.currentPage = 1;
+    this.loadCharacters();
   }
 
   /**
@@ -189,13 +231,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
   onFilterChange(): void {
     this.currentPage = 1;
     this.loadCharacters();
-    if (this.showOnlyFavorites) {
-      // Filtra y muestra solo los personajes favoritos
-      this.displayFavoriteCharactersOnly();
-    } else {
-      // Vuelve a cargar todos los personajes o aplica otros filtros
-      this.loadCharacters();
-    }
   }
 
   /**
@@ -227,12 +262,14 @@ export class CharactersComponent implements OnInit, OnDestroy {
             title: 'Sin coincidencias',
             text: 'No se encontraron personajes favoritos que coincidan con los filtros actuales.',
             icon: 'info',
-            iconColor: '#FFD83D',
+            iconColor: '#00BCD4',
             confirmButtonColor: '#00BCD4',
           });
           this.resetFilters();
         } else {
           this.characters = filteredFavorites;
+          this.totalPages = Math.ceil(filteredFavorites.length);
+          this.currentPage = 1; // Resetear a la primera página
         }
       },
       (error) => {
@@ -258,6 +295,20 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.selectedStatus = ''; // Restablece el estado (status)
     this.selectedSpecies = ''; // Restablece la especie (species)
     this.showOnlyFavorites = false;
+    this.currentPage = 1; // Resetea la página al valor predeterminado (primera página)
+    this.loadCharacters(); // Vuelve a cargar la lista de personajes con los valores de filtro restablecidos
+  }
+
+  /**
+   * Método para restablecer todos los filtros y valores de búsqueda a sus valores predeterminados.
+   * Esto incluye restablecer el término de búsqueda, género, estado (status) y especie (species).
+   * También se restablece la página a la primera página y se recargan los personajes.
+   */
+  resetFiltersFavorites(): void {
+    this.searchTerm = ''; // Restablece el término de búsqueda
+    this.selectedGender = ''; // Restablece el género
+    this.selectedStatus = ''; // Restablece el estado (status)
+    this.selectedSpecies = ''; // Restablece la especie (species)
     this.currentPage = 1; // Resetea la página al valor predeterminado (primera página)
     this.loadCharacters(); // Vuelve a cargar la lista de personajes con los valores de filtro restablecidos
   }
@@ -467,5 +518,10 @@ export class CharactersComponent implements OnInit, OnDestroy {
       this.currentPage = this.totalPages; // Establece la página actual en la última página
       this.loadCharacters(); // Recarga los personajes de la última página
     }
+  }
+
+  updatePagination(totalItems: number): void {
+    const itemsPerPage = 20;
+    this.totalPages = Math.ceil(totalItems / itemsPerPage);
   }
 }
