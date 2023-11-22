@@ -57,13 +57,21 @@ export class CharactersComponent implements OnInit, OnDestroy {
   selectedStatus: string = ''; // Almacena el estatus seleccionado
   selectedSpecies: string = ''; // Almacena la especie seleccionada
 
+  isUserLoggedIn = false; // Por defecto
+
   constructor(
     private charactersService: CharactersService, // Inyecta el servicio de personajes
     private episodesService: EpisodesService, // Inyecta el servicio de episodios
     public modalService: NgbModal, // Inyecta el servicio de modales de Bootstrap
     public translationService: TranslationService,
     private userService: UserService
-  ) {}
+  ) {
+    if (this.userService.isLoggedIn()) {
+      this.isUserLoggedIn = true;
+    } else {
+      this.isUserLoggedIn = false;
+    }
+  }
 
   ngOnInit(): void {
     this.loadCharacters(); // Carga los personajes al inicializar el componente
@@ -154,8 +162,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
           );
         })
       )
-      .subscribe(
-        (filteredCharacters) => {
+      .subscribe({
+        next: (filteredCharacters) => {
           if (filteredCharacters.length === 0) {
             // Mostrar mensaje si no hay coincidencias después de aplicar los filtros
             Swal.fire({
@@ -171,7 +179,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
             this.updatePagination(filteredCharacters.length);
           }
         },
-        (error) => {
+        error: (error) => {
           Swal.fire({
             title: '¡Error!',
             text: 'Error al cargar tus personajes favoritos. Por favor, inténtelo de nuevo más tarde.',
@@ -179,8 +187,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
             iconColor: '#FF4565',
             confirmButtonColor: '#00BCD4',
           });
-        }
-      );
+        },
+      });
   }
 
   /**

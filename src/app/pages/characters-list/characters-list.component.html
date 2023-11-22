@@ -73,7 +73,7 @@
         </div>
 
         <!-- Filtro de Personajes Favoritos -->
-        <div class="dropdown-item">
+        <div class="dropdown-item" *ngIf="isUserLoggedIn">
           <input
             type="checkbox"
             id="cbx"
