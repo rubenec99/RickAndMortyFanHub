@@ -47,6 +47,28 @@
   border-inline: 2px solid #00bcd4;
 }
 
+.toggle-visibility-container {
+  display: flex;
+}
+
+#password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.5em;
+  transform: translateY(-50%);
+}
+
+#confirm-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.5em;
+  transform: translateY(-50%);
+}
+
+#password {
+  padding-right: 40px;
+}
+
 /* -------------------- LABELS -------------------- */
 .form label {
   display: block;

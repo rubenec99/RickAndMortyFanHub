@@ -18,6 +18,9 @@ export class LoginComponent {
     password: '',
   };
 
+  passwordType = 'password';
+  showIconPassword = false;
+
   constructor(private userService: UserService, private router: Router) {}
 
   /**
@@ -83,5 +86,15 @@ export class LoginComponent {
         });
       },
     });
+  }
+
+  /** Cambia la visibilidad de la contraseña y el tipo de entrada entre 'password' y 'text'. */
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+  }
+
+  /** Alterna la visibilidad del ícono de ojo en el campo de contraseña. */
+  toggleIconPassword() {
+    this.showIconPassword = !this.showIconPassword;
   }
 }

@@ -101,16 +101,28 @@
         </div>
 
         <!-- Password -->
-        <div class="mb-3">
+        <div class="mb-3" style="position: relative">
           <label for="password" class="form-label">Contraseña</label>
-          <input
-            type="password"
-            class="form-control input"
-            id="password"
-            formControlName="password"
-            placeholder="Introduzca su contraseña"
-            required
-          />
+          <div class="toggle-visibility-container">
+            <input
+              type="{{ passwordType }}"
+              class="form-control input"
+              id="password"
+              formControlName="password"
+              placeholder="Introduzca su contraseña"
+              required
+            />
+            <button
+              class="btn"
+              type="button"
+              id="password-toggle"
+              (click)="togglePasswordVisibility()"
+              (click)="toggleIconPassword()"
+            >
+              <i *ngIf="showIconPassword" class="fa-solid fa-eye-slash"></i>
+              <i *ngIf="!showIconPassword" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
           <div
             *ngIf="
               registerForm.get('password')?.hasError('pattern') &&
@@ -125,20 +137,38 @@
         </div>
 
         <!-- Confirm Password -->
-        <div class="mb-3">
+        <div class="mb-3" style="position: relative">
           <label for="confirmPassword" class="form-label"
             >Repita la contraseña</label
           >
-          <input
-            type="password"
-            class="form-control input"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            placeholder="Repita su contraseña"
-            required
-          />
+          <div class="toggle-visibility-container">
+            <input
+              type="{{ confirmPasswordType }}"
+              class="form-control input"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Repita su contraseña"
+              required
+            />
+            <button
+              class="btn"
+              type="button"
+              id="confirm-password-toggle"
+              (click)="toggleConfirmPasswordVisibility()"
+              (click)="toggleIconConfirmPassword()"
+            >
+              <i
+                *ngIf="showIconConfirmPassword"
+                class="fa-solid fa-eye-slash"
+              ></i>
+              <i *ngIf="!showIconConfirmPassword" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
           <div
-            *ngIf="registerForm.errors?.['passwordsDontMatch'] && registerForm.get('confirmPassword')?.touched"
+            *ngIf="
+          registerForm.errors?.['passwordsDontMatch'] &&
+          registerForm.get('confirmPassword')?.touched
+        "
             class="text-danger"
           >
             Las contraseñas no coinciden.

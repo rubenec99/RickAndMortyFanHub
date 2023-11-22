@@ -55,6 +55,20 @@
   font-weight: 600;
 }
 
+#password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.25em;
+  transform: translateY(-50%);
+}
+
+#confirm-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.25em;
+  transform: translateY(-50%);
+}
+
 /* -------------------- BOTONES -------------------- */
 .form .login-button,
 .delete-profile-button,

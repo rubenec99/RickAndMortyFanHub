@@ -20,16 +20,28 @@
         </div>
 
         <!-- Contraseña -->
-        <div class="mb-3">
+        <div class="mb-3" style="position: relative">
           <label for="password" class="form-label">Contraseña</label>
-          <input
-            type="password"
-            class="form-control input"
-            id="password"
-            placeholder="Ingrese su contraseña"
-            [(ngModel)]="loginData.password"
-            name="password"
-          />
+          <div class="toggle-visibility-container">
+            <input
+              type="{{ passwordType }}"
+              class="form-control input"
+              id="password"
+              placeholder="Ingrese su contraseña"
+              [(ngModel)]="loginData.password"
+              name="password"
+            />
+            <button
+              class="btn"
+              type="button"
+              id="confirm-password-toggle"
+              (click)="togglePasswordVisibility()"
+              (click)="toggleIconPassword()"
+            >
+              <i *ngIf="showIconPassword" class="fa-solid fa-eye-slash"></i>
+              <i *ngIf="!showIconPassword" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Botón para iniciar sesión -->

@@ -61,6 +61,22 @@
   font-weight: 600;
 }
 
+.toggle-visibility-container {
+  display: flex;
+}
+
+#password-toggle,
+#confirm-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 75%;
+  transform: translateY(-50%);
+}
+
+#password {
+  padding-right: 40px;
+}
+
 /* -------------------- BOTÓN LOGIN -------------------- */
 .form .login-button {
   display: block;

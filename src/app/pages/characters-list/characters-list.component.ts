@@ -7,8 +7,8 @@ import { EpisodesService } from 'src/app/services/episodes.service';
 import { TranslationService } from 'src/app/services/translation.service';
 import { UserService } from 'src/app/services/user.service';
 
-import { EMPTY, Subject } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 

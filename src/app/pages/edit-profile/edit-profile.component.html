@@ -80,39 +80,68 @@
 
       <!-- Campos de Contraseña, que se mostrarán solo si showPasswordFields es true -->
       <div *ngIf="showPasswordFields">
-        <label for="password">Nueva contraseña:</label>
-        <div class="form-group">
-          <input
-            type="password"
-            id="password"
-            class="form-control input"
-            formControlName="password"
-            placeholder="Introduzca su nueva contraseña"
-          />
+        <div class="form-group" style="position: relative">
+          <label for="password">Nueva contraseña:</label>
+          <div class="toggle-visibility-container">
+            <input
+              type="{{ passwordType }}"
+              class="form-control input"
+              id="password"
+              formControlName="password"
+              placeholder="Introduzca su contraseña"
+              required
+            />
+            <button
+              class="btn"
+              type="button"
+              id="password-toggle"
+              (click)="togglePasswordVisibility()"
+              (click)="toggleIconPassword()"
+            >
+              <i *ngIf="showIconPassword" class="fa-solid fa-eye-slash"></i>
+              <i *ngIf="!showIconPassword" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+          <div
+            *ngIf="
+              editProfileForm.get('password')?.hasError('pattern') &&
+              editProfileForm.get('password')?.touched
+            "
+            class="text-danger"
+          >
+            La contraseña debe tener entre 8 y 16 caracteres, al menos un
+            número, al menos un carácter especial, al menos una minúscula y al
+            menos una mayúscula.
+          </div>
+          <br />
         </div>
-        <div
-          *ngIf="
-            editProfileForm.get('password')?.hasError('pattern') &&
-            editProfileForm.get('password')?.touched
-          "
-          class="text-danger"
-        >
-          La contraseña debe tener al entre 8 y 16 caracteres, al menos un
-          número, al menos un carácter especial, al menos una minúscula y al
-          menos una mayúscula.
-        </div>
-        <br />
 
         <!-- Confirmación de Contraseña -->
-        <div class="form-group">
+        <div class="form-group" style="position: relative">
           <label for="confirmPassword">Confirmar contraseña:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            class="form-control input"
-            formControlName="confirmPassword"
-            placeholder="Repita su contraseña"
-          />
+          <div class="toggle-visibility-container">
+            <input
+              type="{{ confirmPasswordType }}"
+              class="form-control input"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Repita su contraseña"
+              required
+            />
+            <button
+              class="btn"
+              type="button"
+              id="confirm-password-toggle"
+              (click)="toggleConfirmPasswordVisibility()"
+              (click)="toggleIconConfirmPassword()"
+            >
+              <i
+                *ngIf="showIconConfirmPassword"
+                class="fa-solid fa-eye-slash"
+              ></i>
+              <i *ngIf="!showIconConfirmPassword" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
           <div
             *ngIf="
               editProfileForm.get('confirmPassword')?.invalid &&
@@ -133,6 +162,7 @@
           </div>
         </div>
       </div>
+
       <br />
 
       <!-- Fecha de Nacimiento -->

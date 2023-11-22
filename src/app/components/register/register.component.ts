@@ -33,6 +33,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
   private destroy$ = new Subject<void>();
 
+  passwordType = 'password';
+  confirmPasswordType = 'password';
+  showIconPassword = false;
+  showIconConfirmPassword = false;
+
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
@@ -310,5 +315,26 @@ export class RegisterComponent implements OnInit, OnDestroy {
         iconColor: '#FFD83D',
       });
     }
+  }
+
+  /** Cambia la visibilidad de la contraseña y el tipo de entrada entre 'password' y 'text'. */
+  togglePasswordVisibility() {
+    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
+  }
+
+  /** Cambia la visibilidad de la confirmación de contraseña y el tipo de entrada entre 'password' y 'text'. */
+  toggleConfirmPasswordVisibility() {
+    this.confirmPasswordType =
+      this.confirmPasswordType === 'password' ? 'text' : 'password';
+  }
+
+  /** Alterna la visibilidad del ícono de ojo en el campo de contraseña. */
+  toggleIconPassword() {
+    this.showIconPassword = !this.showIconPassword;
+  }
+
+  /** Alterna la visibilidad del ícono de ojo en el campo de confirmación de contraseña. */
+  toggleIconConfirmPassword() {
+    this.showIconConfirmPassword = !this.showIconConfirmPassword;
   }
 }
