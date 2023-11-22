@@ -24,7 +24,7 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
       3. Instala las dependencias:
         npm install
       4. Inicia el backend:
-        node server.js
+        node index.js
       5. En una nueva terminal, arrancar el servidor de desarrollo de Angular:
         ng serve
 
