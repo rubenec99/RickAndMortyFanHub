@@ -78,6 +78,26 @@
   font-weight: 600;
 }
 
+#password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.5em;
+  transform: translateY(-50%);
+  color: #a5a5b0;
+}
+
+#confirm-password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 4.5em;
+  transform: translateY(-50%);
+  color: #a5a5b0;
+}
+
+#password {
+  padding-right: 40px;
+}
+
 /* -------------------- BOTÓN REGISTRO -------------------- */
 .form .register-button {
   display: block;

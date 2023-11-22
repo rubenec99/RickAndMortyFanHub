@@ -60,6 +60,7 @@
   right: 10px;
   top: 4.25em;
   transform: translateY(-50%);
+  color: #a5a5b0;
 }
 
 #confirm-password-toggle {
@@ -67,8 +68,8 @@
   right: 10px;
   top: 4.25em;
   transform: translateY(-50%);
+  color: #a5a5b0;
 }
-
 /* -------------------- BOTONES -------------------- */
 .form .login-button,
 .delete-profile-button,
