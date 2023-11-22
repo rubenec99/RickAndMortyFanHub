@@ -7,8 +7,8 @@ import { EpisodesService } from 'src/app/services/episodes.service';
 import { TranslationService } from 'src/app/services/translation.service';
 import { UserService } from 'src/app/services/user.service';
 
-import { EMPTY, Subject } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -109,8 +109,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
         },
         error: () => {
           Swal.fire({
-            title: '¡Atención!',
-            text: 'No hay personajes con los filtros seleccionados.',
+            title: 'Sin coincidencias',
+            text: 'No se encontraron personajes que coincidan con los filtros actuales.',
             icon: 'info',
             iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
@@ -133,21 +133,39 @@ export class CharactersComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Realiza una búsqueda de personajes por nombre utilizando el término de búsqueda
     this.charactersService
       .searchCharactersByName(this.searchTerm)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (response) => {
-          this.characters = response.results;
-          this.totalPages = response.info.pages;
+          let searchResults = response.results;
+
+          // Filtrar por favoritos si la opción está activa
+          if (this.showOnlyFavorites) {
+            searchResults = searchResults.filter(
+              (character) => this.favoriteCharactersStatus[character.id]
+            );
+          }
+
+          // Verifica si hay resultados después de filtrar
+          if (searchResults.length === 0) {
+            Swal.fire({
+              title: 'Sin coincidencias',
+              text: 'No se encontraron personajes favoritos que coincidan con la búsqueda.',
+              icon: 'info',
+              iconColor: '#FFD83D',
+              confirmButtonColor: '#00BCD4',
+            });
+          } else {
+            this.characters = searchResults;
+          }
         },
         error: () => {
           Swal.fire({
-            title: '¡Error!',
-            text: 'No hay personajes con el nombre introducido.',
-            icon: 'error',
-            iconColor: '#FF4565',
+            title: 'Sin coincidencias',
+            text: 'No se encontraron personajes favoritos que coincidan con la búsqueda.',
+            icon: 'info',
+            iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
           });
         },
@@ -207,7 +225,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
           // No hay favoritos que coincidan con los filtros actuales
           Swal.fire({
             title: 'Sin coincidencias',
-            text: 'No hay personajes favoritos que coincidan con los filtros actuales.',
+            text: 'No se encontraron personajes favoritos que coincidan con los filtros actuales.',
             icon: 'info',
             iconColor: '#FFD83D',
             confirmButtonColor: '#00BCD4',
@@ -317,6 +335,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
         confirmButtonColor: '#00BCD4',
         iconColor: '#FFD83D',
       });
+
       return;
     }
 
