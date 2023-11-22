@@ -50,7 +50,7 @@ export class EditProfileComponent implements OnInit {
           '',
           [
             Validators.pattern(
-              '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%?&])[A-Za-z\\d@$!%?&]{8,16}$'
+              '^(?=.*\\d)(?=.*[\\u0021-\\u002b\\u003c-\\u0040.,_-])(?=.*[A-Z])(?=.*[a-z])\\S{8,16}$'
             ),
           ],
         ],
