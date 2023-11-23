@@ -112,17 +112,7 @@ export class MinigamesComponent {
       options: ['Tammy', 'Beth', 'Summer', 'Jessica'],
       answer: 0,
     },
-    {
-      question:
-        '¿Cuál es el nombre del episodio donde Morty se convierte en un auto?',
-      options: [
-        'La Cita Rickturiana de Morty',
-        'Mortynight Run',
-        'MortyCar',
-        'Los Ricks deben estar locos',
-      ],
-      answer: 1,
-    },
+
     {
       question: '¿Qué juego juegan Rick y Morty en "Blips & Chitz"?',
       options: [
