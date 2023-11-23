@@ -76,3 +76,29 @@ html.swalfire-shown:not(.swalfire-no-backdrop):not(.swalfire-toast-shown) {
     overflow-y: scroll; /* Oculta la barra de desplazamiento vertical */
   }
 }
+
+/* Media queries */
+@media (max-width: 600px) {
+  .footer {
+    padding: 20px 10px; /* Espaciado reducido para pantallas pequeñas */
+  }
+
+  .footer h6 {
+    font-size: 1rem; /* Tamaño de fuente reducido para títulos */
+  }
+
+  .footer a,
+  .footer .fab,
+  .footer .btn-outline-light {
+    font-size: 0.9rem; /* Tamaño de fuente reducido para enlaces y botones */
+  }
+
+  .footer .row {
+    flex-direction: column; /* Los elementos se apilan verticalmente */
+    align-items: center; /* Alineación central de los elementos */
+  }
+
+  body {
+    padding-bottom: 600px; /* Reducir el padding inferior para evitar espacios vacíos */
+  }
+}
