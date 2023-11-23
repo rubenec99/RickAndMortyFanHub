@@ -199,9 +199,14 @@ export class AdminPanelComponent {
    * @param userId El ID del usuario que se desea eliminar.
    */
   confirmDelete(userId: number): void {
+    const user = this.users.find((u) => u.id === userId);
+    const userInfo = user
+      ? `ID: ${user.id} - ${user.username}`
+      : 'el usuario seleccionado';
+
     Swal.fire({
       title: 'Confirmación',
-      text: '¿Estás seguro de que deseas eliminar este usuario?',
+      html: `¿Estás seguro de que deseas eliminar a ${userInfo}?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
@@ -210,9 +215,7 @@ export class AdminPanelComponent {
       cancelButtonColor: '#1F1F2E',
       confirmButtonColor: '#FF4565',
     }).then((result) => {
-      // Verifica si el usuario confirmó la eliminación.
       if (result.isConfirmed) {
-        // Llama al método para eliminar el usuario.
         this.deleteUser(userId);
       }
     });
@@ -243,9 +246,14 @@ export class AdminPanelComponent {
       return;
     }
 
+    // Crear una cadena de texto con los nombres o IDs de los usuarios seleccionados
+    const selectedUserNames = selectedUsers
+      .map((user) => `ID: ${user.id} - ${user.username}`)
+      .join('<br>');
+
     Swal.fire({
       title: '¿Estás seguro?',
-      text: 'Esta acción eliminará los usuarios seleccionados.',
+      html: `Esta acción eliminará los siguientes usuarios:<br><br>${selectedUserNames}`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
