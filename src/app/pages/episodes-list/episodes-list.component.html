@@ -110,11 +110,10 @@
           <div class="modal-body">
             <!-- Muestra el total de personajes -->
             <p class="character-count" *ngIf="charactersOfEpisode.length > 0">
-              Hay
               {{
                 charactersOfEpisode.length === 1
-                  ? "un"
-                  : charactersOfEpisode.length
+                  ? "Aparece un"
+                  : "Aparecen " + charactersOfEpisode.length
               }}
               {{
                 charactersOfEpisode.length === 1 ? "personaje" : "personajes"
