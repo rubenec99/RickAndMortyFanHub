@@ -4,17 +4,17 @@ Aplicación web desarrollada con Angular, Node.js, Express.js y MySQL que ofrece
 
 Este proyecto se ha creado con [Angular CLI](https://github.com/angular/angular-cli) version 16.2.2.
 
-##🚀 Comenzando 
+## 🚀 Comenzando 
 
 Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
-  ###📋 Pre-requisitos 
+  ### 📋 Pre-requisitos 
 
   Qué cosas necesitas para instalar el software y cómo instalarlas:
     * Node.js
     * Angular CLI
 
-  ###🔧 Instalación 
+  ### 🔧 Instalación 
   
     Pasos para obtener un entorno de desarrollo en marcha:
       1. Clona el repositorio:
@@ -28,7 +28,7 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
       5. En una nueva terminal, arrancar el servidor de desarrollo de Angular:
         ng serve
 
-##🖇️ Configuración de la base de datos 
+## 🖇️ Configuración de la base de datos 
   Para configurar la base de datos:
     1. Asegúrate de tener MySQL instalado.
     2. Crea una base de datos llamada `rickandmortyfanhubdb`.
@@ -36,17 +36,17 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
     4. Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
     
 
-##🛠️ Construido con 
+## 🛠️ Construido con 
   * [Angular CLI](https://github.com/angular/angular-cli): Framework para crear aplicaciones SPA.
   * [Node.js](https://github.com/nodejs): Entorno de ejecución para JavaScript.
   * [Express.js](https://expressjs.com/): Framework para Node.js, facilita el desarrollo de aplicaciones web y API.
   * [Rick and Morty API](https://rickandmortyapi.com/): API para obtener datos de la serie.
 
-##📌 Versionado 
+## 📌 Versionado 
 * Se utiliza git para el control de versiones del proyecto.
 
-##✒️ Autor 
+## ✒️ Autor 
 * Rubén Escudero - [rubenec99](https://github.com/rubenec99)
 
-##🔗 Enlace al proyecto GitHub del Back End de la apliación 
+## 🔗 Enlace al proyecto GitHub del Back End de la apliación 
 * Back End - [RickAndMortyFanHubAPI](https://github.com/rubenec99/RickAndMortyFanHubAPI)
