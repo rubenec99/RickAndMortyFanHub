@@ -30,13 +30,13 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
 
 ## 🖇️ Configuración de la base de datos 
   Para configurar la base de datos:
-    * 1. Asegúrate de tener MySQL instalado.
-    * 2. Crea una base de datos llamada `rickandmortyfanhubdb`.
-    * 3. Importa el archivo `db_init.sql` para inicializar las tablas.
-    * 4. Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
+    * Asegúrate de tener MySQL instalado.
+    * Crea una base de datos llamada `rickandmortyfanhubdb`.
+    * Importa el archivo `db_init.sql` para inicializar las tablas.
+    * Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
 
 ## 🔗 Enlace al proyecto GitHub del Back End de la apliación 
-* Back End - [RickAndMortyFanHubAPI](https://github.com/rubenec99/RickAndMortyFanHubAPI)
+  * Back End - [RickAndMortyFanHubAPI](https://github.com/rubenec99/RickAndMortyFanHubAPI)
 
 ## 🛠️ Construido con 
   * [Angular CLI](https://github.com/angular/angular-cli): Framework para crear aplicaciones SPA.
