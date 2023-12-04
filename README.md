@@ -27,13 +27,12 @@ Estas instrucciones te proporcionarán una copia del proyecto en funcionamiento 
         node index.js
       5. En una nueva terminal, arrancar el servidor de desarrollo de Angular:
         ng serve
-
-## 🖇️ Configuración de la base de datos 
-  Para configurar la base de datos:
-    * Asegúrate de tener MySQL instalado.
-    * Crea una base de datos llamada `rickandmortyfanhubdb`.
-    * Importa el archivo `db_init.sql` para inicializar las tablas.
-    * Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
+    
+## ⚙️ Configuración de la base de datos
+- Asegúrate de tener MySQL instalado y configurado.
+- Crea una base de datos llamada `rickandmortyfanhubdb`.
+- Importa el archivo `db_init.sql` para inicializar las tablas.
+- Actualiza las credenciales de acceso en el archivo `config/db.config.js`.
 
 ## 🔗 Enlace al proyecto GitHub del Back End de la apliación 
   * Back End - [RickAndMortyFanHubAPI](https://github.com/rubenec99/RickAndMortyFanHubAPI)
