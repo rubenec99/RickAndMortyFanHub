@@ -35,6 +35,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
   favoriteCharactersStatus: { [characterId: number]: boolean } = {};
   showOnlyFavorites: boolean = false;
 
+  shouldReloadFavorites: boolean = true; // Bandera para controlar la recarga de favoritos
+
   /**
    * Arreglos utilizados para almacenar los géneros, estados (status) y especies únicos disponibles en la lista de personajes.
    * Estas propiedades se utilizan para mostrar opciones de filtro y realizar búsquedas avanzadas.
@@ -138,6 +140,11 @@ export class CharactersComponent implements OnInit, OnDestroy {
    * Carga solo los personajes favoritos aplicando los filtros seleccionados y el término de búsqueda.
    */
   loadFavoriteCharacters(): void {
+    if (!this.shouldReloadFavorites) {
+      // Si la bandera es falsa, no recargar los favoritos
+      return;
+    }
+
     this.charactersService
       .getFavoriteCharacters()
       .pipe(
@@ -173,7 +180,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
               iconColor: '#00BCD4',
               confirmButtonColor: '#00BCD4',
             });
-            this.resetFiltersFavorites();
+            this.shouldReloadFavorites = false; // Cambiar la bandera para evitar la recarga
+            return;
           } else {
             this.characters = filteredCharacters;
             this.updatePagination(filteredCharacters.length);
