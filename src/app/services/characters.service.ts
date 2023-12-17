@@ -59,16 +59,22 @@ export class CharactersService {
     searchTerm?: string
   ): Observable<Character[]> {
     return this.getCharactersByIds(favoriteCharacterIds).pipe(
-      map((characters) =>
-        characters.filter(
+      map((characters) => {
+        // Si la respuesta es un objeto (un solo personaje), conviértelo en un array
+        if (!Array.isArray(characters)) {
+          characters = [characters];
+        }
+
+        // Ahora aplica el filtro
+        return characters.filter(
           (character) =>
             (!gender || character.gender === gender) &&
             (!status || character.status === status) &&
             (!species || character.species === species) &&
             (!searchTerm ||
               character.name.toLowerCase().includes(searchTerm.toLowerCase()))
-        )
-      )
+        );
+      })
     );
   }
 
@@ -94,10 +100,7 @@ export class CharactersService {
     if (ids.length === 0) {
       return of([]);
     }
-    const url =
-      ids.length === 1
-        ? `${this.baseUrl}/${ids[0]}`
-        : `${this.baseUrl}/${ids.join(',')}`;
+    const url = `${this.baseUrl}/${ids.join(',')}`;
     return this.http.get<Character[]>(url);
   }
 
