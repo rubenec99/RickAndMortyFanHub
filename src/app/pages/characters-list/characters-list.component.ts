@@ -180,6 +180,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
               iconColor: '#00BCD4',
               confirmButtonColor: '#00BCD4',
             });
+            this.resetFiltersFavorites();
             this.shouldReloadFavorites = false; // Cambiar la bandera para evitar la recarga
             return;
           } else {
@@ -188,6 +189,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
+          this.resetFiltersFavorites();
+
           Swal.fire({
             title: '¡Error!',
             text: 'Error al cargar tus personajes favoritos. Por favor, inténtelo de nuevo más tarde.',
@@ -281,7 +284,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
             iconColor: '#00BCD4',
             confirmButtonColor: '#00BCD4',
           });
-          this.resetFilters();
+          this.resetFiltersFavorites();
         } else {
           this.characters = filteredFavorites;
           this.totalPages = Math.ceil(filteredFavorites.length);
@@ -289,6 +292,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
+        this.resetFiltersFavorites();
         Swal.fire({
           title: '¡Error!',
           text: 'Error al cargar tus personajes favoritos. Por favor, inténtelo de nuevo más tarde.',
